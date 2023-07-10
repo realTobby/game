@@ -18,9 +18,9 @@ namespace game.Entities
 
         private float speed = 150f; // Change this value to adjust player's speed
 
-        
 
-        public Player(RenderWindow window)
+
+        public Player(RenderWindow window) : base("Entities", "priestess", 4)
         {
             _window = window;
             //precisePosition = base.AnimatedSprite.

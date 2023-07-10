@@ -1,5 +1,6 @@
 ﻿using game.Entities;
 using game.Managers;
+using game.Models;
 using game.UI;
 using SFML.Graphics;
 using SFML.System;
@@ -27,6 +28,8 @@ namespace game.Controllers
 
         private ViewCamera _viewCamera;
 
+        private AnimatedSprite testThunder;
+
         public void Init()
         {
             _uniClock = new Clock();
@@ -45,24 +48,13 @@ namespace game.Controllers
 
             _viewCamera = new ViewCamera(_gameWindow);
 
-            
+            testThunder = new AnimatedSprite(TextureLoader.Instance.GetTexture("thunderStrike", "VFX"), 1, 13, Time.FromSeconds(0.1f));
         }
 
         List<Sprite> testDebug = new List<Sprite>();
 
         public void Run()
         {
-            var frames =  TextureLoader.Instance.GetAnimations($"Assets/Entities/priestess", "priestess", 4);
-
-            foreach(var item in frames)
-            {
-                var spr = new Sprite(item);
-                testDebug.Add(spr);
-            }
-
-            
-
-
 
             while (_gameWindow.IsOpen)
             {
@@ -90,6 +82,9 @@ namespace game.Controllers
             //_overworldManager.OnPlayerMove(player.Position);
 
             _viewCamera.Update(deltaTime, player.Position);
+
+            testThunder.Update();
+
         }
 
         private void Draw(float deltaTime)
@@ -100,7 +95,15 @@ namespace game.Controllers
 
             _viewCamera.Draw();
 
+            testThunder.Draw(_gameWindow);
+
+            //testThunder.DebugDrawAllFrames(_gameWindow);
+
+
         }
+
+
+
 
 
     }

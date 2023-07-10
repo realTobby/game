@@ -13,11 +13,12 @@ namespace game.Models
 
         //public Sprite Sprite;
 
-        public DrawableEntity()
+        public DrawableEntity(string category, string entityName, int frameCount)
         {
             //Sprite = new Sprite(texture);
-            AnimatedSprite = new AnimatedSprite("Entities", "priestess", 4);
+            AnimatedSprite = new AnimatedSprite(category, entityName, frameCount);
         }
+
 
 
 

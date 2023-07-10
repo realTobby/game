@@ -14,7 +14,7 @@ namespace game.Models
     public class AnimatedSprite
     {
         private int currentFrame;
-        private Sprite[] sprites;
+        public Sprite[] sprites;
         private Clock animationTimer;
         private Time frameDuration;
 
@@ -30,6 +30,27 @@ namespace game.Models
             }
 
             this.frameDuration = Time.FromSeconds(0.1f);
+            animationTimer = new Clock();
+        }
+
+        public AnimatedSprite(Texture spriteSheet, int rows, int columns, Time frameDuration)
+        {
+            int frameWidth = (int)spriteSheet.Size.X / columns;
+            int frameHeight = (int)spriteSheet.Size.Y / rows;
+
+            int frameCount = rows * columns;
+            sprites = new Sprite[frameCount];
+
+            for (int i = 0; i < frameCount; i++)
+            {
+                int row = i / columns;
+                int column = i % columns;
+
+                IntRect textureRect = new IntRect(column * frameWidth, row * frameHeight, frameWidth, frameHeight);
+                sprites[i] = new Sprite(spriteSheet, textureRect);
+            }
+
+            this.frameDuration = frameDuration;
             animationTimer = new Clock();
         }
 
@@ -55,5 +76,32 @@ namespace game.Models
                 sprite.Position = position;
             }
         }
+
+        public void DebugDrawAllFrames(RenderWindow window)
+        {
+            for (int i = 0; i < sprites.Length; i++)
+            {
+                // Copy the sprite so we can modify its position without affecting the original
+                Sprite spriteCopy = new Sprite(sprites[i]);
+
+                // Position each frame next to the previous one
+                float spacing = 10f; // Adjust as needed for your sprites
+                spriteCopy.Position = new Vector2f(i * (sprites[i].GetGlobalBounds().Width + spacing), 0);
+
+                // Draw a rectangle around the sprite's bounds
+                RectangleShape boundsRect = new RectangleShape(new Vector2f(spriteCopy.GetGlobalBounds().Width, spriteCopy.GetGlobalBounds().Height))
+                {
+                    Position = spriteCopy.Position,
+                    OutlineColor = Color.Magenta,
+                    FillColor = Color.Transparent,
+                    OutlineThickness = 1f
+                };
+                window.Draw(boundsRect);
+
+                // Draw the sprite
+                window.Draw(spriteCopy);
+            }
+        }
+
     }
 }
