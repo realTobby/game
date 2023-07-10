@@ -2,6 +2,7 @@
 using game.Managers;
 using game.Models;
 using game.UI;
+using SFML.Audio;
 using SFML.Graphics;
 using SFML.System;
 using SFML.Window;
@@ -73,6 +74,16 @@ namespace game.Controllers
 
         public void Run()
         {
+
+            // Load the music
+            Music backgroundMusic = new Music("Assets/BGM/Venus.wav");
+
+            // Set the music to loop
+            backgroundMusic.Loop = true;
+
+            // Start playing the music
+            backgroundMusic.Play();
+
 
             while (_gameWindow.IsOpen)
             {

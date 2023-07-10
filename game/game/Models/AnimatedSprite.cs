@@ -13,10 +13,12 @@ namespace game.Models
 
     public class AnimatedSprite
     {
-        private int currentFrame;
+        public int currentFrame;
         public Sprite[] sprites;
         private Clock animationTimer;
         private Time frameDuration;
+
+        public Action OnAnimationFinish;
 
         public AnimatedSprite(string category, string entityName, int frameCount)
         {
@@ -59,7 +61,7 @@ namespace game.Models
         // Property to indicate whether the animation has finished
         public bool IsFinished { get; private set; }
 
-        public void Update()
+        public virtual void Update()
         {
             if (animationTimer.ElapsedTime > frameDuration)
             {
@@ -70,6 +72,7 @@ namespace game.Models
                 if (currentFrame == 0 && IsSingleShotAnimation == true)
                 {
                     IsFinished = true;
+                    OnAnimationFinish?.Invoke();
                 }
             }
         }

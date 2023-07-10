@@ -53,17 +53,23 @@ namespace game.Entities
             }
         }
 
+        Random rnd = new Random();
+
         private void SpawnAnimatedSprite()
         {
             // Create a new AnimatedSprite at the current position
             // You'll need to provide the necessary arguments for the AnimatedSprite constructor
-            AnimatedSprite newSprite = new AnimatedSprite(TextureLoader.Instance.GetTexture("thunderStrike", "VFX"), 1, 13, Time.FromSeconds(0.1f));
-            newSprite.IsSingleShotAnimation = true;
-            newSprite.SetPosition(Position);
+            ThunderStrike newThunder = new ThunderStrike();
+            //AnimatedSprite newSprite = new AnimatedSprite(TextureLoader.Instance.GetTexture("thunderStrike", "VFX"), 1, 13, Time.FromSeconds(0.1f));
+            newThunder.IsSingleShotAnimation = true;
+
+            Position = new Vector2f((int)rnd.Next((int)Position.X-100, (int)Position.X+100), (int)rnd.Next((int)Position.Y - 100, (int)Position.Y + 100));
+
+            newThunder.SetPosition(Position);
 
             // Add the new sprite to a list of sprites in your game
             // You'll need to provide this list
-            game.Controllers.Game.Instance.animatedSprites.Add(newSprite);
+            game.Controllers.Game.Instance.animatedSprites.Add(newThunder);
         }
 
         public void Draw(RenderWindow window)

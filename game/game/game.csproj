@@ -12,6 +12,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="Assets\BGM\Venus.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Assets\Entities\priestess\priestess_0.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -42,6 +45,9 @@
     <None Update="Assets\Objects\tree2.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Assets\SFX\explosion.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Assets\Tiles\grassyTile.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -64,6 +70,8 @@
 
   <ItemGroup>
     <Folder Include="Assets\Fonts\" />
+    <Folder Include="Assets\BGM\" />
+    <Folder Include="Assets\SFX\" />
     <Folder Include="Helpers\" />
   </ItemGroup>
 
