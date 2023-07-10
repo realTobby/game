@@ -1,4 +1,7 @@
-﻿using game.Entities;
+﻿using game.Controllers;
+using game.Controllers.game.Controllers;
+using game.Entities;
+using game.Entities.Enemies;
 using game.Managers;
 using game.Models;
 using game.UI;
@@ -19,22 +22,28 @@ namespace game.Scenes
         private OverworldManager _overworldManager;
         private ViewCamera _viewCamera;
 
+        private InputManager _inputManager;
+
         private Player player;
         private AnimatedSprite testThunder;
         private ZeusMode follower;
 
         public List<AnimatedSprite> animatedSprites = new List<AnimatedSprite>();
 
+        TestEnemy worm;
+
         
 
         public GameScene()
         {
+            _inputManager = new InputManager();
+
             _uiManager = new UIManager();
             // add UI components to the manager
 
             _overworldManager = new OverworldManager(100);
 
-            player = new Player();
+            player = new Player(new Vector2f(0,0));
 
             _viewCamera = new ViewCamera();
 
@@ -51,6 +60,10 @@ namespace game.Scenes
 
             follower.OnSpawnThunder += SpawnThunder;
 
+            worm = new TestEnemy(player.Position, 100f);
+
+            animatedSprites.Add(worm);
+
         }
 
         private void SpawnThunder(ThunderStrike obj)
@@ -64,19 +77,45 @@ namespace game.Scenes
 
         }
 
-        public override void Update()
+        private void HandlePlayerMovement(float deltaTime)
         {
+            Vector2f movement = new Vector2f(0, 0);
+
+            if (_inputManager.IsKeyPressed(Keyboard.Key.W))
+            {
+                player.MoveUp(deltaTime);
+            }
+            if (_inputManager.IsKeyPressed(Keyboard.Key.S))
+            {
+                player.MoveDown(deltaTime);
+            }
+            if (_inputManager.IsKeyPressed(Keyboard.Key.A))
+            {
+                player.MoveLeft(deltaTime);
+            }
+            if (_inputManager.IsKeyPressed(Keyboard.Key.D))
+            {
+                player.MoveRight(deltaTime);
+            }
+        }
+
+        public override void Update(float deltaTime)
+        {
+            _inputManager.Update();
+
+            HandlePlayerMovement(deltaTime);
+
             _uiManager.Update();
-            player.Update();
+            player.Update(deltaTime);
             _viewCamera.Update(player.Position);
             follower.Update(player.Position);
-            
+            worm.Update(player, deltaTime);
         }
 
         public override void Draw()
         {
             _uiManager.Draw();
-            _overworldManager.Draw();
+            _overworldManager?.Draw();
             player.Draw();
             HandleAnimations();
         }

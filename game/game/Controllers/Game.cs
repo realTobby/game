@@ -28,7 +28,7 @@ namespace game.Controllers
 
         public Clock GameClock = new Clock();
 
-        public float GetDeltaTime() => GameClock.Restart().AsSeconds();
+        //public float GetDeltaTime() => GameClock.ElapsedTime.AsSeconds();
 
         public TextureLoader TextureLoader = new TextureLoader();
 
@@ -43,6 +43,9 @@ namespace game.Controllers
 
             var mode = new VideoMode(800, 600);
             _gameWindow = new RenderWindow(mode, "Game");
+
+            _gameWindow.SetFramerateLimit(60);
+
             _gameWindow.Closed += (sender, e) => _gameWindow.Close();
 
             sceneManager = new SceneManager();
@@ -69,8 +72,16 @@ namespace game.Controllers
                 // Clear screen
                 _gameWindow.Clear(SFML.Graphics.Color.Black);
 
-                sceneManager.Update();
+                float deltaTime = GameClock.ElapsedTime.AsSeconds();
+
+                Console.WriteLine("Delta Time: " + deltaTime + " seconds");
+
+                GameClock.Restart();
+
+                sceneManager.Update(deltaTime);
                 sceneManager.Draw();
+
+                GameClock.Restart();
 
                 // Update the window
                 _gameWindow.Display();

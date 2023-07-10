@@ -9,7 +9,7 @@ namespace game.Scenes
     public abstract class Scene
     {
         public abstract void LoadContent();
-        public abstract void Update();
+        public abstract void Update(float deltaTime);
         public abstract void Draw();
         public abstract void UnloadContent();
     }

@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>WinExe</OutputType>
+    <OutputType>Exe</OutputType>
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
@@ -13,6 +13,9 @@
 
   <ItemGroup>
     <None Update="Assets\BGM\Venus.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\Entities\Enemies\TestEnemy.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Assets\Entities\priestess\priestess_0.png">
@@ -72,6 +75,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Assets\Entities\Enemies\" />
     <Folder Include="Assets\Fonts\" />
     <Folder Include="Assets\BGM\" />
     <Folder Include="Assets\SFX\" />

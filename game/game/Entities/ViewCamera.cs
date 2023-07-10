@@ -50,25 +50,25 @@ namespace game.Entities
 
         private void DebugFreeCam()
         {
-            float deltaTime = Game.Instance.GetDeltaTime();
+            //float deltaTime = Game.Instance.GetDeltaTime();
 
-            Vector2f desiredPosition = view.Center;
+            //Vector2f desiredPosition = view.Center;
 
-            if (Keyboard.IsKeyPressed(Keyboard.Key.Left))
-                //view.Move(new Vector2f(-cameraSpeed * deltaTime.AsSeconds(), 0));
-                desiredPosition.X = -cameraSpeed * deltaTime;
-            if (Keyboard.IsKeyPressed(Keyboard.Key.Right))
-                //view.Move(new Vector2f(cameraSpeed * deltaTime.AsSeconds(), 0));
-                desiredPosition.X = cameraSpeed * deltaTime;
-            if (Keyboard.IsKeyPressed(Keyboard.Key.Up))
-                //view.Move(new Vector2f(0, -cameraSpeed * deltaTime.AsSeconds()));
-                desiredPosition.Y = -cameraSpeed * deltaTime;
-            if (Keyboard.IsKeyPressed(Keyboard.Key.Down))
-                //view.Move(new Vector2f(0, cameraSpeed * deltaTime.AsSeconds()));
-                desiredPosition.Y = cameraSpeed * deltaTime;
+            //if (Keyboard.IsKeyPressed(Keyboard.Key.Left))
+            //    //view.Move(new Vector2f(-cameraSpeed * deltaTime.AsSeconds(), 0));
+            //    desiredPosition.X = -cameraSpeed * deltaTime;
+            //if (Keyboard.IsKeyPressed(Keyboard.Key.Right))
+            //    //view.Move(new Vector2f(cameraSpeed * deltaTime.AsSeconds(), 0));
+            //    desiredPosition.X = cameraSpeed * deltaTime;
+            //if (Keyboard.IsKeyPressed(Keyboard.Key.Up))
+            //    //view.Move(new Vector2f(0, -cameraSpeed * deltaTime.AsSeconds()));
+            //    desiredPosition.Y = -cameraSpeed * deltaTime;
+            //if (Keyboard.IsKeyPressed(Keyboard.Key.Down))
+            //    //view.Move(new Vector2f(0, cameraSpeed * deltaTime.AsSeconds()));
+            //    desiredPosition.Y = cameraSpeed * deltaTime;
 
-            Vector2f roundedPosition = new Vector2f((float)Math.Round(desiredPosition.X), (float)Math.Round(desiredPosition.Y));
-            view.Center += roundedPosition;
+            //Vector2f roundedPosition = new Vector2f((float)Math.Round(desiredPosition.X), (float)Math.Round(desiredPosition.Y));
+            //view.Center += roundedPosition;
 
         }
 

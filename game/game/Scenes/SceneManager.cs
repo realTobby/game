@@ -28,10 +28,10 @@ namespace game.Scenes
             scenes.Pop();
         }
 
-        public void Update()
+        public void Update(float deltaTime)
         {
             Scene scene = scenes.Peek();
-            scene.Update();
+            scene.Update(deltaTime);
         }
 
         public void Draw()

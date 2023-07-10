@@ -44,7 +44,7 @@ namespace game.Scenes
             // load resources
         }
 
-        public override void Update()
+        public override void Update(float deltaTime)
         {
             uiManager.Update();
         }
