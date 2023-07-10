@@ -60,7 +60,10 @@ namespace game.Controllers
             //testThunder.IsSingleShotAnimation = true;
             //animatedSprites.Add(testThunder);
 
-            follower = new Enemy(player.Position, player.Position, .5f, Time.FromSeconds(1), new AnimatedSprite(TextureLoader.Instance.GetTexture("thunderStrike", "VFX"), 1, 13, Time.FromSeconds(0.1f)));
+            follower = new Enemy(player.Position, player.Position, 0, Time.FromSeconds(1f), new AnimatedSprite(TextureLoader.Instance.GetTexture("thunderStrike", "VFX"), 1, 13, Time.FromSeconds(0.1f)));
+
+            AnimatedSprite explosion = new AnimatedSprite(TextureLoader.Instance.GetTexture("EXPLOSION", "VFX"), 1, 12, Time.FromSeconds(0.1f));
+            animatedSprites.Add(explosion);
 
         }
 

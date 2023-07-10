@@ -54,6 +54,9 @@
     <None Update="Assets\testTileTexture.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Assets\VFX\EXPLOSION.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Assets\VFX\thunderStrike.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
