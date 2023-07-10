@@ -13,6 +13,8 @@ namespace game.Managers
         private static TextureLoader _instance;
         public static TextureLoader Instance => _instance;
 
+        public Dictionary<string, Texture> TextureCache = new Dictionary<string, Texture>(); 
+
         public TextureLoader()
         {
             if (_instance == null) _instance = this;
@@ -20,7 +22,12 @@ namespace game.Managers
 
         public Texture GetTexture(string textureName, string category)
         {
-            return new Texture($"Assets/{category}/{textureName}.png");
+            string key = $"{category}/{textureName}";
+            if(!TextureCache.ContainsKey(key))
+            {
+                TextureCache.Add(key, new Texture($"Assets/{category}/{textureName}.png"));
+            }
+            return TextureCache[key];
         }
 
     }
