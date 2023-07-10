@@ -1,4 +1,5 @@
-﻿using game.Models;
+﻿using game.Controllers;
+using game.Models;
 using SFML.Graphics;
 using SFML.System;
 using SFML.Window;
@@ -14,22 +15,18 @@ namespace game.Entities
     {
         private Vector2f precisePosition;
 
-        RenderWindow _window;
-
         private float speed = 150f; // Change this value to adjust player's speed
 
 
 
-        public Player(RenderWindow window) : base("Entities", "priestess", 4)
+        public Player() : base("Entities", "priestess", 4)
         {
-            _window = window;
-            //precisePosition = base.AnimatedSprite.
-
-           
         }
 
-        public void Update(float deltaTime)
+        public void Update()
         {
+            float deltaTime = Game.Instance.GetDeltaTime();
+
             Vector2f movement = new Vector2f(0, 0);
 
             if (Keyboard.IsKeyPressed(Keyboard.Key.W))
@@ -65,7 +62,7 @@ namespace game.Entities
             //base.Sprite.Position = roundedPosition;
             AnimatedSprite.SetPosition(roundedPosition);
 
-            AnimatedSprite.Draw(_window);
+            AnimatedSprite.Draw();
         }
 
         public Vector2f Position

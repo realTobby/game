@@ -1,6 +1,4 @@
-﻿using game.Managers;
-using SFML.Graphics;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,33 +6,34 @@ using System.Threading.Tasks;
 
 namespace game.UI
 {
-    public enum MenuType
-    {
-        MainMenu,
-        Ingame
-    }
-
-    // todo: interface for menu
-    // easily swap menu implementation to show different menus
-
     public class UIManager
     {
-        
-
-        public List<Drawable> UIElements = new List<Drawable>();
+        private List<UIComponent> components;
 
         public UIManager()
         {
-            //GameManager.Instance.OnRedrawUI += Draw;
+            components = new List<UIComponent>();
+        }
+
+        public void AddComponent(UIComponent component)
+        {
+            components.Add(component);
+        }
+
+        public void Update()
+        {
+            foreach (UIComponent component in components)
+            {
+                component.Update();
+            }
         }
 
         public void Draw()
         {
-            foreach(var item in UIElements)
+            foreach (UIComponent component in components)
             {
-                //GameManager.Instance.GetWindow().Draw(item);
+                component.Draw();
             }
         }
-
     }
 }

@@ -1,5 +1,6 @@
 ﻿using game.Managers;
 using game.Models;
+using game.Scenes;
 using SFML.Graphics;
 using SFML.System;
 using System;
@@ -20,6 +21,8 @@ namespace game.Entities
 
         private Time spawnCooldown;
         private Clock spawnTimer;
+
+        public Action<ThunderStrike> OnSpawnThunder { get; set; }
 
         public Enemy(Vector2f initialPosition, Vector2f target, float followDelay, Time spawnCooldown)
         {
@@ -67,7 +70,8 @@ namespace game.Entities
 
             // Add the new sprite to a list of sprites in your game
             // You'll need to provide this list
-            game.Controllers.Game.Instance.animatedSprites.Add(newThunder);
+            //game.Controllers.Game.Instance.animatedSprites.Add(newThunder);
+            OnSpawnThunder?.Invoke(newThunder);
         }
 
         public void Draw(RenderWindow window)

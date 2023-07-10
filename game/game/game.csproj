@@ -60,6 +60,9 @@
     <None Update="Assets\testTileTexture.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Assets\UI\startGameButton.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Assets\VFX\EXPLOSION.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

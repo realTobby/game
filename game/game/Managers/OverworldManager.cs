@@ -60,11 +60,11 @@ namespace game.Managers
             }
         }
 
-        public void Draw(RenderWindow _window)
+        public void Draw()
         {
             foreach(var tile in OverworldTiles)
             {
-                _window.Draw(tile.Sprite);
+                game.Controllers.Game.Instance.GetRenderWindow().Draw(tile.Sprite);
 
                 
 
@@ -74,7 +74,7 @@ namespace game.Managers
             {
                 if (tile.Object != null)
                 {
-                    _window.Draw(tile.Object);
+                    game.Controllers.Game.Instance.GetRenderWindow().Draw(tile.Object);
                 }
             }
 

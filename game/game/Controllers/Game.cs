@@ -1,6 +1,7 @@
 ﻿using game.Entities;
 using game.Managers;
 using game.Models;
+using game.Scenes;
 using game.UI;
 using SFML.Audio;
 using SFML.Graphics;
@@ -19,139 +20,61 @@ namespace game.Controllers
         private static Game _instance;
         public static Game Instance => _instance;
 
-        private TextureLoader _textureLoader;
         private RenderWindow _gameWindow;
 
-        private UIManager _uiManager;
+        private SceneManager sceneManager;
 
-        private OverworldManager _overworldManager;
+        public RenderWindow GetRenderWindow() => _gameWindow;
 
-        private Clock _uniClock;
+        public Clock GameClock = new Clock();
 
-        private Player player;
+        public float GetDeltaTime() => GameClock.Restart().AsSeconds();
 
-        private ViewCamera _viewCamera;
+        public TextureLoader TextureLoader = new TextureLoader();
 
-        private AnimatedSprite testThunder;
+        public void SceneTransition(Scene nextScene)
+        {
+            sceneManager.PushScene(nextScene);
+        }
 
         public Game()
         {
             if (_instance == null) _instance = this;
-        }
-
-        public void Init()
-        {
-            _uniClock = new Clock();
-            _uniClock.Restart();
-
-            _textureLoader = new TextureLoader();
-
-            _uiManager = new UIManager();
-            _overworldManager = new OverworldManager(100);
 
             var mode = new VideoMode(800, 600);
             _gameWindow = new RenderWindow(mode, "Game");
             _gameWindow.Closed += (sender, e) => _gameWindow.Close();
 
-            player = new Player(_gameWindow);
+            sceneManager = new SceneManager();
 
-            _viewCamera = new ViewCamera(_gameWindow);
-
-            //testThunder = new AnimatedSprite(TextureLoader.Instance.GetTexture("thunderStrike", "VFX"), 1, 13, Time.FromSeconds(0.1f));
-            //testThunder.IsSingleShotAnimation = true;
-            //animatedSprites.Add(testThunder);
-
-            follower = new Enemy(player.Position, player.Position, 0, Time.FromSeconds(.5f));
-
-            //AnimatedSprite explosion = new AnimatedSprite(TextureLoader.Instance.GetTexture("EXPLOSION", "VFX"), 1, 12, Time.FromSeconds(0.1f));
-            //animatedSprites.Add(explosion);
-
+            sceneManager.PushScene(new MainMenuScene());
+            //sceneManager.PushScene(new GameScene());
         }
-
-        public Enemy follower;
-
-        List<Sprite> testDebug = new List<Sprite>();
 
         public void Run()
         {
-
             // Load the music
             Music backgroundMusic = new Music("Assets/BGM/Venus.wav");
 
             // Set the music to loop
             backgroundMusic.Loop = true;
-            backgroundMusic.Volume = 50;
-            // Start playing the music
+            backgroundMusic.Volume = 35;
             backgroundMusic.Play();
-
 
             while (_gameWindow.IsOpen)
             {
-                float deltaTime = _uniClock.Restart().AsSeconds();
-
                 // Process events
                 _gameWindow.DispatchEvents();
 
                 // Clear screen
                 _gameWindow.Clear(SFML.Graphics.Color.Black);
 
-                Update(deltaTime);
-                Draw(deltaTime);
-
-                HandleAnimations();
+                sceneManager.Update();
+                sceneManager.Draw();
 
                 // Update the window
                 _gameWindow.Display();
-                //_uniClock.Restart();
             }
         }
-
-        private void Update(float deltaTime)
-        {
-            player.Update(deltaTime);
-
-            //_overworldManager.OnPlayerMove(player.Position);
-
-            _viewCamera.Update(deltaTime, player.Position);
-
-            follower.Update(player.Position);
-
-        }
-
-        public List<AnimatedSprite> animatedSprites = new List<AnimatedSprite>();
-
-        private void HandleAnimations()
-        {
-            foreach (var sprite in animatedSprites.ToList())
-            {
-                if (sprite.IsFinished)
-                {
-                    animatedSprites.Remove(sprite);
-                }
-                else
-                {
-                    sprite.Update();
-                    sprite.Draw(_gameWindow);
-                }
-            }
-        }
-
-        private void Draw(float deltaTime)
-        { 
-            _overworldManager.Draw(_gameWindow);
-
-            player.Draw();
-
-            _viewCamera.Draw();
-
-            //testThunder.DebugDrawAllFrames(_gameWindow);
-
-
-        }
-
-
-
-
-
     }
 }

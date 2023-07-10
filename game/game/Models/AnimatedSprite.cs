@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 namespace game.Models
 {
     using System;
+    using game.Controllers;
     using game.Managers;
     using SFML.Graphics;
     using SFML.System;
@@ -77,9 +78,9 @@ namespace game.Models
             }
         }
 
-        public void Draw(RenderWindow window)
+        public void Draw()
         {
-            window.Draw(sprites[currentFrame]);
+            Game.Instance.GetRenderWindow().Draw(sprites[currentFrame]);
         }
 
         public void SetPosition(Vector2f position)
@@ -90,7 +91,7 @@ namespace game.Models
             }
         }
 
-        public void DebugDrawAllFrames(RenderWindow window)
+        public void DebugDrawAllFrames()
         {
             for (int i = 0; i < sprites.Length; i++)
             {
@@ -109,10 +110,10 @@ namespace game.Models
                     FillColor = Color.Transparent,
                     OutlineThickness = 1f
                 };
-                window.Draw(boundsRect);
+                Game.Instance.GetRenderWindow().Draw(boundsRect);
 
                 // Draw the sprite
-                window.Draw(spriteCopy);
+                Game.Instance.GetRenderWindow().Draw(spriteCopy);
             }
         }
 

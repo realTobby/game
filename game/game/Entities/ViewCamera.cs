@@ -1,4 +1,5 @@
 ﻿
+using game.Controllers;
 using game.Managers;
 using SFML.Graphics;
 using SFML.System;
@@ -13,7 +14,6 @@ namespace game.Entities
 {
     public class ViewCamera
     {
-        private RenderWindow _window;
 
         public View view;
 
@@ -23,13 +23,13 @@ namespace game.Entities
 
         public bool IsFlyToggled = false;
 
-        public ViewCamera(RenderWindow window)
+        public ViewCamera()
         {
-            _window = window;
-            view = new View(new FloatRect(0, 0, _window.Size.X/2, _window.Size.Y/2));
+
+            view = new View(new FloatRect(0, 0, game.Controllers.Game.Instance.GetRenderWindow().Size.X/2, game.Controllers.Game.Instance.GetRenderWindow().Size.Y/2));
         }
 
-        public void Update(float deltaTime, Vector2f targetPos)
+        public void Update(Vector2f targetPos)
         {
             TargetPosition = targetPos;
 
@@ -45,25 +45,27 @@ namespace game.Entities
 
             //GameManager.Instance.OnRedrawUI?.Invoke();
 
-            _window.SetView(view);
+            Game.Instance.GetRenderWindow().SetView(view);
         }
 
-        private void DebugFreeCam(Time deltaTime)
+        private void DebugFreeCam()
         {
+            float deltaTime = Game.Instance.GetDeltaTime();
+
             Vector2f desiredPosition = view.Center;
 
             if (Keyboard.IsKeyPressed(Keyboard.Key.Left))
                 //view.Move(new Vector2f(-cameraSpeed * deltaTime.AsSeconds(), 0));
-                desiredPosition.X = -cameraSpeed * deltaTime.AsSeconds();
+                desiredPosition.X = -cameraSpeed * deltaTime;
             if (Keyboard.IsKeyPressed(Keyboard.Key.Right))
                 //view.Move(new Vector2f(cameraSpeed * deltaTime.AsSeconds(), 0));
-                desiredPosition.X = cameraSpeed * deltaTime.AsSeconds();
+                desiredPosition.X = cameraSpeed * deltaTime;
             if (Keyboard.IsKeyPressed(Keyboard.Key.Up))
                 //view.Move(new Vector2f(0, -cameraSpeed * deltaTime.AsSeconds()));
-                desiredPosition.Y = -cameraSpeed * deltaTime.AsSeconds();
+                desiredPosition.Y = -cameraSpeed * deltaTime;
             if (Keyboard.IsKeyPressed(Keyboard.Key.Down))
                 //view.Move(new Vector2f(0, cameraSpeed * deltaTime.AsSeconds()));
-                desiredPosition.Y = cameraSpeed * deltaTime.AsSeconds();
+                desiredPosition.Y = cameraSpeed * deltaTime;
 
             Vector2f roundedPosition = new Vector2f((float)Math.Round(desiredPosition.X), (float)Math.Round(desiredPosition.Y));
             view.Center += roundedPosition;
@@ -80,13 +82,6 @@ namespace game.Entities
             view.Center = roundedPosition;
         }
 
-        public void Draw()
-        {
-            // draw ui
-
-
-
-        }
 
     }
 }
