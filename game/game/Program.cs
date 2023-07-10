@@ -1,12 +1,13 @@
-﻿
-using game;
+﻿using game.Controllers;
+using game.Managers;
 using System.Drawing;
 
 public class Program
 {
     public static void Main()
     {
-        GameManager gm = new GameManager();
+        Game gm = new Game();
+        gm.Init();
         gm.Run();
     }
 }
