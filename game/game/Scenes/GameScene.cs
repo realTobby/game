@@ -28,7 +28,9 @@ namespace game.Scenes
         private AnimatedSprite testThunder;
         private ZeusMode follower;
 
-        public List<AnimatedSprite> animatedSprites = new List<AnimatedSprite>();
+        public List<Entity> SpawnedEntities = new List<Entity>();
+
+        public List<Enemy> CurrentEnemies = new List<Enemy>();
 
         TestEnemy worm;
 
@@ -58,18 +60,55 @@ namespace game.Scenes
 
             _uiManager = new UIManager();
 
-            follower.OnSpawnThunder += SpawnThunder;
+            //follower.OnSpawnThunder += SpawnThunder;
 
-            worm = new TestEnemy(player.Position, 100f);
+            //worm = new TestEnemy(player.Position, 100f);
 
-            animatedSprites.Add(worm);
-
+            //animatedSprites.Add(worm);
+            RandomlySpawnEnemies(1f, 3f, 100f); // Example usage with a minimum interval of 2 seconds, maximum interval of 5 seconds, and a radius of 200 units
         }
 
-        private void SpawnThunder(ThunderStrike obj)
+        private void SpawnEnemiesAroundPlayer(Vector2f playerPosition, float radius)
         {
-            animatedSprites.Add(obj);
+            int numEnemies = 5; // Change the number of enemies as desired
+            float angleIncrement = 360f / numEnemies;
+            float currentAngle = 0f;
+
+            for (int i = 0; i < numEnemies; i++)
+            {
+                // Calculate the position of the enemy based on the angle and radius
+                float angleRad = MathF.PI * currentAngle / 180f;
+                float x = playerPosition.X + radius * MathF.Cos(angleRad);
+                float y = playerPosition.Y + radius * MathF.Sin(angleRad);
+
+                // Create and add the enemy to the list
+                TestEnemy enemy = new TestEnemy(new Vector2f(x, y), 100f);
+                CurrentEnemies.Add(enemy);
+
+                // Increment the angle for the next enemy
+                currentAngle += angleIncrement;
+            }
         }
+
+
+
+
+        private void RandomlySpawnEnemies(float minInterval, float maxInterval, float radius)
+        {
+            Random random = new Random();
+            float interval = random.Next((int)(minInterval * 1000), (int)(maxInterval * 1000)) / 1000f;
+
+            Task.Delay((int)(interval * 1000)).ContinueWith(_ =>
+            {
+                SpawnEnemiesAroundPlayer(player.Position, radius); // Pass the player's position here
+                RandomlySpawnEnemies(minInterval, maxInterval, radius);
+            });
+        }
+
+        //private void SpawnThunder(ThunderStrike obj)
+        //{
+        //    //SpawnedEntities.Add(obj);
+        //}
 
         public override void LoadContent()
         {
@@ -107,9 +146,27 @@ namespace game.Scenes
 
             _uiManager.Update();
             player.Update(deltaTime);
-            _viewCamera.Update(player.Position);
+            _viewCamera.Update(/*CurrentEnemies?.FirstOrDefault()?.Position ??*/ player.Position);
             follower.Update(player.Position);
-            worm.Update(player, deltaTime);
+            //worm.Update(player, deltaTime);
+            UpdateEnemies(deltaTime);
+
+        }
+
+        private void UpdateEnemies(float deltaTime)
+        {
+            foreach (Enemy enemy in CurrentEnemies.ToList())
+            {
+                enemy.Update(player, deltaTime);
+            }
+        }
+
+        private void DrawEnemies()
+        {
+            foreach (Enemy enemy in CurrentEnemies.ToList())
+            {
+                enemy.Draw();
+            }
         }
 
         public override void Draw()
@@ -117,8 +174,10 @@ namespace game.Scenes
             _uiManager.Draw();
             _overworldManager?.Draw();
             player.Draw();
-            HandleAnimations();
+            //HandleAnimations();
+            DrawEnemies();
         }
+
 
         public override void UnloadContent()
         {
@@ -127,11 +186,11 @@ namespace game.Scenes
 
         private void HandleAnimations()
         {
-            foreach (var sprite in animatedSprites.ToList())
+            foreach (var sprite in SpawnedEntities.ToList())
             {
                 if (sprite.IsFinished)
                 {
-                    animatedSprites.Remove(sprite);
+                    SpawnedEntities.Remove(sprite);
                 }
                 else
                 {

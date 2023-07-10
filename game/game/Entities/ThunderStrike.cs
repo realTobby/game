@@ -11,43 +11,43 @@ using System.Threading.Tasks;
 
 namespace game.Entities
 {
-    public class ThunderStrike : AnimatedSprite
-    {
-        public bool IsAudioPlaying = false;
+    //public class ThunderStrike : AnimatedSprite
+    //{
+    //    public bool IsAudioPlaying = false;
 
-        public int HitFrame = 5;
+    //    public int HitFrame = 5;
 
-        Sound sound = new Sound();
+    //    Sound sound = new Sound();
 
-        public ThunderStrike() : base(TextureLoader.Instance.GetTexture("thunderStrike", "VFX"), 1, 13, Time.FromSeconds(0.095f))
-        {
-            SoundBuffer buffer = new SoundBuffer("Assets/SFX/explosion.wav");
-            sound.Volume = 25;
-            sound.SoundBuffer = buffer;
-        }
+    //    public ThunderStrike() : base(TextureLoader.Instance.GetTexture("thunderStrike", "VFX"), 1, 13, Time.FromSeconds(0.095f))
+    //    {
+    //        SoundBuffer buffer = new SoundBuffer("Assets/SFX/explosion.wav");
+    //        sound.Volume = 25;
+    //        sound.SoundBuffer = buffer;
+    //    }
 
-        public override void Update()
-        {
-            base.Update();
+    //    public override void Update()
+    //    {
+    //        base.Update();
 
-            if (base.currentFrame == HitFrame)
-            {
-                PlaySFX();
-            }
-            else if (base.currentFrame == 0 && IsAudioPlaying) // Animation has been reset
-            {
-                IsAudioPlaying = false;
-            }
-        }
+    //        if (base.currentFrame == HitFrame)
+    //        {
+    //            PlaySFX();
+    //        }
+    //        else if (base.currentFrame == 0 && IsAudioPlaying) // Animation has been reset
+    //        {
+    //            IsAudioPlaying = false;
+    //        }
+    //    }
 
-        private void PlaySFX()
-        {
-            if (!IsAudioPlaying)
-            {
-                IsAudioPlaying = true;
-                sound.Play();
-            }
-        }
-    }
+    //    private void PlaySFX()
+    //    {
+    //        if (!IsAudioPlaying)
+    //        {
+    //            IsAudioPlaying = true;
+    //            sound.Play();
+    //        }
+    //    }
+    //}
 
 }

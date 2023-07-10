@@ -14,8 +14,14 @@ namespace game.Entities.Enemies
     {
         // Texture texture, int rows, int columns, Time frameDuration
 
-        public TestEnemy(Vector2f initialPosition, float speed) : base(TextureLoader.Instance.GetTexture("TestEnemy", "Entities/Enemies"), 1, 9, Time.FromSeconds(0.1f), speed)
+        public TestEnemy(Vector2f initialPosition, float speed) : base(TextureLoader.Instance.GetTexture("TestEnemy", "Entities/Enemies"), 1, 9, Time.FromSeconds(0.1f), speed, initialPosition)
         {
+            base.MinDistance = 45f;
+        }
+
+        public override void Update(Player player, float deltaTime)
+        {
+            base.Update(player, deltaTime);
         }
 
         private void DebugDraw()
@@ -23,7 +29,10 @@ namespace game.Entities.Enemies
             RectangleShape debugShape = new RectangleShape(new Vector2f(50, 50)) // Change this size to a suitable value for your game
             {
                 Position = this.Position,
-                FillColor = Color.Red // This color will make the shape stand out
+                FillColor = Color.Transparent,
+                OutlineColor = Color.Red,
+                OutlineThickness = 2,
+                //Origin = new Vector2f(-25,-25)
             };
             Game.Instance.GetRenderWindow().Draw(debugShape);
         }

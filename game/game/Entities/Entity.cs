@@ -21,7 +21,7 @@ namespace game.Entities
             //SetPosition(Position);
         }
 
-        public Entity(Texture texture, int rows, int columns, Time frameDuration) : base(texture, rows, columns, frameDuration)
+        public Entity(Texture texture, int rows, int columns, Time frameDuration, Vector2f initialPosition) : base(texture, rows, columns, frameDuration, initialPosition)
         {
 
         }

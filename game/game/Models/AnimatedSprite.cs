@@ -19,6 +19,8 @@ namespace game.Models
         private Clock animationTimer;
         private Time frameDuration;
 
+        private bool isFlipped; // Flag to track the sprite flip state
+
         public Action OnAnimationFinish;
 
         public AnimatedSprite(string category, string entityName, int frameCount)
@@ -34,10 +36,13 @@ namespace game.Models
 
             this.frameDuration = Time.FromSeconds(0.1f);
             animationTimer = new Clock();
+            isFlipped = false; // Initialize the flag to false
         }
 
-        public AnimatedSprite(Texture spriteSheet, int rows, int columns, Time frameDuration)
+        public AnimatedSprite(Texture spriteSheet, int rows, int columns, Time frameDuration, Vector2f initialPos)
         {
+            
+
             int frameWidth = (int)spriteSheet.Size.X / columns;
             int frameHeight = (int)spriteSheet.Size.Y / rows;
 
@@ -55,6 +60,9 @@ namespace game.Models
 
             this.frameDuration = frameDuration;
             animationTimer = new Clock();
+            isFlipped = false; // Initialize the flag to false
+
+            SetPosition(initialPos);
         }
 
         public bool IsSingleShotAnimation = false;
@@ -85,9 +93,32 @@ namespace game.Models
 
         public void SetPosition(Vector2f position)
         {
+            Vector2f textureSize = new Vector2f(sprites[0].TextureRect.Width, sprites[0].TextureRect.Height);
+
             foreach (Sprite sprite in sprites)
             {
                 sprite.Position = position;
+                sprite.Origin = textureSize / 2f;
+            }
+        }
+
+        public void FlipSprite(bool flipped)
+        {
+            if (flipped && !isFlipped)
+            {
+                foreach (Sprite sprite in sprites)
+                {
+                    sprite.Scale = new Vector2f(-1, 1);
+                }
+                isFlipped = true;
+            }
+            else if (!flipped && isFlipped)
+            {
+                foreach (Sprite sprite in sprites)
+                {
+                    sprite.Scale = new Vector2f(1, 1);
+                }
+                isFlipped = false;
             }
         }
 
