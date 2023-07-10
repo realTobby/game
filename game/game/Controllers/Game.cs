@@ -61,10 +61,10 @@ namespace game.Controllers
             //testThunder.IsSingleShotAnimation = true;
             //animatedSprites.Add(testThunder);
 
-            follower = new Enemy(player.Position, player.Position, 0, Time.FromSeconds(1f), new AnimatedSprite(TextureLoader.Instance.GetTexture("thunderStrike", "VFX"), 1, 13, Time.FromSeconds(0.1f)));
+            follower = new Enemy(player.Position, player.Position, 0, Time.FromSeconds(.5f));
 
-            AnimatedSprite explosion = new AnimatedSprite(TextureLoader.Instance.GetTexture("EXPLOSION", "VFX"), 1, 12, Time.FromSeconds(0.1f));
-            animatedSprites.Add(explosion);
+            //AnimatedSprite explosion = new AnimatedSprite(TextureLoader.Instance.GetTexture("EXPLOSION", "VFX"), 1, 12, Time.FromSeconds(0.1f));
+            //animatedSprites.Add(explosion);
 
         }
 
@@ -80,7 +80,7 @@ namespace game.Controllers
 
             // Set the music to loop
             backgroundMusic.Loop = true;
-
+            backgroundMusic.Volume = 50;
             // Start playing the music
             backgroundMusic.Play();
 

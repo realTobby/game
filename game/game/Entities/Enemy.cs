@@ -13,7 +13,6 @@ namespace game.Entities
     public class Enemy
     {
         public Vector2f Position { get; set; }
-        public AnimatedSprite Sprite { get; set; }
 
         private Vector2f target;
         private float followDelay;
@@ -22,13 +21,12 @@ namespace game.Entities
         private Time spawnCooldown;
         private Clock spawnTimer;
 
-        public Enemy(Vector2f initialPosition, Vector2f target, float followDelay, Time spawnCooldown, AnimatedSprite sprite)
+        public Enemy(Vector2f initialPosition, Vector2f target, float followDelay, Time spawnCooldown)
         {
             Position = initialPosition;
             this.target = target;
             this.followDelay = followDelay;
             this.spawnCooldown = spawnCooldown;
-            Sprite = sprite;
 
             followTimer = new Clock();
             spawnTimer = new Clock();
@@ -74,8 +72,6 @@ namespace game.Entities
 
         public void Draw(RenderWindow window)
         {
-            Sprite.SetPosition(Position);
-            Sprite.Draw(window);
         }
     }
 }

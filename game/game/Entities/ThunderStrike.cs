@@ -19,7 +19,7 @@ namespace game.Entities
 
         Sound sound = new Sound();
 
-        public ThunderStrike() : base(TextureLoader.Instance.GetTexture("thunderStrike", "VFX"), 1, 13, Time.FromSeconds(0.1f))
+        public ThunderStrike() : base(TextureLoader.Instance.GetTexture("thunderStrike", "VFX"), 1, 13, Time.FromSeconds(0.08f))
         {
             SoundBuffer buffer = new SoundBuffer("Assets/SFX/explosion.wav");
             sound.Volume = 50f;
