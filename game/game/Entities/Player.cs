@@ -18,10 +18,14 @@ namespace game.Entities
 
         private float speed = 150f; // Change this value to adjust player's speed
 
-        public Player(RenderWindow window) : base(new Texture("Assets/playerPlaceholder.png"))
+        
+
+        public Player(RenderWindow window)
         {
             _window = window;
-            precisePosition = base.Sprite.Position;
+            //precisePosition = base.AnimatedSprite.
+
+           
         }
 
         public void Update(float deltaTime)
@@ -51,14 +55,17 @@ namespace game.Entities
 
             precisePosition += movement;
 
-            base.Sprite.Position = new Vector2f((float)Math.Round(precisePosition.X), (float)Math.Round(precisePosition.Y));
+            AnimatedSprite.Update();
+            AnimatedSprite.SetPosition(new Vector2f((float)Math.Round(precisePosition.X), (float)Math.Round(precisePosition.Y)));
         }
 
         public void Draw()
         {
             Vector2f roundedPosition = new Vector2f((float)Math.Round(Position.X), (float)Math.Round(Position.Y));
-            base.Sprite.Position = roundedPosition;
-            _window.Draw(base.Sprite);
+            //base.Sprite.Position = roundedPosition;
+            AnimatedSprite.SetPosition(roundedPosition);
+
+            AnimatedSprite.Draw(_window);
         }
 
         public Vector2f Position
@@ -67,7 +74,8 @@ namespace game.Entities
             set
             {
                 precisePosition = value;  // set both precise position
-                base.Sprite.Position = new Vector2f((float)Math.Round(value.X), (float)Math.Round(value.Y));  // and sprite position
+                //base.Sprite.Position = new Vector2f((float)Math.Round(value.X), (float)Math.Round(value.Y));  // and sprite position
+                base.AnimatedSprite.SetPosition(new Vector2f((float)Math.Round(value.X), (float)Math.Round(value.Y)));
             }
         }
     }

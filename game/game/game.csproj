@@ -12,6 +12,21 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="Assets\Entities\priestess\priestess_0.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\Entities\priestess\priestess_1.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\Entities\priestess\priestess_2.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\Entities\priestess\priestess_3.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\Entities\priestess\priestess_4.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Assets\Fonts\jellyjam.otf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -28,7 +43,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Assets\Tiles\grassyTile.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Assets\playerPlaceholder.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

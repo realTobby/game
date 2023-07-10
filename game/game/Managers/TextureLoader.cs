@@ -30,5 +30,20 @@ namespace game.Managers
             return TextureCache[key];
         }
 
+        public Texture[] GetAnimations(string assetPath,string entityName, int frameCount)
+        {
+            Texture[] textures = new Texture[frameCount];
+            for (int i = 0; i < frameCount; i++)
+            {
+                string key = $"{entityName}_{i}";
+                if (!TextureCache.ContainsKey(key))
+                {
+                    TextureCache.Add(key, new Texture($"{assetPath}/{entityName}_{i}.png"));
+                }
+                textures[i] = TextureCache[key];
+            }
+            return textures;
+        }
+
     }
 }

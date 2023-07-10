@@ -35,13 +35,13 @@ namespace game.Managers
 
             StartCenterPos = new Vector2i(startGridSize / 2, startGridSize / 2);
             // generate a 10x10 grid of tiles
-            for (int x = startX; x < startX+startGridSize; x++)
+            for (int x = startX; x < startX + startGridSize; x++)
             {
-                for(int y = startY; y < startY+startGridSize; y++)
+                for (int y = startY; y < startY + startGridSize; y++)
                 {
-                    var newTile = new OverworldTile(TextureLoader.Instance.GetTexture("grassyTile", "Tiles"), new Vector2f(x * 16, y * 16));
+                    var newTile = new OverworldTile(TextureLoader.Instance.GetTexture("grassyTile", "Tiles"), new Vector2f(x * 32, y * 32));
 
-                    if(rnd.Next(100) > 80)
+                    if (rnd.Next(100) > 80)
                     {
                         if (rnd.Next(100) > 50)
                         {
@@ -52,8 +52,7 @@ namespace game.Managers
                             newTile.Object = new Sprite(TextureLoader.Instance.GetTexture("tree2", "Objects"));
                         }
 
-                        newTile.Object.Position = newTile.Position;
-                        newTile.Object.Position = new Vector2f(newTile.Object.Position.X, newTile.Object.Position.Y-7);
+                        newTile.Object.Position = new Vector2f(newTile.Position.X+24, newTile.Position.Y-2);
                     }
 
                     OverworldTiles.Add(newTile);

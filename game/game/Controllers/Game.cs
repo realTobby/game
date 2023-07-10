@@ -35,7 +35,7 @@ namespace game.Controllers
             _textureLoader = new TextureLoader();
 
             _uiManager = new UIManager();
-            _overworldManager = new OverworldManager(50);
+            _overworldManager = new OverworldManager(100);
 
             var mode = new VideoMode(800, 600);
             _gameWindow = new RenderWindow(mode, "Game");
@@ -48,9 +48,23 @@ namespace game.Controllers
             
         }
 
+        List<Sprite> testDebug = new List<Sprite>();
+
         public void Run()
         {
-            while(_gameWindow.IsOpen)
+            var frames =  TextureLoader.Instance.GetAnimations($"Assets/Entities/priestess", "priestess", 4);
+
+            foreach(var item in frames)
+            {
+                var spr = new Sprite(item);
+                testDebug.Add(spr);
+            }
+
+            
+
+
+
+            while (_gameWindow.IsOpen)
             {
                 float deltaTime = _uniClock.Restart().AsSeconds();
 

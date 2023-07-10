@@ -21,7 +21,7 @@ namespace game.Models
         public OverworldTile(Texture texture, Vector2f pos)
         {
             Sprite = new Sprite(texture);
-            Position = pos;
+            Position = new Vector2f(pos.X - pos.Y, (pos.X + pos.Y) / 2);
         }
 
         public Sprite Object { get; set; } = null;

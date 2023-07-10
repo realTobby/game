@@ -9,11 +9,14 @@ namespace game.Models
 {
     public class DrawableEntity
     {
-        public Sprite Sprite;
+        public AnimatedSprite AnimatedSprite;
 
-        public DrawableEntity(Texture texture)
+        //public Sprite Sprite;
+
+        public DrawableEntity()
         {
-            Sprite = new Sprite(texture);
+            //Sprite = new Sprite(texture);
+            AnimatedSprite = new AnimatedSprite("Entities", "priestess", 4);
         }
 
 
