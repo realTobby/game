@@ -54,13 +54,23 @@ namespace game.Models
             animationTimer = new Clock();
         }
 
+        public bool IsSingleShotAnimation = false;
+
+        // Property to indicate whether the animation has finished
+        public bool IsFinished { get; private set; }
+
         public void Update()
         {
             if (animationTimer.ElapsedTime > frameDuration)
             {
                 currentFrame = (currentFrame + 1) % sprites.Length;
-                //Console.WriteLine("AnimatedSprite: " + currentFrame);
                 animationTimer.Restart();
+
+                // If we've looped back to the beginning, the animation has finished
+                if (currentFrame == 0 && IsSingleShotAnimation == true)
+                {
+                    IsFinished = true;
+                }
             }
         }
 

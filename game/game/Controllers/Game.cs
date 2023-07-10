@@ -15,6 +15,9 @@ namespace game.Controllers
 {
     public class Game
     {
+        private static Game _instance;
+        public static Game Instance => _instance;
+
         private TextureLoader _textureLoader;
         private RenderWindow _gameWindow;
 
@@ -29,6 +32,11 @@ namespace game.Controllers
         private ViewCamera _viewCamera;
 
         private AnimatedSprite testThunder;
+
+        public Game()
+        {
+            if (_instance == null) _instance = this;
+        }
 
         public void Init()
         {
@@ -48,8 +56,15 @@ namespace game.Controllers
 
             _viewCamera = new ViewCamera(_gameWindow);
 
-            testThunder = new AnimatedSprite(TextureLoader.Instance.GetTexture("thunderStrike", "VFX"), 1, 13, Time.FromSeconds(0.1f));
+            //testThunder = new AnimatedSprite(TextureLoader.Instance.GetTexture("thunderStrike", "VFX"), 1, 13, Time.FromSeconds(0.1f));
+            //testThunder.IsSingleShotAnimation = true;
+            //animatedSprites.Add(testThunder);
+
+            follower = new Enemy(player.Position, player.Position, .5f, Time.FromSeconds(1), new AnimatedSprite(TextureLoader.Instance.GetTexture("thunderStrike", "VFX"), 1, 13, Time.FromSeconds(0.1f)));
+
         }
+
+        public Enemy follower;
 
         List<Sprite> testDebug = new List<Sprite>();
 
@@ -69,6 +84,8 @@ namespace game.Controllers
                 Update(deltaTime);
                 Draw(deltaTime);
 
+                HandleAnimations();
+
                 // Update the window
                 _gameWindow.Display();
                 //_uniClock.Restart();
@@ -83,8 +100,26 @@ namespace game.Controllers
 
             _viewCamera.Update(deltaTime, player.Position);
 
-            testThunder.Update();
+            follower.Update(player.Position);
 
+        }
+
+        public List<AnimatedSprite> animatedSprites = new List<AnimatedSprite>();
+
+        private void HandleAnimations()
+        {
+            foreach (var sprite in animatedSprites.ToList())
+            {
+                if (sprite.IsFinished)
+                {
+                    animatedSprites.Remove(sprite);
+                }
+                else
+                {
+                    sprite.Update();
+                    sprite.Draw(_gameWindow);
+                }
+            }
         }
 
         private void Draw(float deltaTime)
@@ -94,8 +129,6 @@ namespace game.Controllers
             player.Draw();
 
             _viewCamera.Draw();
-
-            testThunder.Draw(_gameWindow);
 
             //testThunder.DebugDrawAllFrames(_gameWindow);
 
