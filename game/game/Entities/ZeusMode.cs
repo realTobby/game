@@ -3,6 +3,7 @@ using game.Models;
 using game.Scenes;
 using SFML.Graphics;
 using SFML.System;
+using SFML.Window;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,8 +12,10 @@ using System.Threading.Tasks;
 
 namespace game.Entities
 {
-    public class Enemy
+    public class ZeusMode
     {
+        public bool IsActive { get; set; }
+
         public Vector2f Position { get; set; }
 
         private Vector2f target;
@@ -24,7 +27,10 @@ namespace game.Entities
 
         public Action<ThunderStrike> OnSpawnThunder { get; set; }
 
-        public Enemy(Vector2f initialPosition, Vector2f target, float followDelay, Time spawnCooldown)
+        // Variable to track the last frame's spacebar state
+        private bool wasSpacePressedLastFrame = false;
+
+        public ZeusMode(Vector2f initialPosition, Vector2f target, float followDelay, Time spawnCooldown)
         {
             Position = initialPosition;
             this.target = target;
@@ -33,10 +39,24 @@ namespace game.Entities
 
             followTimer = new Clock();
             spawnTimer = new Clock();
+
+            IsActive = true;
         }
 
         public void Update(Vector2f newTarget)
         {
+            // Check if the spacebar is currently being pressed
+            bool isSpacePressed = Keyboard.IsKeyPressed(Keyboard.Key.Space);
+
+            // Only toggle IsActive when the spacebar key is first pressed
+            if (isSpacePressed && !wasSpacePressedLastFrame)
+            {
+                IsActive = !IsActive;
+            }
+
+            // Update the last frame's spacebar state
+            wasSpacePressedLastFrame = isSpacePressed;
+
             this.target = newTarget;
 
             // Follow the target with a delay
@@ -49,7 +69,9 @@ namespace game.Entities
             // Spawn a new AnimatedSprite every few seconds
             if (spawnTimer.ElapsedTime > spawnCooldown)
             {
-                SpawnAnimatedSprite();
+                if(IsActive) SpawnAnimatedSprite();
+
+
                 spawnTimer.Restart();
             }
         }

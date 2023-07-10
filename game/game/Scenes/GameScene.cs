@@ -21,7 +21,7 @@ namespace game.Scenes
 
         private Player player;
         private AnimatedSprite testThunder;
-        private Enemy follower;
+        private ZeusMode follower;
 
         public List<AnimatedSprite> animatedSprites = new List<AnimatedSprite>();
 
@@ -42,7 +42,7 @@ namespace game.Scenes
             //testThunder.IsSingleShotAnimation = true;
             //animatedSprites.Add(testThunder);
 
-            follower = new Enemy(player.Position, player.Position, 0, Time.FromSeconds(.5f));
+            follower = new ZeusMode(player.Position, player.Position, 0, Time.FromSeconds(.5f));
 
             //AnimatedSprite explosion = new AnimatedSprite(TextureLoader.Instance.GetTexture("EXPLOSION", "VFX"), 1, 12, Time.FromSeconds(0.1f));
             //animatedSprites.Add(explosion);
