@@ -67,7 +67,7 @@ namespace game.Entities
 
         public void SetPosition(Vector2f position)
         {
-            Console.WriteLine($"SetPosition: {Position.ToString()} -> {position.ToString()}");
+            //Console.WriteLine($"SetPosition: {Position.ToString()} -> {position.ToString()}");
             Position = position;
             base.SetPosition(position);
         }

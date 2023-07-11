@@ -19,19 +19,24 @@ namespace game.Managers
 
         public void StartWave()
         {
-           // CurrentEnemies.Clear();
-
-            var toSpawnWaves = enemyWaves.Where(x => x.IsSpawned == false);
-
-            foreach(var item in toSpawnWaves.ToList())
+            Console.WriteLine("Current Enemy Count: " + CurrentEnemies.Count);
+            // CurrentEnemies.Clear();
+            if (CurrentEnemies.Count < 125)
             {
-                item.SpawnEnemies(CurrentEnemies);
+                var toSpawnWaves = enemyWaves.Where(x => x.IsSpawned == false);
+
+                foreach (var item in toSpawnWaves.ToList())
+                {
+                    item.SpawnEnemies(CurrentEnemies);
+                }
             }
+
+            
         }
 
         public void Update(Player player, float deltaTime)
         {
-            Console.WriteLine("Current Enemy Count: " + CurrentEnemies.Count);
+           
             // Update enemies in the current wave
             foreach (Enemy enemy in CurrentEnemies)
             {
