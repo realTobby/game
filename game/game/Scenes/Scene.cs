@@ -10,7 +10,7 @@ namespace game.Scenes
     {
         public abstract void LoadContent();
         public abstract void Update(float deltaTime);
-        public abstract void Draw();
+        public abstract void Draw(float deltaTime);
         public abstract void UnloadContent();
     }
 }

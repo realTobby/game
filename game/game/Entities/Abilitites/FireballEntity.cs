@@ -21,9 +21,9 @@ namespace game.Entities.Abilitites
             SetPosition(initialPosition);
         }
 
-        public override void Draw()
+        public override void Draw(float deltaTime)
         {
-            base.Draw();
+            base.Draw(deltaTime);
         }
 
         public override void Update()

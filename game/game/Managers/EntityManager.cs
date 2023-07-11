@@ -34,11 +34,11 @@ namespace game.Managers
             }
         }
 
-        public void DrawEntities()
+        public void DrawEntities(float deltaTime)
         {
             foreach (Entity entity in entities.ToList())
             {
-                entity.Draw();
+                entity.Draw(deltaTime);
             }
         }
     }

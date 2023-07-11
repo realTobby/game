@@ -15,7 +15,7 @@ public class Player : Entity
         : base("Entities", "priestess", 4, initialPosition)
     {
         precisePosition = initialPosition;
-        Abilities.Add(new FireballAbility(this, 1f, 25f, 5f)); // Example ability
+        Abilities.Add(new FireballAbility(this, 1.25f, 25f, 5f)); // Example ability
         // Add more abilities as needed
     }
 
@@ -29,11 +29,11 @@ public class Player : Entity
 
     }
 
-    public void Draw()
+    public void Draw(float deltaTime)
     {
         Vector2f roundedPosition = new Vector2f((float)Math.Round(precisePosition.X), (float)Math.Round(precisePosition.Y));
         base.SetPosition(roundedPosition);
-        base.Draw();
+        base.Draw(deltaTime);
     }
 
     public void MoveLeft(float deltaTime)

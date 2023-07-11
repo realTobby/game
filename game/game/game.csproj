@@ -12,6 +12,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="Assets\BGM\SuperHero_original.ogg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Assets\BGM\Venus.wav">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

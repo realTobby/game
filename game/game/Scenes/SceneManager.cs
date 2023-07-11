@@ -34,10 +34,10 @@ namespace game.Scenes
             scene.Update(deltaTime);
         }
 
-        public void Draw()
+        public void Draw(float deltaTime)
         {
             Scene scene = scenes.Peek();
-            scene.Draw();
+            scene.Draw(deltaTime);
         }
     }
 }

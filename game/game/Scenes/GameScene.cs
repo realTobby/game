@@ -79,31 +79,34 @@ namespace game.Scenes
             //RandomlySpawnEnemies(1f, 3f, 100f); // Example usage with a minimum interval of 2 seconds, maximum interval of 5 seconds, and a radius of 200 units
         }
 
-        private void CreateWaves()
+        private void GenerateNewWave()
         {
-            EnemyWave wave = new EnemyWave(1f, 35f); // Adjust the spawn interval and enemy speed as desired
-
-            int num = rnd.Next(5,20);
-            Vector2f point = player.Position;
-            float radius = 250f;
-
-            for (int i = 0; i < num; i++)
+            if(gameManager._waveManager.CurrentEnemies.Count < 125)
             {
+                EnemyWave wave = new EnemyWave(1f, 25f); // Adjust the spawn interval and enemy speed as desired
 
-                /* Distance around the circle */
-                var radians = 2 * MathF.PI / num * i;
+                int num = rnd.Next(5, 10);
+                Vector2f point = player.Position;
+                float radius = 300f;
 
-                /* Get the vector direction */
-                var vertical = MathF.Sin(radians);
-                var horizontal = MathF.Cos(radians);
+                for (int i = 0; i < num; i++)
+                {
 
-                var spawnDir = new Vector2f(horizontal, vertical);
-                var spawnPos = point + spawnDir * radius; // Radius is just the distance away from the point
+                    /* Distance around the circle */
+                    var radians = 2 * MathF.PI / num * i;
 
-                /* Now spawn */
-                wave.AddSpawnPosition(new Vector2f(spawnPos.X, spawnPos.Y));
+                    /* Get the vector direction */
+                    var vertical = MathF.Sin(radians);
+                    var horizontal = MathF.Cos(radians);
+
+                    var spawnDir = new Vector2f(horizontal, vertical);
+                    var spawnPos = point + spawnDir * radius; // Radius is just the distance away from the point
+
+                    /* Now spawn */
+                    wave.AddSpawnPosition(new Vector2f(spawnPos.X, spawnPos.Y));
+                }
+                gameManager._waveManager.AddWave(wave);
             }
-            gameManager._waveManager.AddWave(wave);
         }
 
         private void StartNextWave()
@@ -210,7 +213,7 @@ namespace game.Scenes
             if (waveTimer.ElapsedTime.AsSeconds() > waveCooldown)
             {
                 waveTimer.Restart();
-                CreateWaves();
+                GenerateNewWave();
                 StartNextWave();
                 waveCooldown = rnd.Next(5, 15);
             }
@@ -218,18 +221,18 @@ namespace game.Scenes
 
        
 
-        public override void Draw()
+        public override void Draw(float deltaTime)
         {
             _uiManager.Draw();
             _overworldManager?.Draw();
 
             //HandleAnimations();
-            gameManager._waveManager.DrawEnemies();
+            gameManager._waveManager.DrawEnemies(deltaTime);
 
 
-            player.Draw();
+            player.Draw(deltaTime);
 
-            gameManager.Draw();
+            gameManager.Draw(deltaTime);
 
         }
 

@@ -19,6 +19,10 @@ namespace game.Entities
         public int HP;
         public int MAXHP;
 
+        private float flashDuration = .1f; // Duration in seconds for the flash effect
+        private float flashTimer = 0f; // Timer for the flash effect
+
+
         public Enemy(string category, string entityName, int frameCount, Vector2f initialPosition, float speed)
             : base(category, entityName, frameCount, initialPosition)
         {
@@ -27,24 +31,54 @@ namespace game.Entities
             HP = MAXHP;
         }
 
-        public bool TakeDamage(int dmg)
-        {
-            Console.WriteLine("Taking dmg!");
-            HP -= dmg;
-            if(HP <= 0)
-            {
-                Console.WriteLine("IAM DEAD!");
-                GameManager.Instance._waveManager.RemoveEnemy(this);
-                return true;
-            }
-            return false;
-        }
-
         public Enemy(Texture texture, int rows, int columns, Time frameDuration, float speed, Vector2f initialPosition) : base(texture, rows, columns, frameDuration, initialPosition)
         {
             this.speed = speed;
             MAXHP = 5;
             HP = MAXHP;
+        }
+
+        public bool TakeDamage(int dmg)
+        {
+            //Console.WriteLine("Taking dmg!");
+            HP -= dmg;
+            if(HP <= 0)
+            {
+                
+                //Console.WriteLine("IAM DEAD!");
+                GameManager.Instance._waveManager.RemoveEnemy(this);
+                return true;
+            }
+            else
+            {
+                flashTimer = flashDuration; // Activate the flash effect
+            }
+            return false;
+        }
+
+        public override void Draw(float deltaTime)
+        {
+            base.Draw(deltaTime);
+
+            if (flashTimer > 0f)
+            {
+                flashTimer -= deltaTime;
+                if (flashTimer <= 0f)
+                {
+                    // Flash white if the timer is active
+                    for (int i = 0; i < base.sprites.Count(); i++)
+                    {
+                        base.sprites[i].Color = base.NormalColors[i];
+                    }
+                }
+                else
+                {
+                    foreach (var item in base.sprites.ToList())
+                    {
+                        item.Color = new Color(255, 255, 255, 128);
+                    }
+                }
+            }
         }
 
         public virtual void Update(Player player, float deltaTime)

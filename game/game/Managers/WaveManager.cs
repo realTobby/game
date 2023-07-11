@@ -31,7 +31,7 @@ namespace game.Managers
                 }
             }
 
-            Console.WriteLine("Current Enemy Count: " + CurrentEnemies.Count);
+            //Console.WriteLine("Current Enemy Count: " + CurrentEnemies.Count);
         }
 
         public void Update(Player player, float deltaTime)
@@ -71,11 +71,11 @@ namespace game.Managers
             CurrentEnemies.Remove(enemy);
         }
 
-        public void DrawEnemies()
+        public void DrawEnemies(float deltaTime)
         {
             foreach (Enemy enemy in CurrentEnemies)
             {
-                enemy.Draw();
+                enemy.Draw(deltaTime);
             }
         }
 

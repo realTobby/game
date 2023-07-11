@@ -21,17 +21,20 @@ namespace game.Models
 
         private bool isFlipped; // Flag to track the sprite flip state
 
+        public Color[] NormalColors;
+
         public Action OnAnimationFinish;
 
         public AnimatedSprite(string category, string entityName, int frameCount)
         {
             var animationFrames = TextureLoader.Instance.GetAnimations($"Assets/Entities/{entityName}", entityName, frameCount);
             sprites = new Sprite[frameCount];
-
+            NormalColors = new Color[frameCount];
             for (int i = 0; i < frameCount; i++)
             {
                 //IntRect textureRect = new IntRect(i * frameWidth, 0, frameWidth, frameHeight);
                 sprites[i] = new Sprite(animationFrames[i]);
+                NormalColors[i] = sprites[i].Color;
             }
 
             this.frameDuration = Time.FromSeconds(0.1f);
@@ -48,7 +51,7 @@ namespace game.Models
 
             int frameCount = rows * columns;
             sprites = new Sprite[frameCount];
-
+            NormalColors = new Color[frameCount];
             for (int i = 0; i < frameCount; i++)
             {
                 int row = i / columns;
@@ -56,6 +59,7 @@ namespace game.Models
 
                 IntRect textureRect = new IntRect(column * frameWidth, row * frameHeight, frameWidth, frameHeight);
                 sprites[i] = new Sprite(spriteSheet, textureRect);
+                NormalColors[i] = sprites[i].Color;
             }
 
             this.frameDuration = frameDuration;
@@ -86,7 +90,7 @@ namespace game.Models
             }
         }
 
-        public void Draw()
+        public void Draw(float deltaTime)
         {
             Game.Instance.GetRenderWindow().Draw(sprites[currentFrame]);
         }

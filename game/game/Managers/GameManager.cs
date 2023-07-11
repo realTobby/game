@@ -44,9 +44,9 @@ namespace game.Managers
             entityManager.UpdateEntities(deltaTime);
         }
 
-        public void Draw()
+        public void Draw(float deltaTime)
         {
-            entityManager.DrawEntities();
+            entityManager.DrawEntities(deltaTime);
         }
     }
 }

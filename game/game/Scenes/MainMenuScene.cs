@@ -49,7 +49,7 @@ namespace game.Scenes
             uiManager.Update();
         }
 
-        public override void Draw()
+        public override void Draw(float deltaTime)
         {
             uiManager.Draw();
         }

@@ -34,9 +34,9 @@ namespace game.Entities
 
         }
 
-        public virtual void Draw()
+        public virtual void Draw(float deltaTime)
         {
-            base.Draw();
+            base.Draw(deltaTime);
         }
     }
 }

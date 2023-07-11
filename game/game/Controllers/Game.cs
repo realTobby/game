@@ -32,7 +32,7 @@ namespace game.Controllers
 
         public TextureLoader TextureLoader = new TextureLoader();
 
-        Music backgroundMusic = new Music("Assets/BGM/Venus.wav");
+        Music backgroundMusic = new Music("Assets/BGM/SuperHero_original.ogg");
 
 
         public void SceneTransition(Scene nextScene)
@@ -82,7 +82,7 @@ namespace game.Controllers
                 GameClock.Restart();
 
                 sceneManager.Update(deltaTime);
-                sceneManager.Draw();
+                sceneManager.Draw(deltaTime);
 
                 GameClock.Restart();
 
