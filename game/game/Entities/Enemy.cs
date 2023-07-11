@@ -75,7 +75,7 @@ namespace game.Entities
                 {
                     foreach (var item in base.sprites.ToList())
                     {
-                        item.Color = new Color(255, 255, 255, 128);
+                        item.Color = new Color(0, 0, 0, 255);
                     }
                 }
             }
