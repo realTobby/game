@@ -30,9 +30,6 @@ namespace game.Managers
 
         public void SpawnEnemies(List<Enemy> enemies)
         {
-
-
-
             foreach (Vector2f position in spawnPositions)
             {
                 // Create an enemy at each spawn position

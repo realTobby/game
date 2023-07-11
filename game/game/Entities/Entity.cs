@@ -18,7 +18,6 @@ namespace game.Entities
             : base(category, entityName, frameCount)
         {
             Position = initialPosition;
-            //SetPosition(Position);
         }
 
         public Entity(Texture texture, int rows, int columns, Time frameDuration, Vector2f initialPosition) : base(texture, rows, columns, frameDuration, initialPosition)
@@ -26,12 +25,9 @@ namespace game.Entities
             Position = initialPosition;
         }
 
-
         public virtual void Update()
         {
             base.Update();
-
-
         }
 
         public virtual void Draw(float deltaTime)

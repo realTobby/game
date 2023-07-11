@@ -86,7 +86,6 @@
     <Folder Include="Assets\Fonts\" />
     <Folder Include="Assets\BGM\" />
     <Folder Include="Assets\SFX\" />
-    <Folder Include="Helpers\" />
   </ItemGroup>
 
 </Project>

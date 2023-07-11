@@ -1,5 +1,4 @@
-﻿using game.Controllers;
-using SFML.System;
+﻿using SFML.System;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,7 +24,7 @@ namespace game.UI
 
         public override void Update()
         {
-            //throw new NotImplementedException();
+            
         }
 
     }

@@ -1,5 +1,4 @@
-﻿using game.Controllers;
-using game.Managers;
+﻿using game.Managers;
 using SFML.Graphics;
 using SFML.System;
 using System;
@@ -13,20 +12,16 @@ namespace game.Entities.Enemies
 {
     public class TestEnemy : Enemy
     {
-        // Texture texture, int rows, int columns, Time frameDuration
-
         private RectangleShape debugDraw;
 
         public TestEnemy(Vector2f initialPosition, float speed) : base(TextureLoader.Instance.GetTexture("TestEnemy", "Entities/Enemies"), 1, 9, Time.FromSeconds(0.1f), speed, initialPosition)
         {
-            //Console.WriteLine("[NEW ENEMY CREATED!]");
-
             base.MinDistance = 45f;
 
             var width = sprites[0].TextureRect.Width;
             var height = sprites[0].TextureRect.Height;
 
-            debugDraw = new RectangleShape(new Vector2f(width/2, height/2)) // Change this size to a suitable value for your game
+            debugDraw = new RectangleShape(new Vector2f(width/2, height/2))
             {
                 Position = this.Position,
                 FillColor = Color.Transparent,
@@ -40,20 +35,16 @@ namespace game.Entities.Enemies
 
         public override void Update(Player player, float deltaTime)
         {
-            
             var width = sprites[0].TextureRect.Width;
             var height = sprites[0].TextureRect.Height;
             if(debugDraw != null)
             {
                 debugDraw.Position = new Vector2f(Position.X - width / 4, Position.Y - height / 4);
             }
-            
-
-
             base.Update(player, deltaTime);
         }
 
-        private void DebugDraw()
+        private void ShowDebugBoundaries()
         {
             if (debugDraw == null) return;
             Game.Instance.GetRenderWindow().Draw(debugDraw);
@@ -62,7 +53,7 @@ namespace game.Entities.Enemies
         public override void Draw(float deltaTime)
         {
             base.Draw(deltaTime);
-            //DebugDraw();
+            //ShowDebugBoundaries();
         }
 
     }

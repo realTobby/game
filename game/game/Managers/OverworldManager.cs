@@ -1,5 +1,4 @@
-﻿using game.Controllers;
-using game.Models;
+﻿using game.Models;
 using SFML.Graphics;
 using SFML.System;
 using System;
@@ -64,20 +63,16 @@ namespace game.Managers
         {
             foreach(var tile in OverworldTiles)
             {
-                game.Controllers.Game.Instance.GetRenderWindow().Draw(tile.Sprite);
-
-                
-
+                Game.Instance.GetRenderWindow().Draw(tile.Sprite);
             }
 
             foreach(var tile in OverworldTiles)
             {
                 if (tile.Object != null)
                 {
-                    game.Controllers.Game.Instance.GetRenderWindow().Draw(tile.Object);
+                    Game.Instance.GetRenderWindow().Draw(tile.Object);
                 }
             }
-
         }
 
         private bool ExistsTileAt(Vector2f pos)
@@ -111,16 +106,8 @@ namespace game.Managers
 
                         OverworldTiles.Add(newTile);
                     }
-
-                    
                 }
             }
-
-
-
-
         }
-
-
     }
 }

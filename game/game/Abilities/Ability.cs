@@ -13,7 +13,7 @@ namespace game.Abilities
         public string Name { get; set; }
         public int Damage { get; set; }
         public float Cooldown { get; set; }
-        public float LastActivatedTime { get; set; } // New property
+        public float LastActivatedTime { get; set; }
 
         public Clock abilityClock = new Clock();
 
@@ -22,7 +22,7 @@ namespace game.Abilities
             Name = name;
             Damage = damage;
             Cooldown = cooldown;
-            LastActivatedTime = 0f; // Initialize to 0
+            LastActivatedTime = 0f;
             abilityClock.Restart();
         }
 

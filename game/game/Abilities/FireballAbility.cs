@@ -16,7 +16,6 @@ namespace game.Abilities
     public class FireballAbility : Ability
     {
         private Player player;
-
         private float circleSpeed;
         private float circleRadius;
 
@@ -30,17 +29,11 @@ namespace game.Abilities
 
         public override void Activate()
         {
-            //Console.WriteLine("Fireball activated!");
-
-            // Find the nearest enemy to the player
             Enemy nearestEnemy = GameScene.Instance.FindNearestEnemy(player.Position, GameManager.Instance._waveManager.CurrentEnemies);
             if (nearestEnemy == null)
                 return;
-
-            //player.AbilityEntities.Add();
             GameManager.Instance.AddEntity(new FireballEntity(player.Position, nearestEnemy));
         }
-
 
         private Vector2f Normalize(Vector2f vector)
         {

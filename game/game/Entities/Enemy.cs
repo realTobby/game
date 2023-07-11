@@ -5,6 +5,7 @@ using SFML.System;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -40,18 +41,15 @@ namespace game.Entities
 
         public bool TakeDamage(int dmg)
         {
-            //Console.WriteLine("Taking dmg!");
             HP -= dmg;
             if(HP <= 0)
             {
-                
-                //Console.WriteLine("IAM DEAD!");
                 GameManager.Instance._waveManager.RemoveEnemy(this);
                 return true;
             }
             else
             {
-                flashTimer = flashDuration; // Activate the flash effect
+                flashTimer = flashDuration;
             }
             return false;
         }
@@ -59,13 +57,16 @@ namespace game.Entities
         public override void Draw(float deltaTime)
         {
             base.Draw(deltaTime);
+            HitFlash(deltaTime);
+        }
 
+        private void HitFlash(float deltaTime)
+        {
             if (flashTimer > 0f)
             {
                 flashTimer -= deltaTime;
                 if (flashTimer <= 0f)
                 {
-                    // Flash white if the timer is active
                     for (int i = 0; i < base.sprites.Count(); i++)
                     {
                         base.sprites[i].Color = base.NormalColors[i];
@@ -81,10 +82,20 @@ namespace game.Entities
             }
         }
 
-        public virtual void Update(Player player, float deltaTime)
+        private void FlipSprite(Vector2f direction)
         {
-            base.Update();
+            if (direction.X < 0)
+            {
+                FlipSprite(true);
+            }
+            else
+            {
+                FlipSprite(false);
+            }
+        }
 
+        private void MoveTowardsPlayer(Player player, float deltaTime)
+        {
             Vector2f direction = player.Position - Position;
             float magnitude = (float)Math.Sqrt(direction.X * direction.X + direction.Y * direction.Y);
 
@@ -92,36 +103,29 @@ namespace game.Entities
             {
                 direction = direction / magnitude; // Normalize the direction vector
 
-                if (direction.X < 0)
-                {
-                    FlipSprite(true);
-                }
-                else
-                {
-                    FlipSprite(false);
-                }
+                FlipSprite(direction);
 
-                // Check if the enemy is within the minimum distance threshold
                 if (magnitude > MinDistance)
                 {
                     Position += direction * speed * deltaTime;
-                    
+
                 }
             }
             else
             {
                 direction = new Vector2f(0, 0); // Or handle this case as appropriate for your game
             }
+        }
 
-            // Debug: print the enemy's position
-            //Console.WriteLine("Enemy position: " + Position.X + ", " + Position.Y);
+        public virtual void Update(Player player, float deltaTime)
+        {
+            base.Update();
+            MoveTowardsPlayer(player, deltaTime);
             SetPosition(Position);
-
         }
 
         public void SetPosition(Vector2f position)
         {
-            //Console.WriteLine($"SetPosition: {Position.ToString()} -> {position.ToString()}");
             Position = position;
             base.SetPosition(position);
         }

@@ -13,7 +13,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace game.Controllers
+namespace game
 {
     public class Game
     {
@@ -21,19 +21,11 @@ namespace game.Controllers
         public static Game Instance => _instance;
 
         private RenderWindow _gameWindow;
-
         private SceneManager sceneManager;
-
         public RenderWindow GetRenderWindow() => _gameWindow;
-
         public Clock GameClock = new Clock();
-
-        //public float GetDeltaTime() => GameClock.ElapsedTime.AsSeconds();
-
         public TextureLoader TextureLoader = new TextureLoader();
-
         Music backgroundMusic = new Music("Assets/BGM/SuperHero_original.ogg");
-
 
         public void SceneTransition(Scene nextScene)
         {
@@ -46,39 +38,25 @@ namespace game.Controllers
 
             var mode = new VideoMode(800, 600);
             _gameWindow = new RenderWindow(mode, "Game");
-
             _gameWindow.SetFramerateLimit(60);
-
             _gameWindow.Closed += (sender, e) => _gameWindow.Close();
 
             sceneManager = new SceneManager();
-
             sceneManager.PushScene(new MainMenuScene());
-            //sceneManager.PushScene(new GameScene());
         }
 
         public void Run()
         {
-            // Load the music
-            
-
-            // Set the music to loop
             backgroundMusic.Loop = true;
             backgroundMusic.Volume = 35;
             backgroundMusic.Play();
 
             while (_gameWindow.IsOpen)
             {
-                // Process events
                 _gameWindow.DispatchEvents();
-
-                // Clear screen
-                _gameWindow.Clear(SFML.Graphics.Color.Black);
+                _gameWindow.Clear(Color.Black);
 
                 float deltaTime = GameClock.ElapsedTime.AsSeconds();
-
-                //Console.WriteLine("Delta Time: " + deltaTime + " seconds");
-
                 GameClock.Restart();
 
                 sceneManager.Update(deltaTime);
@@ -86,7 +64,6 @@ namespace game.Controllers
 
                 GameClock.Restart();
 
-                // Update the window
                 _gameWindow.Display();
             }
         }

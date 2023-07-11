@@ -1,5 +1,4 @@
-﻿using game.Controllers;
-using game.Managers;
+﻿using game.Managers;
 using game.UI;
 using SFML.System;
 using System;

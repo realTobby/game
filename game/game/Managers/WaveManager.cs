@@ -9,9 +9,10 @@ namespace game.Managers
 {
     public class WaveManager
     {
-        public List<Enemy> CurrentEnemies = new List<Enemy>();
         private List<EnemyWave> enemyWaves = new List<EnemyWave>();
 
+        public List<Enemy> CurrentEnemies = new List<Enemy>();
+        
         public void AddWave(EnemyWave wave)
         {
             enemyWaves.Add(wave);
@@ -19,8 +20,6 @@ namespace game.Managers
 
         public void StartWave()
         {
-            
-            // CurrentEnemies.Clear();
             if (CurrentEnemies.Count < 125)
             {
                 var toSpawnWaves = enemyWaves.Where(x => x.IsSpawned == false);
@@ -30,35 +29,16 @@ namespace game.Managers
                     item.SpawnEnemies(CurrentEnemies);
                 }
             }
-
             //Console.WriteLine("Current Enemy Count: " + CurrentEnemies.Count);
         }
 
         public void Update(Player player, float deltaTime)
         {
-           
             // Update enemies in the current wave
             foreach (Enemy enemy in CurrentEnemies)
             {
                 enemy.Update(player, deltaTime);
             }
-
-            //// Check if all enemies in the current wave have been defeated
-            //if (CurrentEnemies.Count == 0)
-            //{
-            //    isWaveActive = false;
-            //    currentWaveIndex++;
-
-            //    if (currentWaveIndex < enemyWaves.Count)
-            //    {
-            //        // Start the next wave
-            //        StartWave();
-            //    }
-            //    else
-            //    {
-            //        // All waves have been completed
-            //    }
-            //}
         }
 
         public void AddEnemy(Enemy enemy)

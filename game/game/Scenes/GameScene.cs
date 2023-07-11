@@ -34,10 +34,6 @@ namespace game.Scenes
 
         public Player player;
 
-        TestEnemy worm;
-
-        
-
         private GameManager gameManager;
 
         public GameScene()
@@ -45,45 +41,25 @@ namespace game.Scenes
             if (_instance == null) _instance = this;
 
             _inputManager = new InputManager();
-
             _uiManager = new UIManager();
-            // add UI components to the manager
-
             _overworldManager = new OverworldManager(100);
 
             player = new Player(new Vector2f(0,0));
 
             _viewCamera = new ViewCamera();
 
-            //testThunder = new AnimatedSprite(TextureLoader.Instance.GetTexture("thunderStrike", "VFX"), 1, 13, Time.FromSeconds(0.1f));
-            //testThunder.IsSingleShotAnimation = true;
-            //animatedSprites.Add(testThunder);
-
-            //follower = new ZeusMode(player.Position, player.Position, 0, Time.FromSeconds(.5f));
-
-            //AnimatedSprite explosion = new AnimatedSprite(TextureLoader.Instance.GetTexture("EXPLOSION", "VFX"), 1, 12, Time.FromSeconds(0.1f));
-            //animatedSprites.Add(explosion);
-
             _uiManager = new UIManager();
-
-            //follower.OnSpawnThunder += SpawnThunder;
-
-            //worm = new TestEnemy(player.Position, 100f);
-
 
             waveTimer = new Clock();
 
             gameManager = GameManager.Instance;
-
-            ////animatedSprites.Add(worm);
-            //RandomlySpawnEnemies(1f, 3f, 100f); // Example usage with a minimum interval of 2 seconds, maximum interval of 5 seconds, and a radius of 200 units
         }
 
         private void GenerateNewWave()
         {
             if(gameManager._waveManager.CurrentEnemies.Count < 125)
             {
-                EnemyWave wave = new EnemyWave(1f, 25f); // Adjust the spawn interval and enemy speed as desired
+                EnemyWave wave = new EnemyWave(1f, 25f);
 
                 int num = rnd.Next(5, 10);
                 Vector2f point = player.Position;
@@ -91,18 +67,12 @@ namespace game.Scenes
 
                 for (int i = 0; i < num; i++)
                 {
-
-                    /* Distance around the circle */
                     var radians = 2 * MathF.PI / num * i;
-
-                    /* Get the vector direction */
                     var vertical = MathF.Sin(radians);
                     var horizontal = MathF.Cos(radians);
 
                     var spawnDir = new Vector2f(horizontal, vertical);
-                    var spawnPos = point + spawnDir * radius; // Radius is just the distance away from the point
-
-                    /* Now spawn */
+                    var spawnPos = point + spawnDir * radius;
                     wave.AddSpawnPosition(new Vector2f(spawnPos.X, spawnPos.Y));
                 }
                 gameManager._waveManager.AddWave(wave);
@@ -114,15 +84,9 @@ namespace game.Scenes
             gameManager._waveManager.StartWave();
         }
 
-        //private void SpawnThunder(ThunderStrike obj)
-        //{
-        //    //SpawnedEntities.Add(obj);
-        //}
-
         public override void LoadContent()
         {
             // load resources if needed
-
         }
 
         private void HandlePlayerMovement(float deltaTime)
@@ -155,11 +119,8 @@ namespace game.Scenes
 
             _uiManager.Update();
             player.Update(deltaTime);
-            _viewCamera.Update(/*CurrentEnemies?.FirstOrDefault()?.Position ??*/ player.Position);
-            //follower.Update(player.Position);
-            //worm.Update(player, deltaTime);
+            _viewCamera.Update(player.Position);
             gameManager._waveManager.Update(player, deltaTime);
-            //UpdateEnemies(deltaTime);
 
             UpdateEnemyWave();
 
@@ -242,21 +203,6 @@ namespace game.Scenes
             // unload resources
         }
 
-        //private void HandleAnimations()
-        //{
-        //    foreach (var sprite in SpawnedEntities.ToList())
-        //    {
-        //        if (sprite.IsFinished)
-        //        {
-        //            SpawnedEntities.Remove(sprite);
-        //        }
-        //        else
-        //        {
-        //            sprite.Update();
-        //            sprite.Draw();
-        //        }
-        //    }
-        //}
 
     }
 }

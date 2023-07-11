@@ -7,23 +7,23 @@ using System.Threading.Tasks;
 namespace game.Models
 {
     using System;
-    using game.Controllers;
+    using game;
     using game.Managers;
     using SFML.Graphics;
     using SFML.System;
 
     public class AnimatedSprite
     {
-        public int currentFrame;
-        public Sprite[] sprites;
         private Clock animationTimer;
         private Time frameDuration;
+        private bool isFlipped;
 
-        private bool isFlipped; // Flag to track the sprite flip state
-
+        public int currentFrame;
+        public Sprite[] sprites;
         public Color[] NormalColors;
-
         public Action OnAnimationFinish;
+        public bool IsSingleShotAnimation = false;
+        public bool IsFinished { get; private set; }
 
         public AnimatedSprite(string category, string entityName, int frameCount)
         {
@@ -32,7 +32,6 @@ namespace game.Models
             NormalColors = new Color[frameCount];
             for (int i = 0; i < frameCount; i++)
             {
-                //IntRect textureRect = new IntRect(i * frameWidth, 0, frameWidth, frameHeight);
                 sprites[i] = new Sprite(animationFrames[i]);
                 NormalColors[i] = sprites[i].Color;
             }
@@ -44,8 +43,6 @@ namespace game.Models
 
         public AnimatedSprite(Texture spriteSheet, int rows, int columns, Time frameDuration, Vector2f initialPos)
         {
-            
-
             int frameWidth = (int)spriteSheet.Size.X / columns;
             int frameHeight = (int)spriteSheet.Size.Y / rows;
 
@@ -64,15 +61,10 @@ namespace game.Models
 
             this.frameDuration = frameDuration;
             animationTimer = new Clock();
-            isFlipped = false; // Initialize the flag to false
+            isFlipped = false;
 
             SetPosition(initialPos);
         }
-
-        public bool IsSingleShotAnimation = false;
-
-        // Property to indicate whether the animation has finished
-        public bool IsFinished { get; private set; }
 
         public virtual void Update()
         {

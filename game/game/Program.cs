@@ -1,4 +1,4 @@
-﻿using game.Controllers;
+﻿using game;
 using game.Managers;
 using System.Drawing;
 
