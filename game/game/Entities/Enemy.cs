@@ -23,12 +23,13 @@ namespace game.Entities
             : base(category, entityName, frameCount, initialPosition)
         {
             this.speed = speed;
-            MAXHP = 2;
+            MAXHP = 5;
             HP = MAXHP;
         }
 
         public bool TakeDamage(int dmg)
         {
+            Console.WriteLine("Taking dmg!");
             HP -= dmg;
             if(HP <= 0)
             {
@@ -42,6 +43,8 @@ namespace game.Entities
         public Enemy(Texture texture, int rows, int columns, Time frameDuration, float speed, Vector2f initialPosition) : base(texture, rows, columns, frameDuration, initialPosition)
         {
             this.speed = speed;
+            MAXHP = 5;
+            HP = MAXHP;
         }
 
         public virtual void Update(Player player, float deltaTime)
