@@ -74,7 +74,7 @@ namespace game.Controllers
 
                 float deltaTime = GameClock.ElapsedTime.AsSeconds();
 
-                Console.WriteLine("Delta Time: " + deltaTime + " seconds");
+                //Console.WriteLine("Delta Time: " + deltaTime + " seconds");
 
                 GameClock.Restart();
 

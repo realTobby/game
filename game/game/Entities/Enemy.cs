@@ -51,6 +51,7 @@ namespace game.Entities
                 if (magnitude > MinDistance)
                 {
                     Position += direction * speed * deltaTime;
+                    
                 }
             }
             else
@@ -59,13 +60,14 @@ namespace game.Entities
             }
 
             // Debug: print the enemy's position
-            Console.WriteLine("Enemy position: " + Position.X + ", " + Position.Y);
-
+            //Console.WriteLine("Enemy position: " + Position.X + ", " + Position.Y);
             SetPosition(Position);
+
         }
 
         public void SetPosition(Vector2f position)
         {
+            Console.WriteLine($"SetPosition: {Position.ToString()} -> {position.ToString()}");
             Position = position;
             base.SetPosition(position);
         }

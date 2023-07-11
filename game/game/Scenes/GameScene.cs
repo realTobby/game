@@ -10,7 +10,9 @@ using SFML.System;
 using SFML.Window;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -18,6 +20,8 @@ namespace game.Scenes
 {
     public class GameScene : Scene
     {
+        private Random rnd = new Random();
+
         private UIManager _uiManager;
         private OverworldManager _overworldManager;
         private ViewCamera _viewCamera;
@@ -34,7 +38,7 @@ namespace game.Scenes
 
         TestEnemy worm;
 
-        
+        private WaveManager _waveManager;
 
         public GameScene()
         {
@@ -64,45 +68,46 @@ namespace game.Scenes
 
             //worm = new TestEnemy(player.Position, 100f);
 
-            //animatedSprites.Add(worm);
-            RandomlySpawnEnemies(1f, 3f, 100f); // Example usage with a minimum interval of 2 seconds, maximum interval of 5 seconds, and a radius of 200 units
+            _waveManager = new WaveManager();
+
+           
+
+            waveTimer = new Clock();
+
+            ////animatedSprites.Add(worm);
+            //RandomlySpawnEnemies(1f, 3f, 100f); // Example usage with a minimum interval of 2 seconds, maximum interval of 5 seconds, and a radius of 200 units
         }
 
-        private void SpawnEnemiesAroundPlayer(Vector2f playerPosition, float radius)
+        private void CreateWaves()
         {
-            int numEnemies = 5; // Change the number of enemies as desired
-            float angleIncrement = 360f / numEnemies;
-            float currentAngle = 0f;
+            EnemyWave wave = new EnemyWave(1f, 35f); // Adjust the spawn interval and enemy speed as desired
 
-            for (int i = 0; i < numEnemies; i++)
+            int num = rnd.Next(5,20);
+            Vector2f point = player.Position;
+            float radius = 250f;
+
+            for (int i = 0; i < num; i++)
             {
-                // Calculate the position of the enemy based on the angle and radius
-                float angleRad = MathF.PI * currentAngle / 180f;
-                float x = playerPosition.X + radius * MathF.Cos(angleRad);
-                float y = playerPosition.Y + radius * MathF.Sin(angleRad);
 
-                // Create and add the enemy to the list
-                TestEnemy enemy = new TestEnemy(new Vector2f(x, y), 100f);
-                CurrentEnemies.Add(enemy);
+                /* Distance around the circle */
+                var radians = 2 * MathF.PI / num * i;
 
-                // Increment the angle for the next enemy
-                currentAngle += angleIncrement;
+                /* Get the vector direction */
+                var vertical = MathF.Sin(radians);
+                var horizontal = MathF.Cos(radians);
+
+                var spawnDir = new Vector2f(horizontal, vertical);
+                var spawnPos = point + spawnDir * radius; // Radius is just the distance away from the point
+
+                /* Now spawn */
+                wave.AddSpawnPosition(new Vector2f(spawnPos.X, spawnPos.Y));
             }
+            _waveManager.AddWave(wave);
         }
 
-
-
-
-        private void RandomlySpawnEnemies(float minInterval, float maxInterval, float radius)
+        private void StartNextWave()
         {
-            Random random = new Random();
-            float interval = random.Next((int)(minInterval * 1000), (int)(maxInterval * 1000)) / 1000f;
-
-            Task.Delay((int)(interval * 1000)).ContinueWith(_ =>
-            {
-                SpawnEnemiesAroundPlayer(player.Position, radius); // Pass the player's position here
-                RandomlySpawnEnemies(minInterval, maxInterval, radius);
-            });
+            _waveManager.StartWave();
         }
 
         //private void SpawnThunder(ThunderStrike obj)
@@ -149,8 +154,24 @@ namespace game.Scenes
             _viewCamera.Update(/*CurrentEnemies?.FirstOrDefault()?.Position ??*/ player.Position);
             follower.Update(player.Position);
             //worm.Update(player, deltaTime);
-            UpdateEnemies(deltaTime);
+            _waveManager.Update(player, deltaTime);
+            //UpdateEnemies(deltaTime);
 
+            UpdateEnemyWave();
+
+        }
+
+        private Clock waveTimer;
+        private float waveCooldown = 5f;
+        private void UpdateEnemyWave()
+        {
+            if (waveTimer.ElapsedTime.AsSeconds() > waveCooldown)
+            {
+                waveTimer.Restart();
+                CreateWaves();
+                StartNextWave();
+                waveCooldown = rnd.Next(5, 15);
+            }
         }
 
         private void UpdateEnemies(float deltaTime)
@@ -163,7 +184,7 @@ namespace game.Scenes
 
         private void DrawEnemies()
         {
-            foreach (Enemy enemy in CurrentEnemies.ToList())
+            foreach (Enemy enemy in _waveManager.CurrentEnemies)
             {
                 enemy.Draw();
             }
@@ -173,9 +194,11 @@ namespace game.Scenes
         {
             _uiManager.Draw();
             _overworldManager?.Draw();
-            player.Draw();
+            
             //HandleAnimations();
             DrawEnemies();
+
+            player.Draw();
         }
 
 
