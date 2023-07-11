@@ -9,16 +9,29 @@ namespace game.UI
 {
     public abstract class UIComponent
     {
-        public Vector2f Position { get; set; }
+        private Vector2f _position;
+
+        public Vector2f Position
+        {
+            get { return _position; }
+            set
+            {
+                _position = value;
+                OnPositionChanged();
+            }
+        }
 
         public UIComponent(Vector2f position)
         {
-            Position = position;
+            _position = position;
         }
 
         public abstract void Update();
         public abstract void Draw();
-    }
 
-    
+        protected virtual void OnPositionChanged()
+        {
+            // Override this method in derived classes if needed
+        }
+    }
 }

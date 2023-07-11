@@ -53,6 +53,11 @@ namespace game.Scenes
             waveTimer = new Clock();
 
             gameManager = GameManager.Instance;
+
+
+            UI_Text xpText = new UI_Text("XP: ", 8, new Vector2f(0, 0), _viewCamera.view, new UITextBinding(() => player.GetUIXPString()));
+            _uiManager.AddComponent(xpText);
+
         }
 
         private void GenerateNewWave()
@@ -130,6 +135,22 @@ namespace game.Scenes
 
         }
 
+        public override void Draw(float deltaTime)
+        {
+            _overworldManager?.Draw();
+
+            //HandleAnimations();
+            gameManager._waveManager.DrawEnemies(deltaTime);
+
+            player.Draw(deltaTime);
+
+            gameManager.Draw(deltaTime);
+
+
+            _uiManager.Draw(_viewCamera.view);
+            //Game.Instance.GetRenderWindow().Display();
+        }
+
         private void UpdatePlayerAbilities(float deltaTime)
         {
             foreach (Ability ability in player.Abilities)
@@ -201,24 +222,6 @@ namespace game.Scenes
                 waveCooldown = rnd.Next(5, 15);
             }
         }
-
-       
-
-        public override void Draw(float deltaTime)
-        {
-            _uiManager.Draw();
-            _overworldManager?.Draw();
-
-            //HandleAnimations();
-            gameManager._waveManager.DrawEnemies(deltaTime);
-
-
-            player.Draw(deltaTime);
-
-            gameManager.Draw(deltaTime);
-
-        }
-
 
         public override void UnloadContent()
         {

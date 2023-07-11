@@ -11,6 +11,9 @@ public class Player : Entity
     private Vector2f precisePosition;
     private float speed = 150f;
 
+    private int MaxXP = 10;
+    private int CurrentXP = 0;
+
     public List<Ability> Abilities { get; private set; } = new List<Ability>();
 
     public Player(Vector2f initialPosition)
@@ -18,6 +21,11 @@ public class Player : Entity
     {
         precisePosition = initialPosition;
         Abilities.Add(new FireballAbility(this, 1.25f, 25f, 5f));
+    }
+
+    public string GetUIXPString()
+    {
+        return CurrentXP + "/" + MaxXP;
     }
 
     public void Update(float deltaTime)
@@ -40,6 +48,13 @@ public class Player : Entity
             {
                 Console.WriteLine("XP GAINED!");
                 gem.Pickup();
+                CurrentXP++;
+                if(CurrentXP >= MaxXP)
+                {
+                    CurrentXP = 0;
+                    MaxXP += 5;
+                    Abilities.Add(new FireballAbility(this, 1.25f, 25f, 5f));
+                }
             }
         }
     }

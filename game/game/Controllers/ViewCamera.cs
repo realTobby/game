@@ -1,4 +1,5 @@
 ﻿using game.Managers;
+using game.Scenes;
 using SFML.Graphics;
 using SFML.System;
 using SFML.Window;
@@ -28,17 +29,16 @@ namespace game.Controllers
             TargetPosition = targetPos;
             TrackPlayer();
 
-            //GameManager.Instance.OnRedrawUI?.Invoke();
-
             Game.Instance.GetRenderWindow().SetView(view);
+
         }
 
         private void TrackPlayer()
         {
             Vector2f roundedPosition = new Vector2f((float)Math.Round(TargetPosition.X), (float)Math.Round(TargetPosition.Y));
 
-            roundedPosition.X += 16;
-            roundedPosition.Y += 32;
+            //roundedPosition.X += 16;
+            //roundedPosition.Y += 32;
 
             view.Center = roundedPosition;
         }

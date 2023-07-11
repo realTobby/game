@@ -29,7 +29,7 @@ namespace game.Scenes
                                                 16,
                                                 128,
                                                 64,
-                                                new SFML.Graphics.Sprite(TextureLoader.Instance.GetTexture("startGameButton", "UI")));
+                                                new SFML.Graphics.Sprite(TextureLoader.Instance.GetTexture("startGameButton", "UI")), Game.Instance.GetRenderWindow().GetView());
 
             startGameButton.ClickAction += StartGame;
 
