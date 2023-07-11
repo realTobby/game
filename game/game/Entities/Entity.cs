@@ -23,7 +23,7 @@ namespace game.Entities
 
         public Entity(Texture texture, int rows, int columns, Time frameDuration, Vector2f initialPosition) : base(texture, rows, columns, frameDuration, initialPosition)
         {
-
+            Position = initialPosition;
         }
 
 

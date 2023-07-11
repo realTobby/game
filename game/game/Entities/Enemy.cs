@@ -16,10 +16,27 @@ namespace game.Entities
 
         private float speed;
 
+        public int HP;
+        public int MAXHP;
+
         public Enemy(string category, string entityName, int frameCount, Vector2f initialPosition, float speed)
             : base(category, entityName, frameCount, initialPosition)
         {
             this.speed = speed;
+            MAXHP = 2;
+            HP = MAXHP;
+        }
+
+        public bool TakeDamage(int dmg)
+        {
+            HP -= dmg;
+            if(HP <= 0)
+            {
+                Console.WriteLine("IAM DEAD!");
+                GameManager.Instance._waveManager.RemoveEnemy(this);
+                return true;
+            }
+            return false;
         }
 
         public Enemy(Texture texture, int rows, int columns, Time frameDuration, float speed, Vector2f initialPosition) : base(texture, rows, columns, frameDuration, initialPosition)

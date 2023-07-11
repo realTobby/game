@@ -1,6 +1,7 @@
 ﻿using game.Controllers;
 using game.Entities;
 using game.Entities.Abilitites;
+using game.Managers;
 using game.Scenes;
 using SFML.Graphics;
 using SFML.System;
@@ -25,21 +26,19 @@ namespace game.Abilities
             this.player = player;
             this.circleSpeed = circleSpeed;
             this.circleRadius = circleRadius;
-
-
-            
         }
 
         public override void Activate()
         {
-            Console.WriteLine("Fireball activated!");
+            //Console.WriteLine("Fireball activated!");
 
             // Find the nearest enemy to the player
-            Enemy nearestEnemy = GameScene.Instance.FindNearestEnemy(GameScene.Instance.player.Position, GameScene.Instance._waveManager.CurrentEnemies);
+            Enemy nearestEnemy = GameScene.Instance.FindNearestEnemy(player.Position, GameManager.Instance._waveManager.CurrentEnemies);
             if (nearestEnemy == null)
                 return;
 
-            player.AbilityEntities.Add(new FireballEntity(player.Position, nearestEnemy));
+            //player.AbilityEntities.Add();
+            GameManager.Instance.AddEntity(new FireballEntity(player.Position, nearestEnemy));
         }
 
 

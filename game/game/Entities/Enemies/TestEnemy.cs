@@ -19,7 +19,7 @@ namespace game.Entities.Enemies
 
         public TestEnemy(Vector2f initialPosition, float speed) : base(TextureLoader.Instance.GetTexture("TestEnemy", "Entities/Enemies"), 1, 9, Time.FromSeconds(0.1f), speed, initialPosition)
         {
-            Console.WriteLine("[NEW ENEMY CREATED!]");
+            //Console.WriteLine("[NEW ENEMY CREATED!]");
 
             base.MinDistance = 45f;
 

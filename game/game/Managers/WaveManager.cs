@@ -60,5 +60,24 @@ namespace game.Managers
             //    }
             //}
         }
+
+        public void AddEnemy(Enemy enemy)
+        {
+            CurrentEnemies.Add(enemy);
+        }
+
+        public void RemoveEnemy(Enemy enemy)
+        {
+            CurrentEnemies.Remove(enemy);
+        }
+
+        public void DrawEnemies()
+        {
+            foreach (Enemy enemy in CurrentEnemies)
+            {
+                enemy.Draw();
+            }
+        }
+
     }
 }

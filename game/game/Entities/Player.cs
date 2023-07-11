@@ -9,13 +9,13 @@ public class Player : Entity
 
     public List<Ability> Abilities { get; private set; } = new List<Ability>();
 
-    public List<Entity> AbilityEntities = new List<Entity>();
+    //public List<Entity> AbilityEntities = new List<Entity>();
 
     public Player(Vector2f initialPosition)
         : base("Entities", "priestess", 4, initialPosition)
     {
         precisePosition = initialPosition;
-        Abilities.Add(new FireballAbility(this, 5f, 25f, 5f)); // Example ability
+        Abilities.Add(new FireballAbility(this, 1f, 25f, 5f)); // Example ability
         // Add more abilities as needed
     }
 
@@ -25,10 +25,7 @@ public class Player : Entity
         base.SetPosition(new Vector2f((float)Math.Round(precisePosition.X), (float)Math.Round(precisePosition.Y)));
         base.Update();
 
-        foreach(var item in AbilityEntities)
-        {
-            item.Update();
-        }
+        
 
     }
 
@@ -37,12 +34,6 @@ public class Player : Entity
         Vector2f roundedPosition = new Vector2f((float)Math.Round(precisePosition.X), (float)Math.Round(precisePosition.Y));
         base.SetPosition(roundedPosition);
         base.Draw();
-
-        foreach(var item in AbilityEntities)
-        {
-            item.Draw();
-        }
-
     }
 
     public void MoveLeft(float deltaTime)

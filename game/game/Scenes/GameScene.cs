@@ -36,7 +36,9 @@ namespace game.Scenes
 
         TestEnemy worm;
 
-        public WaveManager _waveManager;
+        
+
+        private GameManager gameManager;
 
         public GameScene()
         {
@@ -68,11 +70,10 @@ namespace game.Scenes
 
             //worm = new TestEnemy(player.Position, 100f);
 
-            _waveManager = new WaveManager();
-
-           
 
             waveTimer = new Clock();
+
+            gameManager = GameManager.Instance;
 
             ////animatedSprites.Add(worm);
             //RandomlySpawnEnemies(1f, 3f, 100f); // Example usage with a minimum interval of 2 seconds, maximum interval of 5 seconds, and a radius of 200 units
@@ -102,12 +103,12 @@ namespace game.Scenes
                 /* Now spawn */
                 wave.AddSpawnPosition(new Vector2f(spawnPos.X, spawnPos.Y));
             }
-            _waveManager.AddWave(wave);
+            gameManager._waveManager.AddWave(wave);
         }
 
         private void StartNextWave()
         {
-            _waveManager.StartWave();
+            gameManager._waveManager.StartWave();
         }
 
         //private void SpawnThunder(ThunderStrike obj)
@@ -154,12 +155,15 @@ namespace game.Scenes
             _viewCamera.Update(/*CurrentEnemies?.FirstOrDefault()?.Position ??*/ player.Position);
             //follower.Update(player.Position);
             //worm.Update(player, deltaTime);
-            _waveManager.Update(player, deltaTime);
+            gameManager._waveManager.Update(player, deltaTime);
             //UpdateEnemies(deltaTime);
 
             UpdateEnemyWave();
 
             UpdatePlayerAbilities(deltaTime);
+
+            gameManager.Update(deltaTime);
+
         }
 
         private void UpdatePlayerAbilities(float deltaTime)
@@ -169,7 +173,7 @@ namespace game.Scenes
                 if (ability.abilityClock.ElapsedTime.AsSeconds() >= ability.Cooldown)
                 {
                     ability.Activate();
-                    ability.LastActivatedTime = ability.abilityClock.ElapsedTime.AsSeconds();
+                    ability.LastActivatedTime = ability.abilityClock.Restart().AsSeconds();
                 }
             }
         }
@@ -212,23 +216,21 @@ namespace game.Scenes
             }
         }
 
-        private void DrawEnemies()
-        {
-            foreach (Enemy enemy in _waveManager.CurrentEnemies)
-            {
-                enemy.Draw();
-            }
-        }
+       
 
         public override void Draw()
         {
             _uiManager.Draw();
             _overworldManager?.Draw();
-            
+
             //HandleAnimations();
-            DrawEnemies();
+            gameManager._waveManager.DrawEnemies();
+
 
             player.Draw();
+
+            gameManager.Draw();
+
         }
 
 
