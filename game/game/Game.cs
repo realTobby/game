@@ -57,7 +57,7 @@ namespace game
                 _gameWindow.Clear(Color.Black);
 
                 float deltaTime = GameClock.ElapsedTime.AsSeconds();
-                GameClock.Restart();
+               
 
                 sceneManager.Update(deltaTime);
                 sceneManager.Draw(deltaTime);

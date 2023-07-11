@@ -160,6 +160,28 @@ namespace game.Scenes
             return nearestEnemy;
         }
 
+        public Enemy FindNearestEnemy(Vector2f position, List<Enemy> enemies, List<Enemy> avoidEnemy)
+        {
+            Enemy nearestEnemy = null;
+            float nearestDistance = float.MaxValue;
+
+            // create a foreach-loop that iterates through the enemies list but skips the avoidEnemy
+
+            foreach (Enemy enemy in enemies.ToList())
+            {
+                if (avoidEnemy.Contains(enemy)) continue;
+
+                float distance = CalculateDistance(position, enemy.Position);
+                if (distance < nearestDistance)
+                {
+                    nearestEnemy = enemy;
+                    nearestDistance = distance;
+                }
+            }
+
+            return nearestEnemy;
+        }
+
         private float CalculateDistance(Vector2f a, Vector2f b)
         {
             float dx = b.X - a.X;

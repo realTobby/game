@@ -1,9 +1,11 @@
 ﻿using game.Managers;
+using game.Scenes;
 using SFML.Graphics;
 using SFML.System;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 using static System.Net.Mime.MediaTypeNames;
@@ -12,6 +14,8 @@ namespace game.Entities.Abilitites
 {
     public class FireballEntity : Entity
     {
+        public List<Enemy> previousTargets = new List<Enemy>();
+
         public Enemy target;
 
         public FireballEntity(Vector2f initialPosition, Enemy targetEnemy) : base(TextureLoader.Instance.GetTexture("burning_loop_1", "Entities/Abilities"), 1, 8, Time.FromSeconds(0.1f), initialPosition)
@@ -48,10 +52,24 @@ namespace game.Entities.Abilitites
                 if(target.TakeDamage(1))
                 {
                     target = null;
+                    GameManager.Instance.RemoveEntity(this);
+                    return;
+                }
+
+                if (target != null)
+                {
+                    previousTargets.Add(target);
+                    SetPosition(target.Position);
+                    Enemy nearestEnemy = GameScene.Instance.FindNearestEnemy(target.Position, GameManager.Instance._waveManager.CurrentEnemies, previousTargets);
+                    if (nearestEnemy == null)
+                        return;
+
+                    GameManager.Instance.AddEntity(new FireballEntity(target.Position, nearestEnemy) { previousTargets = previousTargets });
                 }
 
                 // Remove the fireball entity from the game
                 GameManager.Instance.RemoveEntity(this);
+
             }
         }
     }
