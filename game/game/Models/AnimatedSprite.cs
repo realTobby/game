@@ -25,6 +25,8 @@ namespace game.Models
         public bool IsSingleShotAnimation = false;
         public bool IsFinished { get; private set; }
 
+        public FloatRect HitBoxDimensions { get; set; }
+
         public AnimatedSprite(string category, string entityName, int frameCount)
         {
             var animationFrames = TextureLoader.Instance.GetAnimations($"Assets/Entities/{entityName}", entityName, frameCount);
@@ -35,6 +37,8 @@ namespace game.Models
                 sprites[i] = new Sprite(animationFrames[i]);
                 NormalColors[i] = sprites[i].Color;
             }
+
+            HitBoxDimensions = sprites[0].GetGlobalBounds();
 
             this.frameDuration = Time.FromSeconds(0.1f);
             animationTimer = new Clock();
@@ -59,11 +63,21 @@ namespace game.Models
                 NormalColors[i] = sprites[i].Color;
             }
 
+            HitBoxDimensions = sprites[0].GetGlobalBounds();
+
             this.frameDuration = frameDuration;
             animationTimer = new Clock();
             isFlipped = false;
 
             SetPosition(initialPos);
+        }
+
+        public void SetScale(float scale)
+        {
+            for(int i = 0; i < sprites.Length; i++)
+            {
+                sprites[i].Scale = new Vector2f(scale, scale);
+            }
         }
 
         public virtual void Update()

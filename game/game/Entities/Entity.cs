@@ -14,6 +14,8 @@ namespace game.Entities
     {
         public Vector2f Position { get; set; }
 
+        
+
         public Entity(string category, string entityName, int frameCount, Vector2f initialPosition)
             : base(category, entityName, frameCount)
         {
@@ -34,5 +36,16 @@ namespace game.Entities
         {
             base.Draw(deltaTime);
         }
+
+        public FloatRect GetBounds()
+        {
+            return HitBoxDimensions;
+        }
+
+        public bool CheckCollision(Entity other)
+        {
+            return GetBounds().Intersects(other.GetBounds());
+        }
+
     }
 }

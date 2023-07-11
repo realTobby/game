@@ -1,4 +1,5 @@
-﻿using game.Managers;
+﻿using game.Entities.Enemies;
+using game.Managers;
 using game.Scenes;
 using SFML.Graphics;
 using SFML.System;
@@ -32,6 +33,8 @@ namespace game.Entities.Abilitites
 
         public override void Update()
         {
+            HitBoxDimensions = new FloatRect(Position.X, Position.Y, HitBoxDimensions.Width, HitBoxDimensions.Height);
+
             base.Update();
 
             if(target == null)
@@ -46,17 +49,10 @@ namespace game.Entities.Abilitites
             SetPosition(Position);
 
             // Check if the fireball has reached its target
-            if (distance <= .5f) // Adjust the threshold as needed
+            if(CheckCollisionWithEnemy())
             {
-                // Deal damage to the enemy
+                // Remove the fireball entity from the game
                 if(target.TakeDamage(1))
-                {
-                    target = null;
-                    GameManager.Instance.RemoveEntity(this);
-                    return;
-                }
-
-                if (target != null)
                 {
                     previousTargets.Add(target);
                     SetPosition(target.Position);
@@ -67,10 +63,50 @@ namespace game.Entities.Abilitites
                     GameManager.Instance.AddEntity(new FireballEntity(target.Position, nearestEnemy) { previousTargets = previousTargets });
                 }
 
-                // Remove the fireball entity from the game
                 GameManager.Instance.RemoveEntity(this);
-
             }
+        }
+
+        private bool CheckCollisionWithEnemy()
+        {
+            //if (distance <= 1.5f) // Adjust the threshold as needed
+            //{
+            //    // Deal damage to the enemy
+            //    if (target.TakeDamage(1))
+            //    {
+            //        if (target != null)
+            //        {
+            //            previousTargets.Add(target);
+            //            SetPosition(target.Position);
+            //            Enemy nearestEnemy = GameScene.Instance.FindNearestEnemy(target.Position, GameManager.Instance._waveManager.CurrentEnemies, previousTargets);
+            //            if (nearestEnemy == null)
+            //                return;
+
+            //            GameManager.Instance.AddEntity(new FireballEntity(target.Position, nearestEnemy) { previousTargets = previousTargets });
+            //        }
+
+            //        target = null;
+            //        GameManager.Instance.RemoveEntity(this);
+            //        return;
+            //    }
+
+
+
+            //    // Remove the fireball entity from the game
+            //    GameManager.Instance.RemoveEntity(this);
+
+            //}
+
+
+            foreach (Enemy enemy in GameManager.Instance._waveManager.CurrentEnemies)
+            {
+                if (CheckCollision(enemy))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
     }
 }

@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace game.Entities
+namespace game.Controllers
 {
     public class ViewCamera
     {
@@ -20,7 +20,7 @@ namespace game.Entities
 
         public ViewCamera()
         {
-            view = new View(new FloatRect(0, 0, Game.Instance.GetRenderWindow().Size.X/2, Game.Instance.GetRenderWindow().Size.Y/2));
+            view = new View(new FloatRect(0, 0, Game.Instance.GetRenderWindow().Size.X / 2, Game.Instance.GetRenderWindow().Size.Y / 2));
         }
 
         public void Update(Vector2f targetPos)

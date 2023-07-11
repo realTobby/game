@@ -29,6 +29,16 @@ namespace game.Managers
             _waveManager = new WaveManager();
         }
 
+        public List<Entity> GetEntities()
+        {
+            return entityManager.Entities;
+        }
+
+        public List<Entity> GetEntities(Type specificEntityType)
+        {
+            return entityManager.Entities.ToList().Where(x=>x.GetType() == specificEntityType).ToList();
+        }
+
         public void AddEntity(Entity entity)
         {
             entityManager.AddEntity(entity);

@@ -1,4 +1,5 @@
 ﻿using game.Controllers;
+using game.Entities.Pickups;
 using game.Managers;
 using SFML.Graphics;
 using SFML.System;
@@ -9,7 +10,7 @@ using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace game.Entities
+namespace game.Entities.Enemies
 {
     public class Enemy : Entity
     {
@@ -28,22 +29,26 @@ namespace game.Entities
             : base(category, entityName, frameCount, initialPosition)
         {
             this.speed = speed;
-            MAXHP = 5;
+            MAXHP = 2;
             HP = MAXHP;
         }
 
         public Enemy(Texture texture, int rows, int columns, Time frameDuration, float speed, Vector2f initialPosition) : base(texture, rows, columns, frameDuration, initialPosition)
         {
             this.speed = speed;
-            MAXHP = 5;
+            MAXHP = 2;
             HP = MAXHP;
         }
 
         public bool TakeDamage(int dmg)
         {
             HP -= dmg;
-            if(HP <= 0)
+            if (HP <= 0)
             {
+
+                var bluegem = new Gem(Position);
+                GameManager.Instance.AddEntity(bluegem);
+
                 GameManager.Instance._waveManager.RemoveEnemy(this);
                 return true;
             }
@@ -67,14 +72,14 @@ namespace game.Entities
                 flashTimer -= deltaTime;
                 if (flashTimer <= 0f)
                 {
-                    for (int i = 0; i < base.sprites.Count(); i++)
+                    for (int i = 0; i < sprites.Count(); i++)
                     {
-                        base.sprites[i].Color = base.NormalColors[i];
+                        sprites[i].Color = NormalColors[i];
                     }
                 }
                 else
                 {
-                    foreach (var item in base.sprites.ToList())
+                    foreach (var item in sprites.ToList())
                     {
                         item.Color = new Color(0, 0, 0, 255);
                     }

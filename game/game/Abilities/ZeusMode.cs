@@ -10,7 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace game.Entities
+namespace game.Abilities
 {
     public class ZeusMode
     {
@@ -57,7 +57,7 @@ namespace game.Entities
             // Update the last frame's spacebar state
             wasSpacePressedLastFrame = isSpacePressed;
 
-            this.target = newTarget;
+            target = newTarget;
 
             // Follow the target with a delay
             if (followTimer.ElapsedTime.AsSeconds() > followDelay)
@@ -69,7 +69,7 @@ namespace game.Entities
             // Spawn a new AnimatedSprite every few seconds
             if (spawnTimer.ElapsedTime > spawnCooldown)
             {
-                if(IsActive) SpawnAnimatedSprite();
+                if (IsActive) SpawnAnimatedSprite();
 
 
                 spawnTimer.Restart();
@@ -86,7 +86,7 @@ namespace game.Entities
             //AnimatedSprite newSprite = new AnimatedSprite(TextureLoader.Instance.GetTexture("thunderStrike", "VFX"), 1, 13, Time.FromSeconds(0.1f));
             //newThunder.IsSingleShotAnimation = true;
 
-            Position = new Vector2f((int)rnd.Next((int)Position.X-100, (int)Position.X+100), (int)rnd.Next((int)Position.Y - 100, (int)Position.Y + 100));
+            Position = new Vector2f(rnd.Next((int)Position.X - 100, (int)Position.X + 100), rnd.Next((int)Position.Y - 100, (int)Position.Y + 100));
 
             //newThunder.SetPosition(Position);
 

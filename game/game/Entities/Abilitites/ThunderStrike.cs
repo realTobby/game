@@ -9,7 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace game.Entities
+namespace game.Entities.Abilitites
 {
     //public class ThunderStrike : AnimatedSprite
     //{

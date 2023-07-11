@@ -1,5 +1,9 @@
 ﻿using game.Abilities;
 using game.Entities;
+using game.Entities.Enemies;
+using game.Entities.Pickups;
+using game.Managers;
+using SFML.Graphics;
 using SFML.System;
 
 public class Player : Entity
@@ -18,9 +22,26 @@ public class Player : Entity
 
     public void Update(float deltaTime)
     {
+        HitBoxDimensions = new FloatRect(Position.X, Position.Y, 16, 16);
+
         base.Update();
         base.SetPosition(new Vector2f((float)Math.Round(precisePosition.X), (float)Math.Round(precisePosition.Y)));
-        base.Update();
+
+        CheckCollisionWithPickups();
+
+
+    }
+
+    private void CheckCollisionWithPickups()
+    {
+        foreach (Gem gem in GameManager.Instance.GetEntities(typeof(Gem)))
+        {
+            if (CheckCollision(gem))
+            {
+                Console.WriteLine("XP GAINED!");
+                gem.Pickup();
+            }
+        }
     }
 
     public void Draw(float deltaTime)

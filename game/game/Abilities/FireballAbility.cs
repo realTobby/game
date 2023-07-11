@@ -1,6 +1,7 @@
 ﻿using game.Controllers;
 using game.Entities;
 using game.Entities.Abilitites;
+using game.Entities.Enemies;
 using game.Managers;
 using game.Scenes;
 using SFML.Graphics;

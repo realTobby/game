@@ -16,6 +16,8 @@ namespace game.Entities.Enemies
 
         public TestEnemy(Vector2f initialPosition, float speed) : base(TextureLoader.Instance.GetTexture("TestEnemy", "Entities/Enemies"), 1, 9, Time.FromSeconds(0.1f), speed, initialPosition)
         {
+            
+
             base.MinDistance = 45f;
 
             var width = sprites[0].TextureRect.Width;
@@ -30,18 +32,26 @@ namespace game.Entities.Enemies
                 Origin = new Vector2f(0, 0)
             };
 
+            
+
             SetPosition(initialPosition);
         }
 
         public override void Update(Player player, float deltaTime)
         {
+            base.Update(player, deltaTime);
+
+
             var width = sprites[0].TextureRect.Width;
             var height = sprites[0].TextureRect.Height;
             if(debugDraw != null)
             {
                 debugDraw.Position = new Vector2f(Position.X - width / 4, Position.Y - height / 4);
             }
-            base.Update(player, deltaTime);
+
+            HitBoxDimensions = new FloatRect(Position.X, Position.Y, 32, 32);
+
+            
         }
 
         private void ShowDebugBoundaries()

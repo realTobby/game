@@ -16,6 +16,8 @@ namespace game.Managers
             entities = new List<Entity>();
         }
 
+        public List<Entity> Entities => entities;
+
         public void AddEntity(Entity entity)
         {
             entities.Add(entity);
