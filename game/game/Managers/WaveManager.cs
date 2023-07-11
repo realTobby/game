@@ -19,7 +19,7 @@ namespace game.Managers
 
         public void StartWave()
         {
-            Console.WriteLine("Current Enemy Count: " + CurrentEnemies.Count);
+            
             // CurrentEnemies.Clear();
             if (CurrentEnemies.Count < 125)
             {
@@ -31,7 +31,7 @@ namespace game.Managers
                 }
             }
 
-            
+            Console.WriteLine("Current Enemy Count: " + CurrentEnemies.Count);
         }
 
         public void Update(Player player, float deltaTime)

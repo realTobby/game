@@ -32,6 +32,9 @@ namespace game.Controllers
 
         public TextureLoader TextureLoader = new TextureLoader();
 
+        Music backgroundMusic = new Music("Assets/BGM/Venus.wav");
+
+
         public void SceneTransition(Scene nextScene)
         {
             sceneManager.PushScene(nextScene);
@@ -57,7 +60,7 @@ namespace game.Controllers
         public void Run()
         {
             // Load the music
-            Music backgroundMusic = new Music("Assets/BGM/Venus.wav");
+            
 
             // Set the music to loop
             backgroundMusic.Loop = true;

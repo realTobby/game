@@ -15,6 +15,9 @@
     <None Update="Assets\BGM\Venus.wav">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Assets\Entities\Abilities\burning_loop_1.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Assets\Entities\Enemies\TestEnemy.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -76,6 +79,7 @@
 
   <ItemGroup>
     <Folder Include="Assets\Entities\Enemies\" />
+    <Folder Include="Assets\Entities\Abilities\" />
     <Folder Include="Assets\Fonts\" />
     <Folder Include="Assets\BGM\" />
     <Folder Include="Assets\SFX\" />

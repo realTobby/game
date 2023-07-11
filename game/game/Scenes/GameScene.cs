@@ -1,4 +1,5 @@
-﻿using game.Controllers;
+﻿using game.Abilities;
+using game.Controllers;
 using game.Controllers.game.Controllers;
 using game.Entities;
 using game.Entities.Enemies;
@@ -20,6 +21,9 @@ namespace game.Scenes
 {
     public class GameScene : Scene
     {
+        private static GameScene _instance;
+        public static GameScene Instance => _instance;
+
         private Random rnd = new Random();
 
         private UIManager _uiManager;
@@ -28,20 +32,16 @@ namespace game.Scenes
 
         private InputManager _inputManager;
 
-        private Player player;
-        private AnimatedSprite testThunder;
-        private ZeusMode follower;
-
-        public List<Entity> SpawnedEntities = new List<Entity>();
-
-        public List<Enemy> CurrentEnemies = new List<Enemy>();
+        public Player player;
 
         TestEnemy worm;
 
-        private WaveManager _waveManager;
+        public WaveManager _waveManager;
 
         public GameScene()
         {
+            if (_instance == null) _instance = this;
+
             _inputManager = new InputManager();
 
             _uiManager = new UIManager();
@@ -57,7 +57,7 @@ namespace game.Scenes
             //testThunder.IsSingleShotAnimation = true;
             //animatedSprites.Add(testThunder);
 
-            follower = new ZeusMode(player.Position, player.Position, 0, Time.FromSeconds(.5f));
+            //follower = new ZeusMode(player.Position, player.Position, 0, Time.FromSeconds(.5f));
 
             //AnimatedSprite explosion = new AnimatedSprite(TextureLoader.Instance.GetTexture("EXPLOSION", "VFX"), 1, 12, Time.FromSeconds(0.1f));
             //animatedSprites.Add(explosion);
@@ -152,13 +152,51 @@ namespace game.Scenes
             _uiManager.Update();
             player.Update(deltaTime);
             _viewCamera.Update(/*CurrentEnemies?.FirstOrDefault()?.Position ??*/ player.Position);
-            follower.Update(player.Position);
+            //follower.Update(player.Position);
             //worm.Update(player, deltaTime);
             _waveManager.Update(player, deltaTime);
             //UpdateEnemies(deltaTime);
 
             UpdateEnemyWave();
 
+            UpdatePlayerAbilities(deltaTime);
+        }
+
+        private void UpdatePlayerAbilities(float deltaTime)
+        {
+            foreach (Ability ability in player.Abilities)
+            {
+                if (ability.abilityClock.ElapsedTime.AsSeconds() >= ability.Cooldown)
+                {
+                    ability.Activate();
+                    ability.LastActivatedTime = ability.abilityClock.ElapsedTime.AsSeconds();
+                }
+            }
+        }
+
+        public Enemy FindNearestEnemy(Vector2f position, List<Enemy> enemies)
+        {
+            Enemy nearestEnemy = null;
+            float nearestDistance = float.MaxValue;
+
+            foreach (Enemy enemy in enemies)
+            {
+                float distance = CalculateDistance(position, enemy.Position);
+                if (distance < nearestDistance)
+                {
+                    nearestEnemy = enemy;
+                    nearestDistance = distance;
+                }
+            }
+
+            return nearestEnemy;
+        }
+
+        private float CalculateDistance(Vector2f a, Vector2f b)
+        {
+            float dx = b.X - a.X;
+            float dy = b.Y - a.Y;
+            return MathF.Sqrt(dx * dx + dy * dy);
         }
 
         private Clock waveTimer;
@@ -171,14 +209,6 @@ namespace game.Scenes
                 CreateWaves();
                 StartNextWave();
                 waveCooldown = rnd.Next(5, 15);
-            }
-        }
-
-        private void UpdateEnemies(float deltaTime)
-        {
-            foreach (Enemy enemy in CurrentEnemies.ToList())
-            {
-                enemy.Update(player, deltaTime);
             }
         }
 
@@ -207,21 +237,21 @@ namespace game.Scenes
             // unload resources
         }
 
-        private void HandleAnimations()
-        {
-            foreach (var sprite in SpawnedEntities.ToList())
-            {
-                if (sprite.IsFinished)
-                {
-                    SpawnedEntities.Remove(sprite);
-                }
-                else
-                {
-                    sprite.Update();
-                    sprite.Draw();
-                }
-            }
-        }
+        //private void HandleAnimations()
+        //{
+        //    foreach (var sprite in SpawnedEntities.ToList())
+        //    {
+        //        if (sprite.IsFinished)
+        //        {
+        //            SpawnedEntities.Remove(sprite);
+        //        }
+        //        else
+        //        {
+        //            sprite.Update();
+        //            sprite.Draw();
+        //        }
+        //    }
+        //}
 
     }
 }

@@ -30,6 +30,8 @@ namespace game.Entities
         public virtual void Update()
         {
             base.Update();
+
+
         }
 
         public virtual void Draw()

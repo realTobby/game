@@ -1,0 +1,66 @@
+﻿using game.Controllers;
+using game.Entities;
+using game.Entities.Abilitites;
+using game.Scenes;
+using SFML.Graphics;
+using SFML.System;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace game.Abilities
+{
+    public class FireballAbility : Ability
+    {
+        private Player player;
+
+        private float circleSpeed;
+        private float circleRadius;
+
+        public FireballAbility(Player player, float cooldown, float circleSpeed, float circleRadius)
+            : base("Fireball", 1, cooldown)
+        {
+            this.player = player;
+            this.circleSpeed = circleSpeed;
+            this.circleRadius = circleRadius;
+
+
+            
+        }
+
+        public override void Activate()
+        {
+            Console.WriteLine("Fireball activated!");
+
+            // Find the nearest enemy to the player
+            Enemy nearestEnemy = GameScene.Instance.FindNearestEnemy(GameScene.Instance.player.Position, GameScene.Instance._waveManager.CurrentEnemies);
+            if (nearestEnemy == null)
+                return;
+
+            player.AbilityEntities.Add(new FireballEntity(player.Position, nearestEnemy));
+        }
+
+
+        private Vector2f Normalize(Vector2f vector)
+        {
+            float magnitude = CalculateMagnitude(vector);
+            if (magnitude > 0)
+            {
+                return vector / magnitude;
+            }
+            else
+            {
+                return vector;
+            }
+        }
+
+        private float CalculateMagnitude(Vector2f vector)
+        {
+            return MathF.Sqrt(vector.X * vector.X + vector.Y * vector.Y);
+        }
+
+
+    }
+}
