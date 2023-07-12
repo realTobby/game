@@ -24,7 +24,7 @@ namespace game.UI
         private Color hoverColor = Color.Yellow;
         private Color clickedColor = Color.Green;
 
-        public UI_Button(Vector2f pos, string buttonText, int textSize, int width, int height, Sprite buttonSprite, View cameraView) : base(pos)
+        public UI_Button(Vector2f pos, string buttonText, int textSize, int width, int height, Sprite buttonSprite, View cameraView) : base(pos, cameraView)
         {
             _text = new UI_Text(buttonText, 16, pos, cameraView);
             _textSize = textSize;
@@ -38,9 +38,19 @@ namespace game.UI
 
         public override void Draw()
         {
+            base.StartUIDraw();
+
+            // Update the position relative to the camera view
+            Vector2f offsetPosition = Position + cameraView.Center - cameraView.Size / 2f;
+
+            _buttonSprite.Position = offsetPosition;
+
             Game.Instance.GetRenderWindow().Draw(_buttonSprite);
 
             if (!string.IsNullOrEmpty(_buttonText)) _text.Draw();
+
+            base.EndUIDraw();
+
         }
 
         public override void Update()

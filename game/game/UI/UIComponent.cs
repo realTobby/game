@@ -1,4 +1,5 @@
-﻿using SFML.System;
+﻿using SFML.Graphics;
+using SFML.System;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,8 @@ namespace game.UI
 {
     public abstract class UIComponent
     {
+        internal View cameraView;
+
         private Vector2f _position;
 
         public Vector2f Position
@@ -17,7 +20,6 @@ namespace game.UI
             set
             {
                 _position = value;
-                OnPositionChanged();
             }
         }
 
@@ -26,12 +28,40 @@ namespace game.UI
             _position = position;
         }
 
-        public abstract void Update();
-        public abstract void Draw();
-
-        protected virtual void OnPositionChanged()
+        public UIComponent(Vector2f position, View view)
         {
-            // Override this method in derived classes if needed
+            _position = position;
+            cameraView = view;
         }
+
+        public abstract void Update();
+        public virtual void Draw()
+        {
+            
+
+            
+        }
+
+        View originalViewTMP;
+
+        public void StartUIDraw()
+        {
+            RenderWindow window = Game.Instance.GetRenderWindow();
+
+            // Store the original view
+            originalViewTMP = window.GetView();
+
+            
+
+            // Set the view of the render target to the camera's view
+            window.SetView(cameraView);
+        }
+
+        public void EndUIDraw()
+        {
+            // Restore the original view
+            Game.Instance.GetRenderWindow().SetView(originalViewTMP);
+        }
+
     }
 }

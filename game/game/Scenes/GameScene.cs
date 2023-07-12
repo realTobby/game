@@ -26,7 +26,7 @@ namespace game.Scenes
 
         private Random rnd = new Random();
 
-        private UIManager _uiManager;
+        public UIManager _uiManager;
         private OverworldManager _overworldManager;
         private ViewCamera _viewCamera;
 
@@ -55,8 +55,16 @@ namespace game.Scenes
             gameManager = GameManager.Instance;
 
 
-            UI_Text xpText = new UI_Text("XP: ", 8, new Vector2f(0, 0), _viewCamera.view, new UITextBinding(() => player.GetUIXPString()));
+            UI_ProgressBar xpBar = new UI_ProgressBar(new Vector2f(5, 0), new UIBinding<int>(() => player.CurrentXP), new UIBinding<int>(() => player.MaxXP), new Vector2f(128, 16), _viewCamera.view, SFML.Graphics.Color.Blue);
+            _uiManager.AddComponent(xpBar);
+
+            UI_Text xpText = new UI_Text("XP: ", 8, new Vector2f(10, 0), _viewCamera.view, new UIBinding<string>(() => player.GetUIXPString()));
             _uiManager.AddComponent(xpText);
+
+            //UI_ProgressBar hpBar = new UI_ProgressBar(new Vector2f(5, 16), new UIBinding<int>(() => player.HP), new UIBinding<int>(() => player.MaxXP), new Vector2f(128, 16), _viewCamera.view, Color.Blue);
+            //_uiManager.AddComponent(hpBar);
+
+
 
         }
 

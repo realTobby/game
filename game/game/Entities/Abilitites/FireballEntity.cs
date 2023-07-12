@@ -15,6 +15,8 @@ namespace game.Entities.Abilitites
 {
     public class FireballEntity : Entity
     {
+        public Clock killTimer = new Clock();
+
         public List<Enemy> previousTargets = new List<Enemy>();
 
         public Enemy target;
@@ -33,6 +35,11 @@ namespace game.Entities.Abilitites
 
         public override void Update()
         {
+            if(killTimer.ElapsedTime > Time.FromSeconds(7))
+            {
+                GameManager.Instance.RemoveEntity(this);
+            }
+
             HitBoxDimensions = new FloatRect(Position.X, Position.Y, HitBoxDimensions.Width, HitBoxDimensions.Height);
 
             base.Update();

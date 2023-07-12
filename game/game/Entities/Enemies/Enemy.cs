@@ -1,6 +1,8 @@
 ﻿using game.Controllers;
 using game.Entities.Pickups;
 using game.Managers;
+using game.Scenes;
+using game.UI;
 using SFML.Graphics;
 using SFML.System;
 using System;
@@ -21,6 +23,8 @@ namespace game.Entities.Enemies
         public int HP;
         public int MAXHP;
 
+        private UI_ProgressBar hpBar;
+
         private float flashDuration = .1f; // Duration in seconds for the flash effect
         private float flashTimer = 0f; // Timer for the flash effect
 
@@ -31,6 +35,10 @@ namespace game.Entities.Enemies
             this.speed = speed;
             MAXHP = 2;
             HP = MAXHP;
+
+            hpBar = new UI_ProgressBar(new Vector2f(initialPosition.X, initialPosition.Y), new UIBinding<int>(() => HP), new UIBinding<int>(() => MAXHP), new Vector2f(16,4), Color.Red, this);
+            GameScene.Instance._uiManager.AddComponent(hpBar);
+
         }
 
         public Enemy(Texture texture, int rows, int columns, Time frameDuration, float speed, Vector2f initialPosition) : base(texture, rows, columns, frameDuration, initialPosition)
@@ -38,6 +46,8 @@ namespace game.Entities.Enemies
             this.speed = speed;
             MAXHP = 2;
             HP = MAXHP;
+            hpBar = new UI_ProgressBar(new Vector2f(initialPosition.X, initialPosition.Y), new UIBinding<int>(() => HP), new UIBinding<int>(() => MAXHP), new Vector2f(16, 4), Color.Red, this);
+            GameScene.Instance._uiManager.AddComponent(hpBar);
         }
 
         public bool TakeDamage(int dmg)
@@ -49,7 +59,10 @@ namespace game.Entities.Enemies
                 var bluegem = new Gem(Position);
                 GameManager.Instance.AddEntity(bluegem);
 
+                GameScene.Instance._uiManager.RemoveComponent(hpBar);
+
                 GameManager.Instance._waveManager.RemoveEnemy(this);
+
                 return true;
             }
             else
@@ -62,6 +75,7 @@ namespace game.Entities.Enemies
         public override void Draw(float deltaTime)
         {
             base.Draw(deltaTime);
+
             HitFlash(deltaTime);
         }
 
@@ -127,6 +141,13 @@ namespace game.Entities.Enemies
             base.Update();
             MoveTowardsPlayer(player, deltaTime);
             SetPosition(Position);
+
+            if(hpBar != null)
+            {
+                hpBar.Position = new Vector2f(Position.X, Position.Y - base.HitBoxDimensions.Height);
+            }
+            
+
         }
 
         public void SetPosition(Vector2f position)

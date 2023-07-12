@@ -5,14 +5,16 @@ using game.Entities.Pickups;
 using game.Managers;
 using SFML.Graphics;
 using SFML.System;
+using System;
+using System.Collections.Generic;
 
 public class Player : Entity
 {
     private Vector2f precisePosition;
     private float speed = 150f;
 
-    private int MaxXP = 10;
-    private int CurrentXP = 0;
+    public int MaxXP = 10;
+    public int CurrentXP = 0;
 
     public List<Ability> Abilities { get; private set; } = new List<Ability>();
 
