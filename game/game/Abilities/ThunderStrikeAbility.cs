@@ -33,7 +33,7 @@ namespace game.Abilities
             float y = (float)Math.Sin(angle) * radius;
             Vector2f randomPosition = new Vector2f(playerPosition.X + x, playerPosition.Y + y);
 
-            GameManager.Instance.AddEntity(new ThunderStrikeEntity(randomPosition));
+            EntityManager.Instance.AddEntity(new ThunderStrikeEntity(randomPosition));
             abilityClock.Restart();
         }
 

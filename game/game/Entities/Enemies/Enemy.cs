@@ -66,11 +66,11 @@ namespace game.Entities.Enemies
             if (HP <= 0)
             {
                 var bluegem = new Gem(Position);
-                GameManager.Instance.AddEntity(bluegem);
+                EntityManager.Instance.AddEntity(bluegem);
 
                 GameScene.Instance._uiManager.RemoveComponent(hpBar);
 
-                GameManager.Instance.RemoveEntity(this);
+                EntityManager.Instance.RemoveEntity(this);
 
                 return true;
             }

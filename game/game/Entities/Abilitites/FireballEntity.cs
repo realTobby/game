@@ -41,7 +41,7 @@ namespace game.Entities.Abilitites
         {
             if(killTimer.ElapsedTime > Time.FromSeconds(4))
             {
-                GameManager.Instance.RemoveEntity(this);
+                EntityManager.Instance.RemoveEntity(this);
             }
 
             HitBoxDimensions = new FloatRect(Position.X, Position.Y, HitBoxDimensions.Width, HitBoxDimensions.Height);
@@ -60,7 +60,7 @@ namespace game.Entities.Abilitites
                 if (CheckCollisionWithEnemy())
                 {
 
-                    GameManager.Instance.RemoveEntity(this);
+                    EntityManager.Instance.RemoveEntity(this);
                 }
 
                 if (!GameManager.Instance.EntityExists(target))

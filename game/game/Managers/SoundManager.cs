@@ -1,6 +1,7 @@
 ﻿using SFML.Audio;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,6 +12,7 @@ namespace game.Managers
     {
         Random random = new Random();
 
+        [AllowNull]
         private static SoundManager _instance;
         public static SoundManager Instance => _instance;
 

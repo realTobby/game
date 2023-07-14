@@ -1,71 +1,125 @@
 ﻿using game.Entities;
 using game.Entities.Enemies;
 using game.Entities.Pickups;
+using game.Scenes;
+using SFML.System;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace game.Managers
 {
     public class EntityManager
     {
-        private static EntityManager _instacne;
-        public static EntityManager Instance => _instacne;
+        [AllowNull]
+        private static EntityManager _instance;
+        public static EntityManager Instance => _instance;
 
         private GemManager gemManager;
 
         private List<Entity> entities;
+        private List<Enemy> enemies;
+
+        private Thread updateThread;
+        private bool isUpdating;
 
         public EntityManager()
         {
-            if (_instacne == null) _instacne = this;
+            if (_instance == null) _instance = this;
 
             entities = new List<Entity>();
+            enemies = new List<Enemy>();
             gemManager = new GemManager();
+
+            updateThread = new Thread(UpdateLoop);
+            isUpdating = false;
+
         }
 
         public List<Entity> Entities => entities;
+        public List<Enemy> Enemies => enemies;
 
         public void AddEntity(Entity entity)
         {
-            if(entity.GetType() == typeof(Gem) || entity.GetType() == typeof(MaxiGem))
+            if (entity is Gem || entity is MaxiGem)
             {
                 gemManager.ActiveGems.Add((Gem)entity);
             }
 
             entities.Add(entity);
+
+            if (entity is Enemy enemy)
+            {
+                enemies.Add(enemy);
+            }
         }
 
         public void RemoveEntity(Entity entity)
         {
-            if(entity.GetType() == typeof(Gem) || entity.GetType() == typeof(MaxiGem))
+            if (entity is Gem || entity is MaxiGem)
             {
                 gemManager.ActiveGems.Remove((Gem)entity);
             }
 
             entities.Remove(entity);
+
+            if (entity is Enemy enemy)
+            {
+                enemies.Remove(enemy);
+            }
         }
 
-        public void UpdateEntities(float deltaTime)
+        public void StartUpdatingEntities()
         {
-            gemManager.Update();
-
-            foreach (Entity entity in entities.ToList())
+            if (!isUpdating)
             {
-                entity.Update();
+                isUpdating = true;
+                updateThread.Start();
             }
+        }
 
+        public void StopUpdatingEntities()
+        {
+            if (isUpdating)
+            {
+                isUpdating = false;
+                updateThread.Join();
+            }
+        }
 
+        private void UpdateLoop()
+        {
+            float deltaTime = 0f;
+            Clock clock = new Clock();
 
+            while (isUpdating)
+            {
+                deltaTime = clock.Restart().AsSeconds();
+
+                gemManager.Update();
+
+                Parallel.ForEach(entities.ToList(), entity =>
+                {
+                    if(entity != null) entity.Update();
+
+                });
+
+                UpdateEnemyEntities(GameScene.Instance.player, deltaTime);
+
+                Thread.Sleep(10); // Adjust the sleep duration as needed
+            }
         }
 
         public void DrawEntities(float deltaTime)
         {
             foreach (Entity entity in entities.ToList())
             {
-                entity.Draw(deltaTime);
+                if(entity != null) entity.Draw(deltaTime);
+
             }
         }
 
@@ -73,10 +127,10 @@ namespace game.Managers
         {
             foreach (Enemy enemy in GameManager.Instance.GetEntities(new Type[] { typeof(Enemy) }))
             {
-                enemy.Update(player, deltaTime);
+                if(enemy != null) enemy.Update(player, deltaTime);
+
             }
         }
-
 
 
     }

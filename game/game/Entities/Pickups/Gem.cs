@@ -33,7 +33,7 @@ namespace game.Entities.Pickups
         public virtual int Pickup()
         {
             SoundManager.Instance.PlayGemPickup();
-            GameManager.Instance.RemoveEntity(this);
+            EntityManager.Instance.RemoveEntity(this);
             return XPGAIN;
         }
 

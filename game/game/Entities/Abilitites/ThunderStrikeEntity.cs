@@ -38,7 +38,7 @@ namespace game.Entities.Abilitites
 
             if (base.currentFrame >= base.sprites.Length - 1)
             {
-                GameManager.Instance.RemoveEntity(this);
+                EntityManager.Instance.RemoveEntity(this);
             }
 
         }

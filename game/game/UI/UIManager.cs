@@ -3,6 +3,7 @@ using game.Scenes;
 using SFML.Graphics;
 using SFML.System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace game.UI
 {
@@ -27,17 +28,19 @@ namespace game.UI
 
         public void Update()
         {
-            foreach (UIComponent component in _components)
+            foreach (UIComponent component in _components.ToList())
             {
-                component.Update();
+                if(component != null) component.Update();
+
             }
         }
 
         public void Draw()
         {
-            foreach (UIComponent component in _components)
+            foreach (UIComponent component in _components.ToList())
             {
-                component.Draw();
+                if(component != null) component.Draw();
+
             }
         }
 
@@ -52,9 +55,10 @@ namespace game.UI
             window.SetView(view);
 
             // Draw the UI components
-            foreach (UIComponent component in _components)
+            foreach (UIComponent component in _components.ToList())
             {
-                component.Draw();
+                if(component != null) component.Draw();
+
             }
 
             // Restore the original view

@@ -22,49 +22,47 @@ namespace game.Managers
         }
 
         private EntityManager entityManager;
+
         public WaveManager _waveManager;
 
         private GameManager()
         {
-            entityManager = new EntityManager();
             _waveManager = new WaveManager();
+            entityManager = new EntityManager();
         }
 
         public List<Entity> GetEntities()
         {
-            return entityManager.Entities;
+            return EntityManager.Instance.Entities;
         }
 
         public List<Entity> GetEntities(Type[] baseTypes)
         {
-            return entityManager.Entities
-                                .Where(x => baseTypes.Any(baseType => baseType.IsAssignableFrom(x.GetType())))
-                                .ToList();
+            return EntityManager.Instance.Entities
+                .Where(x => x != null && baseTypes.Any(baseType => baseType.IsAssignableFrom(x.GetType())))
+                .ToList();
         }
+
 
         public bool EntityExists(Entity entity)
         {
-            return entityManager.Entities.Contains(entity);
+            return EntityManager.Instance.Entities.Contains(entity);
         }
 
-        public void AddEntity(Entity entity)
-        {
-            entityManager.AddEntity(entity);
-        }
-
-        public void RemoveEntity(Entity entity)
-        {
-            entityManager.RemoveEntity(entity);
-        }
-
-        public void Update(float deltaTime)
-        {
-            entityManager.UpdateEntities(deltaTime);
-        }
 
         public void Draw(float deltaTime)
         {
-            entityManager.DrawEntities(deltaTime);
+            EntityManager.Instance.DrawEntities(deltaTime);
+        }
+
+        public void StopGame()
+        {
+            entityManager.StopUpdatingEntities();
+        }
+
+        public void Dispose()
+        {
+            StopGame();
         }
     }
 }

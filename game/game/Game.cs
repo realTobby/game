@@ -9,6 +9,7 @@ using SFML.System;
 using SFML.Window;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,6 +18,7 @@ namespace game
 {
     public class Game
     {
+        [AllowNull]
         private static Game _instance;
         public static Game Instance => _instance;
 
@@ -39,10 +41,16 @@ namespace game
             var mode = new VideoMode(800, 600);
             _gameWindow = new RenderWindow(mode, "Game");
             _gameWindow.SetFramerateLimit(60);
-            _gameWindow.Closed += (sender, e) => _gameWindow.Close();
+            _gameWindow.Closed += (sender, e) => StopGame();
 
             sceneManager = new SceneManager();
             sceneManager.PushScene(new MainMenuScene());
+        }
+
+        private void StopGame()
+        {
+            EntityManager.Instance.StopUpdatingEntities();
+            _gameWindow.Close();
         }
 
         public void Run()

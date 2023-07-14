@@ -11,6 +11,7 @@ using SFML.System;
 using SFML.Window;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.Linq;
 using System.Numerics;
@@ -21,6 +22,7 @@ namespace game.Scenes
 {
     public class GameScene : Scene
     {
+        [AllowNull]
         private static GameScene _instance;
         public static GameScene Instance => _instance;
 
@@ -66,7 +68,7 @@ namespace game.Scenes
             UI_Text debugSoundChannels = new UI_Text("SoundChannels: ", 8, new Vector2f(10,20), _viewCamera.view, new UIBinding<string>(() => soundManager.GetActiveChannels().ToString()));
             _uiManager.AddComponent(debugSoundChannels);
 
-
+            EntityManager.Instance.StartUpdatingEntities();
 
         }
 
@@ -135,13 +137,13 @@ namespace game.Scenes
             _uiManager.Update();
             player.Update(deltaTime);
             _viewCamera.Update(player.Position);
-            gameManager._waveManager.Update(player, deltaTime);
+            //gameManager._waveManager.Update(player, deltaTime);
 
             UpdateEnemyWave();
 
             UpdatePlayerAbilities(deltaTime);
 
-            gameManager.Update(deltaTime);
+            
 
         }
 

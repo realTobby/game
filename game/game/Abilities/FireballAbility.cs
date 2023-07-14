@@ -33,7 +33,7 @@ namespace game.Abilities
             Enemy nearestEnemy = GameScene.Instance.FindNearestEnemy(player.Position, GameManager.Instance.GetEntities(new Type[] { typeof(Enemy) }).Cast<Enemy>().ToList() );
             if (nearestEnemy == null)
                 return;
-            GameManager.Instance.AddEntity(new FireballEntity(player.Position, nearestEnemy));
+            EntityManager.Instance.AddEntity(new FireballEntity(player.Position, nearestEnemy));
             abilityClock.Restart();
         }
 

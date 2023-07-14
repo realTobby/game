@@ -34,7 +34,7 @@ namespace game.Managers
             {
                 // Create an enemy at each spawn position
                 TestEnemy enemy = new TestEnemy(position, enemySpeed);
-                GameManager.Instance.AddEntity(enemy);
+                EntityManager.Instance.AddEntity(enemy);
             }
         }
     }
