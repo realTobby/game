@@ -3,6 +3,8 @@ using game.Entities;
 using game.Entities.Enemies;
 using game.Entities.Pickups;
 using game.Managers;
+using game.Scenes;
+using game.UI;
 using SFML.Graphics;
 using SFML.System;
 using System;
@@ -18,6 +20,8 @@ public class Player : Entity
     public int MaxXP = 10;
     public int CurrentXP = 0;
 
+    private UI_PowerupMenu powerupMenu;
+
     public List<Ability> Abilities { get; private set; } = new List<Ability>();
 
     public Player(Vector2f initialPosition)
@@ -25,6 +29,9 @@ public class Player : Entity
     {
         precisePosition = initialPosition;
         Abilities.Add(new FireballAbility(this, 1.25f, 25f, 5f));
+
+        powerupMenu = new UI_PowerupMenu(new Vector2f(100, 100), GameScene.Instance._viewCamera.view);
+        GameScene.Instance._uiManager.AddComponent(powerupMenu);
     }
 
     public string GetUIXPString()
@@ -58,6 +65,8 @@ public class Player : Entity
                 {
                     if (CurrentXP + xpAmount >= MaxXP)
                     {
+                        
+
                         xpAmount -= (MaxXP - CurrentXP);
                         CurrentXP = 0;
                         MaxXP += 5;
@@ -71,7 +80,8 @@ public class Player : Entity
                             Abilities.Add(new ThunderStrikeAbility(5f));
                         }
 
-                        
+                        powerupMenu.OpenWindow();
+
                     }
                     else
                     {

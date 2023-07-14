@@ -35,12 +35,8 @@ namespace game.UI
         }
 
         public abstract void Update();
-        public virtual void Draw()
-        {
-            
 
-            
-        }
+        public abstract void Draw();
 
         View originalViewTMP;
 

@@ -71,7 +71,7 @@ namespace game.UI
 
             fillShape = new RectangleShape(size);
             fillShape.FillColor = color;
-            backgroundShape.Position = position;
+            fillShape.Position = position;
         }
 
         public override void Draw()

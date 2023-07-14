@@ -1,5 +1,6 @@
 ﻿using game.Managers;
 using game.Models;
+using game.Scenes;
 using SFML.Graphics;
 using SFML.System;
 using System;
@@ -12,9 +13,25 @@ namespace game.Entities
 {
     public abstract class Entity : AnimatedSprite
     {
+        private Clock deltaClock = new Clock();
+
         public Vector2f Position { get; set; }
 
         public int Damage = 0;
+
+        public bool IsMagnetized = false;
+
+        private void MoveTowardsPlayer(Player player, float deltaTime)
+        {
+            if (GameManager.Instance.IsGamePaused == false)
+            {
+                Vector2f direction = player.Position - Position;
+                float magnitude = (float)Math.Sqrt(direction.X * direction.X + direction.Y * direction.Y);
+                direction = direction / magnitude; // Normalize the direction vector
+                Position += direction * 300f * deltaTime;
+                SetPosition(Position);
+            }
+        }
 
         public Entity(string category, string entityName, int frameCount, Vector2f initialPosition)
             : base(category, entityName, frameCount)
@@ -29,7 +46,17 @@ namespace game.Entities
 
         public virtual void Update()
         {
-            base.Update();
+            float deltaTime = deltaClock.Restart().AsSeconds();
+
+            
+                base.Update();
+
+
+                if (IsMagnetized)
+                {
+                    MoveTowardsPlayer(GameScene.Instance.player, deltaTime);
+                }
+            
         }
 
         public virtual void Draw(float deltaTime)

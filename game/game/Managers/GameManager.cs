@@ -1,4 +1,6 @@
 ﻿using game.Entities;
+using game.Entities.Enemies;
+using game.Entities.Pickups;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,9 +23,24 @@ namespace game.Managers
             }
         }
 
+        public bool IsGamePaused = false;
+
         private EntityManager entityManager;
 
         public WaveManager _waveManager;
+
+        public void MagnetizeGems()
+        {
+            foreach (Gem gem in GetEntities(new Type[2] { typeof(Gem), typeof(MaxiGem) }))
+            {
+                gem.IsMagnetized = true;
+            }
+
+            //foreach (Enemy enemy in GetEntities(new Type[1] { typeof(Enemy)}))
+            //{
+            //    enemy.IsMagnetized = true;
+            //}
+        }
 
         private GameManager()
         {

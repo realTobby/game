@@ -147,30 +147,32 @@ namespace game.Entities.Enemies
 
         public virtual void Update(Player player, float deltaTime)
         {
-            base.Update();
-            MoveTowardsPlayer(player, deltaTime);
-            SetPosition(Position);
-
-            if(hpBar != null)
+            if (GameManager.Instance.IsGamePaused == false)
             {
-                hpBar.Position = new Vector2f(Position.X, Position.Y - base.HitBoxDimensions.Height);
-            }
+                base.Update();
+                MoveTowardsPlayer(player, deltaTime);
+                SetPosition(Position);
 
-            
-
-            if(CanBeDamaged == false)
-            {
-                if(invisibleClock.ElapsedTime.AsSeconds() >= invisDuration)
+                if (hpBar != null)
                 {
-                    CanBeDamaged = true;
-                    invisibleClock.Restart();
+                    hpBar.Position = new Vector2f(Position.X, Position.Y - base.HitBoxDimensions.Height);
+                }
+
+
+
+                if (CanBeDamaged == false)
+                {
+                    if (invisibleClock.ElapsedTime.AsSeconds() >= invisDuration)
+                    {
+                        CanBeDamaged = true;
+                        invisibleClock.Restart();
+                    }
+                }
+                else
+                {
+                    CheckCollisionWithEntityType(new Type[] { typeof(AbilityEntity) });
                 }
             }
-            else
-            {
-                CheckCollisionWithEntityType(new Type[] { typeof(AbilityEntity) });
-            }
-
         }
 
         public void AbilityCollision(AbilityEntity entity)

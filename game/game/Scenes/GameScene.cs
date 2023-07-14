@@ -30,7 +30,7 @@ namespace game.Scenes
 
         public UIManager _uiManager;
         private OverworldManager _overworldManager;
-        private ViewCamera _viewCamera;
+        public ViewCamera _viewCamera;
 
         private InputManager _inputManager;
 
@@ -47,12 +47,9 @@ namespace game.Scenes
             _inputManager = new InputManager();
             _uiManager = new UIManager();
             _overworldManager = new OverworldManager(100);
-
+            _viewCamera = new ViewCamera();
             player = new Player(new Vector2f(0,0));
 
-            _viewCamera = new ViewCamera();
-
-            _uiManager = new UIManager();
 
             waveTimer = new Clock();
 
@@ -108,23 +105,32 @@ namespace game.Scenes
 
         private void HandlePlayerMovement(float deltaTime)
         {
-            Vector2f movement = new Vector2f(0, 0);
+            if (GameManager.Instance.IsGamePaused == false)
+            {
 
-            if (_inputManager.IsKeyPressed(Keyboard.Key.W))
-            {
-                player.MoveUp(deltaTime);
-            }
-            if (_inputManager.IsKeyPressed(Keyboard.Key.S))
-            {
-                player.MoveDown(deltaTime);
-            }
-            if (_inputManager.IsKeyPressed(Keyboard.Key.A))
-            {
-                player.MoveLeft(deltaTime);
-            }
-            if (_inputManager.IsKeyPressed(Keyboard.Key.D))
-            {
-                player.MoveRight(deltaTime);
+                Vector2f movement = new Vector2f(0, 0);
+
+                if (_inputManager.IsKeyPressed(Keyboard.Key.W))
+                {
+                    player.MoveUp(deltaTime);
+                }
+                if (_inputManager.IsKeyPressed(Keyboard.Key.S))
+                {
+                    player.MoveDown(deltaTime);
+                }
+                if (_inputManager.IsKeyPressed(Keyboard.Key.A))
+                {
+                    player.MoveLeft(deltaTime);
+                }
+                if (_inputManager.IsKeyPressed(Keyboard.Key.D))
+                {
+                    player.MoveRight(deltaTime);
+                }
+
+                if (_inputManager.IsKeyPressed(Keyboard.Key.Space))
+                {
+                    GameManager.Instance.MagnetizeGems();
+                }
             }
         }
 
@@ -165,12 +171,15 @@ namespace game.Scenes
 
         private void UpdatePlayerAbilities(float deltaTime)
         {
-            foreach (Ability ability in player.Abilities)
+            if (GameManager.Instance.IsGamePaused == false)
             {
-                if (ability.abilityClock.ElapsedTime.AsSeconds() >= ability.Cooldown)
+                foreach (Ability ability in player.Abilities)
                 {
-                    ability.Activate();
-                    ability.LastActivatedTime = ability.abilityClock.Restart().AsSeconds();
+                    if (ability.abilityClock.ElapsedTime.AsSeconds() >= ability.Cooldown)
+                    {
+                        ability.Activate();
+                        ability.LastActivatedTime = ability.abilityClock.Restart().AsSeconds();
+                    }
                 }
             }
         }

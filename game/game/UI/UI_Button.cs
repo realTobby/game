@@ -56,6 +56,11 @@ namespace game.UI
         public override void Update()
         {
             var mousePos = Mouse.GetPosition(Game.Instance.GetRenderWindow());
+
+            // Adjust mouse position based on the view offset
+            mousePos.X += (int)Game.Instance.GetRenderWindow().GetView().Center.X - (int)Game.Instance.GetRenderWindow().Size.X / 2;
+            mousePos.Y += (int)Game.Instance.GetRenderWindow().GetView().Center.Y - (int)Game.Instance.GetRenderWindow().Size.Y / 2;
+
             FloatRect buttonBounds = _buttonSprite.GetGlobalBounds();
 
             // Check if mouse is over the button
@@ -79,5 +84,6 @@ namespace game.UI
 
             _text.Update();
         }
+
     }
 }
