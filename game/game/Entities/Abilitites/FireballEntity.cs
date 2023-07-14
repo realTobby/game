@@ -65,7 +65,7 @@ namespace game.Entities.Abilitites
 
                 if (!GameManager.Instance.EntityExists(target))
                 {
-                    target = GameScene.Instance.FindNearestEnemy(Position, GameManager.Instance.GetEntities(new Type[] { typeof(Enemy) }).Cast<Enemy>().ToList());
+                    EntityManager.Instance.RemoveEntity(this);
                 }
             }
 

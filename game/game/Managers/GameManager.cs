@@ -28,7 +28,7 @@ namespace game.Managers
         private GameManager()
         {
             _waveManager = new WaveManager();
-            entityManager = new EntityManager();
+            entityManager = EntityManager.Instance;
         }
 
         public List<Entity> GetEntities()

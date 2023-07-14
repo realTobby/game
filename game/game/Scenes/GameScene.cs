@@ -179,14 +179,19 @@ namespace game.Scenes
         {
             Enemy nearestEnemy = null;
             float nearestDistance = float.MaxValue;
+            int lowestHealth = int.MaxValue;
 
             foreach (Enemy enemy in enemies)
             {
-                float distance = CalculateDistance(position, enemy.Position);
-                if (distance < nearestDistance)
+                if (enemy.HP <= lowestHealth && enemy.HP > 0) // Check if enemy has lower health and is not defeated
                 {
-                    nearestEnemy = enemy;
-                    nearestDistance = distance;
+                    float distance = CalculateDistance(position, enemy.Position);
+                    if (distance < nearestDistance)
+                    {
+                        nearestEnemy = enemy;
+                        nearestDistance = distance;
+                        lowestHealth = enemy.HP;
+                    }
                 }
             }
 

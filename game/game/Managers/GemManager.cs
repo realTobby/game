@@ -17,7 +17,7 @@ namespace game.Managers
 
         public void Update()
         {
-            if(ActiveGems.Count > 100)
+            if(ActiveGems.Count > 200)
             {
                 int totalXP = 0;
 

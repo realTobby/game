@@ -1,23 +1,18 @@
-﻿using game.Entities;
-using game.Entities.Enemies;
+﻿using game.Entities.Enemies;
 using game.Entities.Pickups;
+using game.Entities;
 using game.Scenes;
 using SFML.System;
-using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
+using System.Linq;
 
 namespace game.Managers
 {
     public class EntityManager
     {
-        [AllowNull]
         private static EntityManager _instance;
-        public static EntityManager Instance => _instance;
+        private static readonly object _lock = new object();
 
         private GemManager gemManager;
 
@@ -27,67 +22,111 @@ namespace game.Managers
         private Thread updateThread;
         private bool isUpdating;
 
-        public EntityManager()
+        public static EntityManager Instance
         {
-            if (_instance == null) _instance = this;
+            get
+            {
+                lock (_lock)
+                {
+                    if (_instance == null)
+                        _instance = new EntityManager();
+                    return _instance;
+                }
+            }
+        }
 
+        private EntityManager()
+        {
             entities = new List<Entity>();
             enemies = new List<Enemy>();
             gemManager = new GemManager();
 
             updateThread = new Thread(UpdateLoop);
             isUpdating = false;
-
         }
 
-        public List<Entity> Entities => entities;
-        public List<Enemy> Enemies => enemies;
+        public List<Entity> Entities
+        {
+            get
+            {
+                lock (_lock)
+                {
+                    return new List<Entity>(entities);
+                }
+            }
+        }
+
+        public List<Enemy> Enemies
+        {
+            get
+            {
+                lock (_lock)
+                {
+                    return new List<Enemy>(enemies);
+                }
+            }
+        }
 
         public void AddEntity(Entity entity)
         {
-            if (entity is Gem || entity is MaxiGem)
+            lock (_lock)
             {
-                gemManager.ActiveGems.Add((Gem)entity);
-            }
+                if (entity is Gem || entity is MaxiGem)
+                {
+                    gemManager.ActiveGems.Add((Gem)entity);
+                }
 
-            entities.Add(entity);
+                entities.Add(entity);
 
-            if (entity is Enemy enemy)
-            {
-                enemies.Add(enemy);
+                if (entity is Enemy enemy)
+                {
+                    enemies.Add(enemy);
+                }
             }
         }
 
         public void RemoveEntity(Entity entity)
         {
-            if (entity is Gem || entity is MaxiGem)
+            lock (_lock)
             {
-                gemManager.ActiveGems.Remove((Gem)entity);
-            }
+                if (entities.Contains(entity))
+                {
+                    entities.Remove(entity);
 
-            entities.Remove(entity);
+                    if (entity is Gem || entity is MaxiGem)
+                    {
+                        gemManager.ActiveGems.Remove((Gem)entity);
+                    }
 
-            if (entity is Enemy enemy)
-            {
-                enemies.Remove(enemy);
+                    if (entity is Enemy enemy)
+                    {
+                        enemies.Remove(enemy);
+                    }
+                }
             }
         }
 
         public void StartUpdatingEntities()
         {
-            if (!isUpdating)
+            lock (_lock)
             {
-                isUpdating = true;
-                updateThread.Start();
+                if (!isUpdating)
+                {
+                    isUpdating = true;
+                    updateThread.Start();
+                }
             }
         }
 
         public void StopUpdatingEntities()
         {
-            if (isUpdating)
+            lock (_lock)
             {
-                isUpdating = false;
-                updateThread.Join();
+                if (isUpdating)
+                {
+                    isUpdating = false;
+                    updateThread.Join();
+                }
             }
         }
 
@@ -96,17 +135,23 @@ namespace game.Managers
             float deltaTime = 0f;
             Clock clock = new Clock();
 
-            while (isUpdating)
+            while (true)
             {
-                deltaTime = clock.Restart().AsSeconds();
-
-                gemManager.Update();
-
-                Parallel.ForEach(entities.ToList(), entity =>
+                lock (_lock)
                 {
-                    if(entity != null) entity.Update();
+                    if (!isUpdating)
+                        break;
 
-                });
+                    deltaTime = clock.Restart().AsSeconds();
+
+                    gemManager.Update();
+
+                    foreach (Entity entity in entities.ToList())
+                    {
+                        if (entity != null)
+                            entity.Update();
+                    }
+                }
 
                 UpdateEnemyEntities(GameScene.Instance.player, deltaTime);
 
@@ -116,22 +161,26 @@ namespace game.Managers
 
         public void DrawEntities(float deltaTime)
         {
-            foreach (Entity entity in entities.ToList())
+            lock (_lock)
             {
-                if(entity != null) entity.Draw(deltaTime);
-
+                foreach (Entity entity in entities.ToList())
+                {
+                    if (entity != null)
+                        entity.Draw(deltaTime);
+                }
             }
         }
 
         public void UpdateEnemyEntities(Player player, float deltaTime)
         {
-            foreach (Enemy enemy in GameManager.Instance.GetEntities(new Type[] { typeof(Enemy) }))
+            lock (_lock)
             {
-                if(enemy != null) enemy.Update(player, deltaTime);
-
+                foreach (Enemy enemy in enemies.ToList())
+                {
+                    if (enemy != null)
+                        enemy.Update(player, deltaTime);
+                }
             }
         }
-
-
     }
 }
