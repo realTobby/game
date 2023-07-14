@@ -13,7 +13,7 @@ using static System.Net.Mime.MediaTypeNames;
 
 namespace game.Entities.Abilitites
 {
-    public class FireballEntity : Entity
+    public class FireballEntity : AbilityEntity
     {
         public Clock killTimer = new Clock();
 
@@ -21,11 +21,15 @@ namespace game.Entities.Abilitites
 
         public Enemy target;
 
-        public FireballEntity(Vector2f initialPosition, Enemy targetEnemy) : base(TextureLoader.Instance.GetTexture("burning_loop_1", "Entities/Abilities"), 1, 8, Time.FromSeconds(0.1f), initialPosition)
+        public FireballEntity(Vector2f initialPosition, Enemy targetEnemy) : base("Fireball", initialPosition, TextureLoader.Instance.GetTexture("burning_loop_1", "Entities/Abilities"), 1, 8, Time.FromSeconds(0.1f))
         {
+            CanCheckCollision = true;
+
             target = targetEnemy;
 
             SetPosition(initialPosition);
+
+            Damage = 1;
         }
 
         public override void Draw(float deltaTime)
@@ -35,7 +39,7 @@ namespace game.Entities.Abilitites
 
         public override void Update()
         {
-            if(killTimer.ElapsedTime > Time.FromSeconds(7))
+            if(killTimer.ElapsedTime > Time.FromSeconds(4))
             {
                 GameManager.Instance.RemoveEntity(this);
             }
@@ -44,34 +48,29 @@ namespace game.Entities.Abilitites
 
             base.Update();
 
-            if(target == null)
+            if(target != null)
             {
-                GameManager.Instance.RemoveEntity(this);
-            }
+                var direction = target.Position - Position;
+                var distance = Math.Sqrt(direction.X * direction.X + direction.Y * direction.Y);
+                var normalizedDirection = new Vector2f((float)(direction.X / distance), (float)(direction.Y / distance));
+                Position += normalizedDirection * 2f;
+                SetPosition(Position);
 
-            var direction = target.Position - Position;
-            var distance = Math.Sqrt(direction.X * direction.X + direction.Y * direction.Y);
-            var normalizedDirection = new Vector2f((float)(direction.X / distance), (float)(direction.Y / distance));
-            Position += normalizedDirection * 2f;
-            SetPosition(Position);
-
-            // Check if the fireball has reached its target
-            if(CheckCollisionWithEnemy())
-            {
-                // Remove the fireball entity from the game
-                if(target.TakeDamage(1))
+                // Check if the fireball has reached its target
+                if (CheckCollisionWithEnemy())
                 {
-                    previousTargets.Add(target);
-                    SetPosition(target.Position);
-                    Enemy nearestEnemy = GameScene.Instance.FindNearestEnemy(target.Position, GameManager.Instance._waveManager.CurrentEnemies, previousTargets);
-                    if (nearestEnemy == null)
-                        return;
 
-                    GameManager.Instance.AddEntity(new FireballEntity(target.Position, nearestEnemy) { previousTargets = previousTargets });
+                    GameManager.Instance.RemoveEntity(this);
                 }
 
-                GameManager.Instance.RemoveEntity(this);
+                if (!GameManager.Instance.EntityExists(target))
+                {
+                    target = GameScene.Instance.FindNearestEnemy(Position, GameManager.Instance.GetEntities(new Type[] { typeof(Enemy) }).Cast<Enemy>().ToList());
+                }
             }
+
+            
+
         }
 
         private bool CheckCollisionWithEnemy()
@@ -105,7 +104,7 @@ namespace game.Entities.Abilitites
             //}
 
 
-            foreach (Enemy enemy in GameManager.Instance._waveManager.CurrentEnemies)
+            foreach (Enemy enemy in GameManager.Instance.GetEntities(new Type[] { typeof(Enemy) }).Cast<Enemy>().ToList())
             {
                 if (CheckCollision(enemy))
                 {

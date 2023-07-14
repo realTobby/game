@@ -28,13 +28,13 @@ namespace game.Managers
             spawnPositions.Add(position);
         }
 
-        public void SpawnEnemies(List<Enemy> enemies)
+        public void SpawnEnemies()
         {
             foreach (Vector2f position in spawnPositions)
             {
                 // Create an enemy at each spawn position
                 TestEnemy enemy = new TestEnemy(position, enemySpeed);
-                enemies.Add(enemy);
+                GameManager.Instance.AddEntity(enemy);
             }
         }
     }

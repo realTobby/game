@@ -78,28 +78,32 @@ namespace game.UI
         {
             if(FollowUI) base.StartUIDraw();
 
-
-            // Update the position relative to the camera view
-            if (base.cameraView != null)
+            if(_currentValue != _maxValue)
             {
-                Vector2f offsetPosition = Position + cameraView.Center - cameraView.Size / 2f;
+                // Update the position relative to the camera view
+                if (base.cameraView != null)
+                {
+                    Vector2f offsetPosition = Position + cameraView.Center - cameraView.Size / 2f;
 
-                backgroundShape.Position = offsetPosition;
-                fillShape.Position = offsetPosition;
+                    backgroundShape.Position = offsetPosition;
+                    fillShape.Position = offsetPosition;
+                }
+
+                if (FollowUI == false)
+                {
+                    backgroundShape.Position = new Vector2f(parent.Position.X, parent.Position.Y - 20);
+                    fillShape.Position = new Vector2f(parent.Position.X, parent.Position.Y - 20);
+                }
+
+                Vector2f size = fillShape.Size;
+                size.X = backgroundShape.Size.X * ((float)_currentValue / (float)_maxValue);
+                fillShape.Size = new Vector2f(size.X, size.Y);
+
+                Game.Instance.GetRenderWindow().Draw(backgroundShape);
+                Game.Instance.GetRenderWindow().Draw(fillShape);
             }
 
-            if(FollowUI == false)
-            {
-                backgroundShape.Position = new Vector2f(parent.Position.X, parent.Position.Y-20);
-                fillShape.Position = new Vector2f(parent.Position.X, parent.Position.Y - 20);
-            }
             
-            Vector2f size = fillShape.Size;
-            size.X = backgroundShape.Size.X * ((float)_currentValue / (float)_maxValue);
-            fillShape.Size = new Vector2f(size.X, size.Y);
-
-            Game.Instance.GetRenderWindow().Draw(backgroundShape);
-            Game.Instance.GetRenderWindow().Draw(fillShape);
 
             if(FollowUI) base.EndUIDraw();
             

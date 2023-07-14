@@ -95,6 +95,12 @@ namespace game.Managers
             LastChannel.Play();
         }
 
+        public void PlayExplosion()
+        {
+            InitSound(SFX_EXPLOSION, 15);
+            LastChannel.Pitch = (float)random.NextDouble() * 0.2f + 0.9f;
+            LastChannel.Play();
+        }
 
 
     }

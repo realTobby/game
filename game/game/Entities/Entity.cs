@@ -14,7 +14,7 @@ namespace game.Entities
     {
         public Vector2f Position { get; set; }
 
-        
+        public int Damage = 0;
 
         public Entity(string category, string entityName, int frameCount, Vector2f initialPosition)
             : base(category, entityName, frameCount)

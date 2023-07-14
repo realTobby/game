@@ -1,4 +1,5 @@
 ﻿using game.Entities;
+using game.Entities.Enemies;
 using game.Entities.Pickups;
 using System;
 using System.Collections.Generic;
@@ -10,12 +11,17 @@ namespace game.Managers
 {
     public class EntityManager
     {
+        private static EntityManager _instacne;
+        public static EntityManager Instance => _instacne;
+
         private GemManager gemManager;
 
         private List<Entity> entities;
 
         public EntityManager()
         {
+            if (_instacne == null) _instacne = this;
+
             entities = new List<Entity>();
             gemManager = new GemManager();
         }
@@ -50,6 +56,9 @@ namespace game.Managers
             {
                 entity.Update();
             }
+
+
+
         }
 
         public void DrawEntities(float deltaTime)
@@ -59,5 +68,16 @@ namespace game.Managers
                 entity.Draw(deltaTime);
             }
         }
+
+        public void UpdateEnemyEntities(Player player, float deltaTime)
+        {
+            foreach (Enemy enemy in GameManager.Instance.GetEntities(new Type[] { typeof(Enemy) }))
+            {
+                enemy.Update(player, deltaTime);
+            }
+        }
+
+
+
     }
 }

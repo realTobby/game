@@ -1,4 +1,6 @@
-﻿using game.Controllers;
+﻿using game.Abilities;
+using game.Controllers;
+using game.Entities.Abilitites;
 using game.Entities.Pickups;
 using game.Managers;
 using game.Scenes;
@@ -29,6 +31,11 @@ namespace game.Entities.Enemies
         private float flashTimer = 0f; // Timer for the flash effect
 
 
+        public bool CanBeDamaged = true;
+        private Clock invisibleClock = new Clock();
+        private float invisDuration = .5f;
+        
+
         public Enemy(string category, string entityName, int frameCount, Vector2f initialPosition, float speed)
             : base(category, entityName, frameCount, initialPosition)
         {
@@ -52,7 +59,8 @@ namespace game.Entities.Enemies
 
         public bool TakeDamage(int dmg)
         {
-
+            if(!CanBeDamaged) return false;
+            CanBeDamaged = false;
             SoundManager.Instance.PlayHit();
             HP -= dmg;
             if (HP <= 0)
@@ -62,7 +70,7 @@ namespace game.Entities.Enemies
 
                 GameScene.Instance._uiManager.RemoveComponent(hpBar);
 
-                GameManager.Instance._waveManager.RemoveEnemy(this);
+                GameManager.Instance.RemoveEntity(this);
 
                 return true;
             }
@@ -147,8 +155,45 @@ namespace game.Entities.Enemies
             {
                 hpBar.Position = new Vector2f(Position.X, Position.Y - base.HitBoxDimensions.Height);
             }
+
             
 
+            if(CanBeDamaged == false)
+            {
+                if(invisibleClock.ElapsedTime.AsSeconds() >= invisDuration)
+                {
+                    CanBeDamaged = true;
+                    invisibleClock.Restart();
+                }
+            }
+            else
+            {
+                CheckCollisionWithEntityType(new Type[] { typeof(AbilityEntity) });
+            }
+
+        }
+
+        public void AbilityCollision(AbilityEntity entity)
+        {
+            TakeDamage(entity.Damage);
+        }
+
+        private void CheckCollisionWithEntityType(Type[] entityTypse)
+        {
+            var abilityEntities = GameManager.Instance.GetEntities(entityTypse);
+            //Console.WriteLine(abilityEntities.Count() + " abilities could hurt me!");
+            foreach (AbilityEntity ability in abilityEntities)
+            {
+                if(ability.CanCheckCollision)
+                {
+                    if (CheckCollision(ability))
+                    {
+                        //Console.WriteLine("I got hit by " + ability.AbilityName);
+                        TakeDamage(ability.Damage);
+                    }
+                }
+                
+            }
         }
 
         public void SetPosition(Vector2f position)

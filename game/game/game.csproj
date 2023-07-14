@@ -90,14 +90,13 @@
     <None Update="Assets\VFX\EXPLOSION.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Assets\VFX\thunderStrike.png">
+    <None Update="Assets\Entities\Abilities\thunderStrike.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Assets\Entities\Enemies\" />
-    <Folder Include="Assets\Entities\Abilities\" />
     <Folder Include="Assets\Entities\Pickups\" />
     <Folder Include="Assets\Fonts\" />
     <Folder Include="Assets\BGM\" />

@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.AccessControl;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -34,11 +35,16 @@ namespace game.Managers
             return entityManager.Entities;
         }
 
-        public List<Entity> GetEntities(Type[] specificEntityTypes)
+        public List<Entity> GetEntities(Type[] baseTypes)
         {
             return entityManager.Entities
-                         .Where(x => specificEntityTypes.Contains(x.GetType()))
-                         .ToList();
+                                .Where(x => baseTypes.Any(baseType => baseType.IsAssignableFrom(x.GetType())))
+                                .ToList();
+        }
+
+        public bool EntityExists(Entity entity)
+        {
+            return entityManager.Entities.Contains(entity);
         }
 
         public void AddEntity(Entity entity)

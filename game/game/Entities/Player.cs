@@ -10,6 +10,8 @@ using System.Collections.Generic;
 
 public class Player : Entity
 {
+    private Random rnd = new Random();
+
     private Vector2f precisePosition;
     private float speed = 150f;
 
@@ -49,7 +51,7 @@ public class Player : Entity
         {
             if (CheckCollision(gem))
             {
-                Console.WriteLine("XP GAINED!");
+                //Console.WriteLine("XP GAINED!");
                 int xpAmount = gem.Pickup();
 
                 while(xpAmount > 0)
@@ -59,7 +61,17 @@ public class Player : Entity
                         xpAmount -= (MaxXP - CurrentXP);
                         CurrentXP = 0;
                         MaxXP += 5;
-                        Abilities.Add(new FireballAbility(this, 1.25f, 25f, 5f));
+
+                        if(rnd.Next(100) > 50)
+                        {
+                            Abilities.Add(new FireballAbility(this, 1.25f, 25f, 5f));
+                        }
+                        else
+                        {
+                            Abilities.Add(new ThunderStrikeAbility(5f));
+                        }
+
+                        
                     }
                     else
                     {

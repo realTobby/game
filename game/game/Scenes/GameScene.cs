@@ -72,7 +72,7 @@ namespace game.Scenes
 
         private void GenerateNewWave()
         {
-            if(gameManager._waveManager.CurrentEnemies.Count < 125)
+            if(GameManager.Instance.GetEntities(new Type[] { typeof(Enemy) }).Cast<Enemy>().ToList().Count < 125)
             {
                 EnemyWave wave = new EnemyWave(1f, 25f);
 

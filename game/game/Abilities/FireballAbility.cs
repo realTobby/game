@@ -30,10 +30,11 @@ namespace game.Abilities
 
         public override void Activate()
         {
-            Enemy nearestEnemy = GameScene.Instance.FindNearestEnemy(player.Position, GameManager.Instance._waveManager.CurrentEnemies);
+            Enemy nearestEnemy = GameScene.Instance.FindNearestEnemy(player.Position, GameManager.Instance.GetEntities(new Type[] { typeof(Enemy) }).Cast<Enemy>().ToList() );
             if (nearestEnemy == null)
                 return;
             GameManager.Instance.AddEntity(new FireballEntity(player.Position, nearestEnemy));
+            abilityClock.Restart();
         }
 
         private Vector2f Normalize(Vector2f vector)
