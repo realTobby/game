@@ -39,6 +39,7 @@ public class Player : Entity
 
         CheckCollisionWithPickups();
 
+       
 
     }
 
@@ -51,12 +52,14 @@ public class Player : Entity
                 Console.WriteLine("XP GAINED!");
                 gem.Pickup();
                 CurrentXP++;
-                if(CurrentXP >= MaxXP)
+                if (CurrentXP >= MaxXP)
                 {
+                    SoundManager.Instance.PlayLevelUp();
                     CurrentXP = 0;
                     MaxXP += 5;
                     Abilities.Add(new FireballAbility(this, 1.25f, 25f, 5f));
                 }
+
             }
         }
     }

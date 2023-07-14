@@ -52,9 +52,13 @@ namespace game.Entities.Enemies
 
         public bool TakeDamage(int dmg)
         {
+
+            SoundManager.Instance.PlayHit();
             HP -= dmg;
             if (HP <= 0)
             {
+
+                
 
                 var bluegem = new Gem(Position);
                 GameManager.Instance.AddEntity(bluegem);

@@ -36,6 +36,8 @@ namespace game.Scenes
 
         private GameManager gameManager;
 
+        private SoundManager soundManager;
+
         public GameScene()
         {
             if (_instance == null) _instance = this;
@@ -53,7 +55,7 @@ namespace game.Scenes
             waveTimer = new Clock();
 
             gameManager = GameManager.Instance;
-
+            soundManager = new SoundManager();
 
             UI_ProgressBar xpBar = new UI_ProgressBar(new Vector2f(5, 0), new UIBinding<int>(() => player.CurrentXP), new UIBinding<int>(() => player.MaxXP), new Vector2f(128, 16), _viewCamera.view, SFML.Graphics.Color.Blue);
             _uiManager.AddComponent(xpBar);
@@ -61,8 +63,8 @@ namespace game.Scenes
             UI_Text xpText = new UI_Text("XP: ", 8, new Vector2f(10, 0), _viewCamera.view, new UIBinding<string>(() => player.GetUIXPString()));
             _uiManager.AddComponent(xpText);
 
-            //UI_ProgressBar hpBar = new UI_ProgressBar(new Vector2f(5, 16), new UIBinding<int>(() => player.HP), new UIBinding<int>(() => player.MaxXP), new Vector2f(128, 16), _viewCamera.view, Color.Blue);
-            //_uiManager.AddComponent(hpBar);
+            UI_Text debugSoundChannels = new UI_Text("SoundChannels: ", 8, new Vector2f(10,20), _viewCamera.view, new UIBinding<string>(() => soundManager.GetActiveChannels().ToString()));
+            _uiManager.AddComponent(debugSoundChannels);
 
 
 

@@ -48,7 +48,7 @@ namespace game
         public void Run()
         {
             backgroundMusic.Loop = true;
-            backgroundMusic.Volume = 1;
+            backgroundMusic.Volume = 20;
             backgroundMusic.Play();
 
             while (_gameWindow.IsOpen)

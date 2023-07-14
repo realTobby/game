@@ -12,15 +12,8 @@ namespace game.Entities.Pickups
 {
     public class Gem : Entity
     {
-
-        Sound sound = new Sound();
-
         public Gem(Vector2f initialPosition) : base(TextureLoader.Instance.GetTexture("gem_blue", "Entities/Pickups"), 1, 4, Time.FromSeconds(0.2f), initialPosition)
         {
-            SoundBuffer buffer = new SoundBuffer("Assets/SFX/pickup.wav");
-            sound.Volume = 30;
-            sound.SoundBuffer = buffer;
-
             SetScale(.7f);
 
             SetPosition(initialPosition);
@@ -29,7 +22,7 @@ namespace game.Entities.Pickups
 
         public void Pickup()
         {
-            sound.Play();
+            SoundManager.Instance.PlayGemPickup();
             GameManager.Instance.RemoveEntity(this);
         }
 
