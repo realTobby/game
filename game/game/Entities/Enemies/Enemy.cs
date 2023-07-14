@@ -57,9 +57,6 @@ namespace game.Entities.Enemies
             HP -= dmg;
             if (HP <= 0)
             {
-
-                
-
                 var bluegem = new Gem(Position);
                 GameManager.Instance.AddEntity(bluegem);
 

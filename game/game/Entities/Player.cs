@@ -45,19 +45,27 @@ public class Player : Entity
 
     private void CheckCollisionWithPickups()
     {
-        foreach (Gem gem in GameManager.Instance.GetEntities(typeof(Gem)))
+        foreach (Gem gem in GameManager.Instance.GetEntities(new Type[2] {typeof(Gem), typeof(MaxiGem)}))
         {
             if (CheckCollision(gem))
             {
                 Console.WriteLine("XP GAINED!");
-                gem.Pickup();
-                CurrentXP++;
-                if (CurrentXP >= MaxXP)
+                int xpAmount = gem.Pickup();
+
+                while(xpAmount > 0)
                 {
-                    SoundManager.Instance.PlayLevelUp();
-                    CurrentXP = 0;
-                    MaxXP += 5;
-                    Abilities.Add(new FireballAbility(this, 1.25f, 25f, 5f));
+                    if (CurrentXP + xpAmount >= MaxXP)
+                    {
+                        xpAmount -= (MaxXP - CurrentXP);
+                        CurrentXP = 0;
+                        MaxXP += 5;
+                        Abilities.Add(new FireballAbility(this, 1.25f, 25f, 5f));
+                    }
+                    else
+                    {
+                        CurrentXP += xpAmount;
+                        xpAmount = 0;
+                    }
                 }
 
             }

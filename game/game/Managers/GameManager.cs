@@ -34,9 +34,11 @@ namespace game.Managers
             return entityManager.Entities;
         }
 
-        public List<Entity> GetEntities(Type specificEntityType)
+        public List<Entity> GetEntities(Type[] specificEntityTypes)
         {
-            return entityManager.Entities.ToList().Where(x=>x.GetType() == specificEntityType).ToList();
+            return entityManager.Entities
+                         .Where(x => specificEntityTypes.Contains(x.GetType()))
+                         .ToList();
         }
 
         public void AddEntity(Entity entity)

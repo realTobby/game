@@ -27,6 +27,9 @@
     <None Update="Assets\Entities\Pickups\gem_blue.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Assets\Entities\Pickups\gem_green.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Assets\Entities\priestess\priestess_0.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

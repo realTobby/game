@@ -1,5 +1,5 @@
 ﻿using game.Managers;
-using SFML.Audio;
+using game.Scenes;
 using SFML.Graphics;
 using SFML.System;
 using System;
@@ -10,30 +10,24 @@ using System.Threading.Tasks;
 
 namespace game.Entities.Pickups
 {
-    public class Gem : Entity
+    public class MaxiGem : Gem
     {
-        public int XPGAIN = 1;
-
-        public Gem(Vector2f initialPosition) : base(TextureLoader.Instance.GetTexture("gem_blue", "Entities/Pickups"), 1, 4, Time.FromSeconds(0.2f), initialPosition)
+        public MaxiGem(Vector2f initialPosition, int xp) : base(initialPosition, TextureLoader.Instance.GetTexture("gem_green", "Entities/Pickups"))
         {
+            XPGAIN = xp;
+
             SetScale(.7f);
 
             SetPosition(initialPosition);
 
         }
 
-        public Gem(Vector2f initialPosition, Texture gem) : base(gem, 1, 4, Time.FromSeconds(0.2f), initialPosition)
-        {
-            SetScale(.8f);
-
-            SetPosition(initialPosition);
-        }
-
-
-        public virtual int Pickup()
+        public override int Pickup()
         {
             SoundManager.Instance.PlayGemPickup();
+
             GameManager.Instance.RemoveEntity(this);
+
             return XPGAIN;
         }
 
@@ -48,8 +42,5 @@ namespace game.Entities.Pickups
         {
             base.Draw(deltaTime);
         }
-
-        
-
     }
 }
