@@ -2,6 +2,7 @@
 using game.Entities;
 using game.Entities.Enemies;
 using game.Entities.Pickups;
+using game.Helpers;
 using game.Managers;
 using game.Scenes;
 using game.UI;
@@ -9,6 +10,8 @@ using SFML.Graphics;
 using SFML.System;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 
 public class Player : Entity
 {
@@ -19,6 +22,8 @@ public class Player : Entity
 
     public int MaxXP = 10;
     public int CurrentXP = 0;
+
+    public int Level = 1;
 
     private UI_PowerupMenu powerupMenu;
 
@@ -54,34 +59,31 @@ public class Player : Entity
 
     private void CheckCollisionWithPickups()
     {
-        foreach (Gem gem in GameManager.Instance.GetEntities(new Type[2] {typeof(Gem), typeof(MaxiGem)}))
+        foreach (Gem gem in GameManager.Instance.GetEntities(new Type[] { typeof(Gem), typeof(MaxiGem) }))
         {
             if (CheckCollision(gem))
             {
-                //Console.WriteLine("XP GAINED!");
                 int xpAmount = gem.Pickup();
 
-                while(xpAmount > 0)
+                while (xpAmount > 0)
                 {
+                    
                     if (CurrentXP + xpAmount >= MaxXP)
                     {
-                        
-
                         xpAmount -= (MaxXP - CurrentXP);
                         CurrentXP = 0;
                         MaxXP += 5;
+                        Level += 1;
 
-                        if(rnd.Next(100) > 50)
-                        {
-                            Abilities.Add(new FireballAbility(this, 1.25f, 25f, 5f));
-                        }
-                        else
-                        {
-                            Abilities.Add(new ThunderStrikeAbility(5f));
-                        }
+                        UniversalLog.LogInfo("level up!");
+
+
+                        AbilityFactory af = new AbilityFactory();
+                        var newAbility = af.CreateRandomAbility(this);
+                        Abilities.Add(newAbility);
+                        UniversalLog.LogInfo("Added new ability: " + newAbility.Name);
 
                         powerupMenu.OpenWindow();
-
                     }
                     else
                     {
@@ -89,7 +91,6 @@ public class Player : Entity
                         xpAmount = 0;
                     }
                 }
-
             }
         }
     }

@@ -21,6 +21,11 @@ namespace game.Entities
 
         public bool IsMagnetized = false;
 
+        public float GetDeltaTime()
+        {
+            return deltaClock.Restart().AsSeconds();
+        }
+
         private void MoveTowardsPlayer(Player player, float deltaTime)
         {
             if (GameManager.Instance.IsGamePaused == false)

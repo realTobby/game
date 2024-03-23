@@ -53,11 +53,16 @@ namespace game
             _gameWindow.Close();
         }
 
-        public void Run()
+        private void StartBackGroundMusic()
         {
             backgroundMusic.Loop = true;
             backgroundMusic.Volume = 20;
             backgroundMusic.Play();
+        }
+
+        public void Run()
+        {
+            //StartBackGroundMusic();
 
             while (_gameWindow.IsOpen)
             {

@@ -67,6 +67,9 @@ namespace game.Scenes
 
             EntityManager.Instance.StartUpdatingEntities();
 
+            //player.Abilities.Add(new OrbitalAbility(player, 10f, 10, 45, 5));
+            
+
         }
 
         private void GenerateNewWave()
@@ -175,6 +178,8 @@ namespace game.Scenes
             {
                 foreach (Ability ability in player.Abilities)
                 {
+                    ability.Update();
+
                     if (ability.abilityClock.ElapsedTime.AsSeconds() >= ability.Cooldown)
                     {
                         ability.Activate();

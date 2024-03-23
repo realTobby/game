@@ -1,4 +1,5 @@
 ﻿using game.Entities.Enemies;
+using game.Helpers;
 using game.Managers;
 using SFML.Graphics;
 using SFML.System;
@@ -40,6 +41,7 @@ namespace game.Entities.Abilitites
                 {
                     if (CheckCollision(enemy))
                     {
+
                         enemy.AbilityCollision(this);
                     }
                 }

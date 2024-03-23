@@ -27,5 +27,8 @@ namespace game.Abilities
         }
 
         public abstract void Activate();
+
+        public abstract void Update();
+
     }
 }

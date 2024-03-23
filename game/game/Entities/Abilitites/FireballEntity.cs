@@ -75,34 +75,6 @@ namespace game.Entities.Abilitites
 
         private bool CheckCollisionWithEnemy()
         {
-            //if (distance <= 1.5f) // Adjust the threshold as needed
-            //{
-            //    // Deal damage to the enemy
-            //    if (target.TakeDamage(1))
-            //    {
-            //        if (target != null)
-            //        {
-            //            previousTargets.Add(target);
-            //            SetPosition(target.Position);
-            //            Enemy nearestEnemy = GameScene.Instance.FindNearestEnemy(target.Position, GameManager.Instance._waveManager.CurrentEnemies, previousTargets);
-            //            if (nearestEnemy == null)
-            //                return;
-
-            //            GameManager.Instance.AddEntity(new FireballEntity(target.Position, nearestEnemy) { previousTargets = previousTargets });
-            //        }
-
-            //        target = null;
-            //        GameManager.Instance.RemoveEntity(this);
-            //        return;
-            //    }
-
-
-
-            //    // Remove the fireball entity from the game
-            //    GameManager.Instance.RemoveEntity(this);
-
-            //}
-
 
             foreach (Enemy enemy in GameManager.Instance.GetEntities(new Type[] { typeof(Enemy) }).Cast<Enemy>().ToList())
             {

@@ -182,5 +182,18 @@ namespace game.Managers
                 }
             }
         }
+
+        public bool EntityExists(Entity entityToCheck)
+        {
+            lock(_lock)
+            {
+                foreach(Entity entity in entities.ToList())
+                {
+                    if (entity == entityToCheck) return true;
+                }
+                return false;
+            }
+        }
+
     }
 }

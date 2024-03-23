@@ -56,5 +56,10 @@ namespace game.Abilities
         }
 
 
+        public override void Update()
+        {
+            //throw new NotImplementedException();
+        }
+
     }
 }
