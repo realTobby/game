@@ -24,6 +24,9 @@ namespace game.UI
         private Color hoverColor = Color.Yellow;
         private Color clickedColor = Color.Green;
 
+        
+
+
         public UI_Button(Vector2f pos, string buttonText, int textSize, int width, int height, Sprite buttonSprite, View cameraView) : base(pos, cameraView)
         {
             _text = new UI_Text(buttonText, 16, pos, cameraView);

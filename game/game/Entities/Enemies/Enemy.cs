@@ -75,6 +75,12 @@ namespace game.Entities.Enemies
             CallDamageNumber(dmg);
 
             HP -= dmg;
+
+            GameScene.Instance._viewCamera.ShakeCamera(3f, 0.115f);
+
+            GameScene.Instance.particleSystem.SpawnDamageParticles(Position, 3, 50, 1); // spawns 10 particles with a speed spread of 50 and a lifetime of 1 second
+
+
             if (HP <= 0)
             {
                 var bluegem = new Gem(Position);

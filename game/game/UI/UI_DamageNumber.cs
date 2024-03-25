@@ -51,7 +51,7 @@ namespace game.UI
         public override void Draw()
         {
             // Convert the world position to view-relative position every draw call
-            Vector2f viewRelativePosition = ConvertWorldToViewPosition(worldPosition, Game.Instance.GetRenderWindow().GetView());
+            Vector2f viewRelativePosition = GameScene.Instance._viewCamera.ConvertWorldToViewPosition(worldPosition, Game.Instance.GetRenderWindow().GetView());
 
             // Update the UI_Text component's position before drawing
             damageText.Position = viewRelativePosition;
@@ -59,14 +59,6 @@ namespace game.UI
             damageText.Draw();
         }
 
-        private Vector2f ConvertWorldToViewPosition(Vector2f worldPosition, View view)
-        {
-            // Calculate the position relative to the view
-            Vector2f viewCenter = view.Center;
-            Vector2f viewSize = view.Size;
-            Vector2f viewTopLeft = viewCenter - (viewSize / 2f);
-
-            return worldPosition - viewTopLeft;
-        }
+        
     }
 }

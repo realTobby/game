@@ -11,6 +11,8 @@ namespace game.UI
     {
         private List<UIComponent> _components;
 
+        public Font MainFont = new Font("Assets/Fonts/m6x11.ttf");
+
         public UIManager()
         {
             _components = new List<UIComponent>();

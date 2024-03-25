@@ -1,4 +1,5 @@
-﻿using SFML.Graphics;
+﻿using game.Scenes;
+using SFML.Graphics;
 using SFML.System;
 using System;
 using System.Collections.Generic;
@@ -16,7 +17,7 @@ namespace game.UI
 
         public UI_Text(string text, int size, Vector2f pos, View view, UIBinding<string> textBinding) : base(pos, view)
         {
-            textComp = new Text(text, new Font("Assets/Fonts/m6x11.ttf"), (uint)size);
+            textComp = new Text(text, GameScene.Instance._uiManager.MainFont, (uint)size);
             this.textBinding = textBinding;
             defaultText = text;
 

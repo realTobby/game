@@ -40,6 +40,8 @@ namespace game.Scenes
 
         private SoundManager soundManager;
 
+        public ParticleSystem particleSystem = new ParticleSystem();
+
         public GameScene()
         {
             if (_instance == null) _instance = this;
@@ -154,7 +156,7 @@ namespace game.Scenes
 
             UpdatePlayerAbilities(deltaTime);
 
-            
+            particleSystem.Update(deltaTime);
 
         }
 
@@ -169,9 +171,12 @@ namespace game.Scenes
 
             gameManager.Draw(deltaTime);
 
+            particleSystem.Draw(_viewCamera.view);
 
             _uiManager.Draw(_viewCamera.view);
             //Game.Instance.GetRenderWindow().Display();
+
+
         }
 
         private void UpdatePlayerAbilities(float deltaTime)
