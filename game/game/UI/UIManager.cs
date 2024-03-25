@@ -25,7 +25,27 @@ namespace game.UI
 
         public void RemoveComponent(UIComponent component)
         {
-            _components.Remove(component);
+            //_components.Remove(component);
+            component.IsActive = false;
+        }
+
+        public void CreateDamageNumber(int amount, Vector2f worldPos, View view, float duration)
+        {
+            // find non-active object
+            UI_DamageNumber freeDamageNumber = _components.Where(x => x.IsActive == false && x.GetType() == typeof(UI_DamageNumber)).FirstOrDefault() as UI_DamageNumber;
+
+            if(freeDamageNumber == null)
+            {
+                freeDamageNumber = new UI_DamageNumber(amount, worldPos, view, duration);
+                _components.Add(freeDamageNumber);
+            }
+            else
+            {
+
+                freeDamageNumber.IsActive = true;
+                freeDamageNumber.ResetFromPool(worldPos);
+            }
+
         }
 
         public void Update()
@@ -66,5 +86,7 @@ namespace game.UI
             // Restore the original view
             window.SetView(originalView);
         }
+
+        
     }
 }

@@ -63,8 +63,9 @@ namespace game.Entities
 
         public void Draw(View cameraView)
         {
+
             RenderWindow window = Game.Instance.GetRenderWindow();
-            foreach (var particle in particles)
+            foreach (var particle in particles.ToList())
             {
                 // Update the position relative to the camera view
                 Vector2f offsetPosition = particle.Position + cameraView.Center - cameraView.Size / 2f;
@@ -73,9 +74,9 @@ namespace game.Entities
                 Vector2f viewPos = GameScene.Instance._viewCamera.ConvertWorldToViewPosition(particle.Position, cameraView);
 
                 // Draw the particle as a small circle or a point
-                CircleShape shape = new CircleShape(2) // Radius of the particle
+                CircleShape shape = new CircleShape(4) // Radius of the particle
                 {
-                    Position = offsetPosition,
+                    Position = viewPos + offsetPosition,
                     FillColor = Color.Red
                 };
                 window.Draw(shape);

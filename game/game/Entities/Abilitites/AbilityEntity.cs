@@ -25,6 +25,11 @@ namespace game.Entities.Abilitites
             AbilityName = name;
         }
 
+        public override void ResetFromPool(Vector2f position)
+        {
+            UniversalLog.LogInfo("hier könnte ihre reset AbilityEntity Logik stehen");
+        }
+
         public override void Update()
         {
             base.Update();
@@ -39,6 +44,7 @@ namespace game.Entities.Abilitites
 
                 foreach (var enemy in listOfY)
                 {
+                    if (enemy.IsActive == false) continue;
                     if (CheckCollision(enemy))
                     {
 

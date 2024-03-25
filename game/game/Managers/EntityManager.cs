@@ -83,7 +83,8 @@ namespace game.Managers
                         gemManager.ActiveGems.Remove(gem);
                         break;
                     case Enemy enemy:
-                        enemies.Remove(enemy);
+                        //enemies.Remove(enemy);
+                        enemy.IsActive = false;
                         break;
                 }
             }
@@ -132,6 +133,7 @@ namespace game.Managers
 
                     foreach (var enemy in enemies.ToArray())
                     {
+                        if (!enemy.IsActive) continue;
                         enemy?.Update(GameScene.Instance.player, deltaTime);
                     }
                 }
@@ -158,5 +160,25 @@ namespace game.Managers
                 return entities.Contains(entityToCheck);
             }
         }
+
+        public Enemy CreateEnemy(Vector2f pos)
+        {
+            // get free enemy from pool
+            var freeEnemy = Enemies.Where(x => x.IsActive == false).FirstOrDefault();
+            
+            if(freeEnemy == null)
+            {
+                freeEnemy = new TestEnemy(pos, 25);
+                AddEntity(freeEnemy);
+            }
+            else
+            {
+                freeEnemy.ResetFromPool(pos);
+            }
+
+            return freeEnemy;
+        }
+
+
     }
 }

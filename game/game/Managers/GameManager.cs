@@ -52,12 +52,15 @@ namespace game.Managers
         {
             return EntityManager.Instance.Entities
                 .Where(x => x != null && baseTypes.Any(baseType => baseType.IsAssignableFrom(x.GetType())))
-                .ToList();
+                .ToList().Where(enemy => enemy.IsActive == true).ToList();
         }
 
 
         public bool EntityExists(Entity entity)
         {
+
+            if (!entity.IsActive) return false;
+
             return EntityManager.Instance.Entities.Contains(entity);
         }
 

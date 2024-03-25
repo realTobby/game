@@ -14,6 +14,8 @@ namespace game.UI
 
         private Vector2f _position;
 
+        public bool IsActive = false;
+
         public Vector2f Position
         {
             get { return _position; }
@@ -26,12 +28,14 @@ namespace game.UI
         public UIComponent(Vector2f position)
         {
             _position = position;
+            IsActive = true;
         }
 
         public UIComponent(Vector2f position, View view)
         {
             _position = position;
             cameraView = view;
+            IsActive = true;
         }
 
         public abstract void Update();
@@ -46,8 +50,6 @@ namespace game.UI
 
             // Store the original view
             originalViewTMP = window.GetView();
-
-            
 
             // Set the view of the render target to the camera's view
             window.SetView(cameraView);

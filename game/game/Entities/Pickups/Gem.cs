@@ -56,7 +56,10 @@ namespace game.Entities.Pickups
             base.Draw(deltaTime);
         }
 
-        
-
+        public override void ResetFromPool(Vector2f position)
+        {
+            base.IsActive = true;
+            SetPosition(position);
+        }
     }
 }

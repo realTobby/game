@@ -64,6 +64,13 @@ namespace game.Entities.Enemies
             GameScene.Instance._uiManager.AddComponent(newDamageNumber);
         }
 
+        public override void ResetFromPool(Vector2f position)
+        {
+            IsActive = true;
+            HP = MAXHP;
+            SetPosition(position);
+        }
+
         public bool TakeDamage(int dmg)
         {
             UniversalLog.LogInfo("Entity took damage " + dmg);
@@ -88,7 +95,8 @@ namespace game.Entities.Enemies
 
                 GameScene.Instance._uiManager.RemoveComponent(hpBar);
 
-                EntityManager.Instance.RemoveEntity(this);
+                IsActive = false;
+                //EntityManager.Instance.RemoveEntity(this);
 
                 return true;
             }

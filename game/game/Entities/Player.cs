@@ -122,6 +122,11 @@ public class Player : Entity
         precisePosition.Y += speed * deltaTime;
     }
 
+    public override void ResetFromPool(Vector2f position)
+    {
+        UniversalLog.LogInfo("hopefully we do not pool the Player object :)");
+    }
+
     public Vector2f Position
     {
         get { return precisePosition; }

@@ -23,16 +23,24 @@ namespace game.UI
 
             // Initialize UI_Text without setting its position here
             UIBinding<string> damageBinding = new UIBinding<string>(() => damageAmount.ToString());
-            damageText = new UI_Text(damageAmount.ToString(), 24, new Vector2f(0, 0), view, damageBinding);
+            damageText = new UI_Text(damageAmount.ToString(), 0, new Vector2f(0, 0), view, damageBinding);
             damageText.SetColor(new Color(0, 0, 0, 255)); // Start fully opaque
             damageText.SetBold(true);
-            damageText.SetSize(24);
+            damageText.SetSize(11);
 
             //GameScene.Instance._uiManager.AddComponent(this);
         }
 
+        public void ResetFromPool(Vector2f pos)
+        {
+            this.worldPosition = pos; // Save the world position
+            elapsedTime = 0;
+        }
+
         public override void Update()
         {
+            if (!base.IsActive) return;
+
             elapsedTime += Game.Instance.DeltaTime;
 
             // Make the damage number rise over time
@@ -50,6 +58,8 @@ namespace game.UI
 
         public override void Draw()
         {
+            if (!base.IsActive) return;
+
             // Convert the world position to view-relative position every draw call
             Vector2f viewRelativePosition = GameScene.Instance._viewCamera.ConvertWorldToViewPosition(worldPosition, Game.Instance.GetRenderWindow().GetView());
 

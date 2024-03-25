@@ -15,6 +15,9 @@ namespace game.Entities
     {
         internal AnimatedSprite animateSpriteComponent;
 
+        public bool IsActive = false;
+
+        public abstract void ResetFromPool(Vector2f position);
 
         private Clock deltaClock = new Clock();
 
@@ -56,6 +59,8 @@ namespace game.Entities
             Position = initialPosition;
 
             animateSpriteComponent = new AnimatedSprite(category, entityName, frameCount);
+
+            IsActive = true;
         }
 
         public Entity(Texture texture, int rows, int columns, Time frameDuration, Vector2f initialPosition)
@@ -64,10 +69,15 @@ namespace game.Entities
 
             animateSpriteComponent = new AnimatedSprite(texture, rows, columns, frameDuration, initialPosition);
 
+            IsActive = true;
+
         }
 
         public virtual void Update()
         {
+            if (!IsActive) return;
+
+
             float deltaTime = deltaClock.Restart().AsSeconds();
 
 
@@ -83,6 +93,7 @@ namespace game.Entities
 
         public virtual void Draw(float deltaTime)
         {
+            if (!IsActive) return;
             animateSpriteComponent.Draw(deltaTime);
         }
 
@@ -93,6 +104,7 @@ namespace game.Entities
 
         public bool CheckCollision(Entity other)
         {
+            if (!IsActive) return false;
             return GetBounds().Intersects(other.GetBounds());
         }
 
