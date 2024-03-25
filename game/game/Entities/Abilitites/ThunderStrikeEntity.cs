@@ -27,16 +27,16 @@ namespace game.Entities.Abilitites
         {
             base.Update();
 
-            HitBoxDimensions = new FloatRect(Position.X, Position.Y, HitBoxDimensions.Width, HitBoxDimensions.Height);
+            base.SrtHitBoxDimensions(new FloatRect(Position.X, Position.Y, HitBoxDimensions.Width, HitBoxDimensions.Height));
 
 
-            if (base.currentFrame == HitFrame)
+            if (base.animateSpriteComponent.currentFrame == HitFrame)
             {
                 CanCheckCollision = true;
                 PlaySFX();
             }
 
-            if (base.currentFrame >= base.sprites.Length - 1)
+            if (base.animateSpriteComponent.currentFrame >= base.animateSpriteComponent.sprites.Length - 1)
             {
                 EntityManager.Instance.RemoveEntity(this);
             }

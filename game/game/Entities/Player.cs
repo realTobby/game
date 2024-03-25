@@ -46,7 +46,7 @@ public class Player : Entity
 
     public void Update(float deltaTime)
     {
-        HitBoxDimensions = new FloatRect(Position.X, Position.Y, 16, 16);
+        base.SrtHitBoxDimensions(new FloatRect(Position.X, Position.Y, 16, 16));
 
         base.Update();
         base.SetPosition(new Vector2f((float)Math.Round(precisePosition.X), (float)Math.Round(precisePosition.Y)));

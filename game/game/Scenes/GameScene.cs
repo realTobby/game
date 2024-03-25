@@ -60,9 +60,11 @@ namespace game.Scenes
             _uiManager.AddComponent(xpBar);
 
             UI_Text xpText = new UI_Text("XP: ", 8, new Vector2f(10, 0), _viewCamera.view, new UIBinding<string>(() => player.GetUIXPString()));
+            xpText.SetColor(SFML.Graphics.Color.Magenta);
             _uiManager.AddComponent(xpText);
 
             UI_Text debugSoundChannels = new UI_Text("SoundChannels: ", 8, new Vector2f(10,20), _viewCamera.view, new UIBinding<string>(() => soundManager.GetActiveChannels().ToString()));
+            debugSoundChannels.SetColor(SFML.Graphics.Color.Red);
             _uiManager.AddComponent(debugSoundChannels);
 
             EntityManager.Instance.StartUpdatingEntities();

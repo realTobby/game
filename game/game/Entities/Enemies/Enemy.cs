@@ -2,6 +2,7 @@
 using game.Controllers;
 using game.Entities.Abilitites;
 using game.Entities.Pickups;
+using game.Helpers;
 using game.Managers;
 using game.Scenes;
 using game.UI;
@@ -57,11 +58,22 @@ namespace game.Entities.Enemies
             GameScene.Instance._uiManager.AddComponent(hpBar);
         }
 
+        private void CallDamageNumber(int damage)
+        {
+            UI_DamageNumber newDamageNumber = new UI_DamageNumber(damage, Position, GameScene.Instance._viewCamera.view, 0.32f);
+            GameScene.Instance._uiManager.AddComponent(newDamageNumber);
+        }
+
         public bool TakeDamage(int dmg)
         {
+            UniversalLog.LogInfo("Entity took damage " + dmg);
+
             if(!CanBeDamaged) return false;
             CanBeDamaged = false;
             SoundManager.Instance.PlayHit();
+
+            CallDamageNumber(dmg);
+
             HP -= dmg;
             if (HP <= 0)
             {
@@ -95,14 +107,14 @@ namespace game.Entities.Enemies
                 flashTimer -= deltaTime;
                 if (flashTimer <= 0f)
                 {
-                    for (int i = 0; i < sprites.Count(); i++)
+                    for (int i = 0; i < base.animateSpriteComponent.sprites.Count(); i++)
                     {
-                        sprites[i].Color = NormalColors[i];
+                        base.animateSpriteComponent.sprites[i].Color = base.animateSpriteComponent.NormalColors[i];
                     }
                 }
                 else
                 {
-                    foreach (var item in sprites.ToList())
+                    foreach (var item in base.animateSpriteComponent.sprites.ToList())
                     {
                         item.Color = new Color(0, 0, 0, 255);
                     }
@@ -114,11 +126,11 @@ namespace game.Entities.Enemies
         {
             if (direction.X < 0)
             {
-                FlipSprite(true);
+                base.animateSpriteComponent.FlipSprite(true);
             }
             else
             {
-                FlipSprite(false);
+                base.animateSpriteComponent.FlipSprite(false);
             }
         }
 
@@ -155,7 +167,7 @@ namespace game.Entities.Enemies
 
                 if (hpBar != null)
                 {
-                    hpBar.Position = new Vector2f(Position.X, Position.Y - base.HitBoxDimensions.Height);
+                    hpBar.Position = new Vector2f(Position.X, Position.Y - base.animateSpriteComponent.HitBoxDimensions.Height);
                 }
 
 
@@ -198,10 +210,20 @@ namespace game.Entities.Enemies
             }
         }
 
-        public void SetPosition(Vector2f position)
+        public void SetScale(float scale)
         {
-            Position = position;
-            base.SetPosition(position);
+            base.animateSpriteComponent.SetScale(scale);
+        }
+
+        public void SetPosition(Vector2f pos)
+        {
+            Position = pos;
+            base.animateSpriteComponent.SetPosition(pos);
+        }
+
+        public void SetHitBoxDimensions(FloatRect newHitBox)
+        {
+            base.animateSpriteComponent.HitBoxDimensions = newHitBox;
         }
 
     }

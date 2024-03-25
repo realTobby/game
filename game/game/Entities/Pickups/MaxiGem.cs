@@ -33,7 +33,7 @@ namespace game.Entities.Pickups
 
         public override void Update()
         {
-            HitBoxDimensions = new FloatRect(Position.X, Position.Y, 16, 16);
+            base.SrtHitBoxDimensions(new FloatRect(Position.X, Position.Y, 16, 16));
 
             base.Update();
         }

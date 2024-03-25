@@ -44,7 +44,7 @@ namespace game.Entities.Abilitites
                 EntityManager.Instance.RemoveEntity(this);
             }
 
-            HitBoxDimensions = new FloatRect(Position.X, Position.Y, HitBoxDimensions.Width, HitBoxDimensions.Height);
+            base.SrtHitBoxDimensions(new FloatRect(Position.X, Position.Y, HitBoxDimensions.Width, HitBoxDimensions.Height));
 
             base.Update();
 

@@ -20,8 +20,8 @@ namespace game.Entities.Enemies
 
             base.MinDistance = 45f;
 
-            var width = sprites[0].TextureRect.Width;
-            var height = sprites[0].TextureRect.Height;
+            var width = base.animateSpriteComponent.sprites[0].TextureRect.Width;
+            var height = base.animateSpriteComponent.sprites[0].TextureRect.Height;
 
             debugDraw = new RectangleShape(new Vector2f(width/2, height/2))
             {
@@ -42,14 +42,14 @@ namespace game.Entities.Enemies
             base.Update(player, deltaTime);
 
 
-            var width = sprites[0].TextureRect.Width;
-            var height = sprites[0].TextureRect.Height;
+            var width = base.animateSpriteComponent.sprites[0].TextureRect.Width;
+            var height = base.animateSpriteComponent.sprites[0].TextureRect.Height;
             if(debugDraw != null)
             {
                 debugDraw.Position = new Vector2f(Position.X - width / 4, Position.Y - height / 4);
             }
 
-            HitBoxDimensions = new FloatRect(Position.X, Position.Y, 32, 32);
+            base.animateSpriteComponent.HitBoxDimensions = new FloatRect(Position.X, Position.Y, 32, 32);
 
             
         }

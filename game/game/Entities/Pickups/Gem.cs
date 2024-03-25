@@ -18,7 +18,7 @@ namespace game.Entities.Pickups
 
         public Gem(Vector2f initialPosition) : base(TextureLoader.Instance.GetTexture("gem_blue", "Entities/Pickups"), 1, 4, Time.FromSeconds(0.2f), initialPosition)
         {
-            SetScale(.7f);
+            base.animateSpriteComponent.SetScale(.7f);
 
             SetPosition(initialPosition);
 
@@ -26,7 +26,8 @@ namespace game.Entities.Pickups
 
         public Gem(Vector2f initialPosition, Texture gem) : base(gem, 1, 4, Time.FromSeconds(0.2f), initialPosition)
         {
-            SetScale(.8f);
+            
+            base.SetScale(.8f);
 
             SetPosition(initialPosition);
         }
@@ -42,9 +43,8 @@ namespace game.Entities.Pickups
 
         public override void Update()
         {
-            
 
-            HitBoxDimensions = new FloatRect(Position.X, Position.Y, 16, 16);
+            base.SrtHitBoxDimensions(new FloatRect(Position.X, Position.Y, 16, 16));
 
             base.Update();
 

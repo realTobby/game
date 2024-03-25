@@ -48,11 +48,6 @@ namespace game.Managers
             entityManager = EntityManager.Instance;
         }
 
-        public List<Entity> GetEntities()
-        {
-            return EntityManager.Instance.Entities;
-        }
-
         public List<Entity> GetEntities(Type[] baseTypes)
         {
             return EntityManager.Instance.Entities

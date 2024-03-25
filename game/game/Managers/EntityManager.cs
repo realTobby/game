@@ -5,64 +5,50 @@ using game.Scenes;
 using SFML.System;
 using System.Collections.Generic;
 using System.Threading;
+using System;
 using System.Linq;
 
 namespace game.Managers
 {
     public class EntityManager
     {
-        private static EntityManager _instance;
+        private static readonly Lazy<EntityManager> _instance = new Lazy<EntityManager>(() => new EntityManager());
         private static readonly object _lock = new object();
 
         private GemManager gemManager;
 
-        private List<Entity> entities;
-        private List<Enemy> enemies;
+        private List<Entity> entities = new List<Entity>();
+        private List<Enemy> enemies = new List<Enemy>();
 
         private Thread updateThread;
         private bool isUpdating;
 
-        public static EntityManager Instance
-        {
-            get
-            {
-                lock (_lock)
-                {
-                    if (_instance == null)
-                        _instance = new EntityManager();
-                    return _instance;
-                }
-            }
-        }
+        public static EntityManager Instance => _instance.Value;
 
         private EntityManager()
         {
-            entities = new List<Entity>();
-            enemies = new List<Enemy>();
             gemManager = new GemManager();
-
-            updateThread = new Thread(UpdateLoop);
-            isUpdating = false;
+            updateThread = new Thread(UpdateLoop) { IsBackground = true };
         }
 
-        public List<Entity> Entities
+        public IEnumerable<Entity> Entities
         {
             get
             {
                 lock (_lock)
                 {
-                    return new List<Entity>(entities);
+                    return entities.ToArray();
                 }
             }
         }
 
-        public List<Enemy> Enemies
+        public IEnumerable<Enemy> Enemies
         {
             get
             {
                 lock (_lock)
                 {
-                    return new List<Enemy>(enemies);
+                    return enemies.ToArray();
                 }
             }
         }
@@ -71,16 +57,16 @@ namespace game.Managers
         {
             lock (_lock)
             {
-                if (entity is Gem || entity is MaxiGem)
-                {
-                    gemManager.ActiveGems.Add((Gem)entity);
-                }
-
                 entities.Add(entity);
 
-                if (entity is Enemy enemy)
+                switch (entity)
                 {
-                    enemies.Add(enemy);
+                    case Gem gem:
+                        gemManager.ActiveGems.Add(gem);
+                        break;
+                    case Enemy enemy:
+                        enemies.Add(enemy);
+                        break;
                 }
             }
         }
@@ -89,19 +75,16 @@ namespace game.Managers
         {
             lock (_lock)
             {
-                if (entities.Contains(entity))
+                entities.Remove(entity);
+
+                switch (entity)
                 {
-                    entities.Remove(entity);
-
-                    if (entity is Gem || entity is MaxiGem)
-                    {
-                        gemManager.ActiveGems.Remove((Gem)entity);
-                    }
-
-                    if (entity is Enemy enemy)
-                    {
+                    case Gem gem:
+                        gemManager.ActiveGems.Remove(gem);
+                        break;
+                    case Enemy enemy:
                         enemies.Remove(enemy);
-                    }
+                        break;
                 }
             }
         }
@@ -132,30 +115,28 @@ namespace game.Managers
 
         private void UpdateLoop()
         {
-            float deltaTime = 0f;
-            Clock clock = new Clock();
+            var clock = new Clock();
 
-            while (true)
+            while (isUpdating)
             {
                 lock (_lock)
                 {
-                    if (!isUpdating)
-                        break;
-
-                    deltaTime = clock.Restart().AsSeconds();
+                    var deltaTime = clock.Restart().AsSeconds();
 
                     gemManager.Update();
 
-                    foreach (Entity entity in entities.ToList())
+                    foreach (var entity in entities.ToArray())
                     {
-                        if (entity != null)
-                            entity.Update();
+                        entity?.Update();
+                    }
+
+                    foreach (var enemy in enemies.ToArray())
+                    {
+                        enemy?.Update(GameScene.Instance.player, deltaTime);
                     }
                 }
 
-                UpdateEnemyEntities(GameScene.Instance.player, deltaTime);
-
-                Thread.Sleep(10); // Adjust the sleep duration as needed
+                Thread.Sleep(10);
             }
         }
 
@@ -163,37 +144,19 @@ namespace game.Managers
         {
             lock (_lock)
             {
-                foreach (Entity entity in entities.ToList())
+                foreach (var entity in entities)
                 {
-                    if (entity != null)
-                        entity.Draw(deltaTime);
-                }
-            }
-        }
-
-        public void UpdateEnemyEntities(Player player, float deltaTime)
-        {
-            lock (_lock)
-            {
-                foreach (Enemy enemy in enemies.ToList())
-                {
-                    if (enemy != null)
-                        enemy.Update(player, deltaTime);
+                    entity?.Draw(deltaTime);
                 }
             }
         }
 
         public bool EntityExists(Entity entityToCheck)
         {
-            lock(_lock)
+            lock (_lock)
             {
-                foreach(Entity entity in entities.ToList())
-                {
-                    if (entity == entityToCheck) return true;
-                }
-                return false;
+                return entities.Contains(entityToCheck);
             }
         }
-
     }
 }

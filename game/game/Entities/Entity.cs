@@ -11,8 +11,11 @@ using System.Threading.Tasks;
 
 namespace game.Entities
 {
-    public abstract class Entity : AnimatedSprite
+    public abstract class Entity
     {
+        internal AnimatedSprite animateSpriteComponent;
+
+
         private Clock deltaClock = new Clock();
 
         public Vector2f Position { get; set; }
@@ -38,40 +41,54 @@ namespace game.Entities
             }
         }
 
-        public Entity(string category, string entityName, int frameCount, Vector2f initialPosition)
-            : base(category, entityName, frameCount)
+        public void SetPosition(Vector2f pos)
         {
-            Position = initialPosition;
+            animateSpriteComponent.SetPosition(pos);
         }
 
-        public Entity(Texture texture, int rows, int columns, Time frameDuration, Vector2f initialPosition) : base(texture, rows, columns, frameDuration, initialPosition)
+        public void SetScale(float scale)
+        {
+            animateSpriteComponent.SetScale(scale);
+        }
+
+        public Entity(string category, string entityName, int frameCount, Vector2f initialPosition)
         {
             Position = initialPosition;
+
+            animateSpriteComponent = new AnimatedSprite(category, entityName, frameCount);
+        }
+
+        public Entity(Texture texture, int rows, int columns, Time frameDuration, Vector2f initialPosition)
+        {
+            Position = initialPosition;
+
+            animateSpriteComponent = new AnimatedSprite(texture, rows, columns, frameDuration, initialPosition);
+
         }
 
         public virtual void Update()
         {
             float deltaTime = deltaClock.Restart().AsSeconds();
 
-            
-                base.Update();
+
+            animateSpriteComponent.Update();
 
 
-                if (IsMagnetized)
-                {
-                    MoveTowardsPlayer(GameScene.Instance.player, deltaTime);
-                }
+            if (IsMagnetized)
+            {
+                MoveTowardsPlayer(GameScene.Instance.player, deltaTime);
+            }
             
         }
 
         public virtual void Draw(float deltaTime)
         {
-            base.Draw(deltaTime);
+            animateSpriteComponent.Draw(deltaTime);
         }
 
         public FloatRect GetBounds()
         {
-            return HitBoxDimensions;
+            return animateSpriteComponent.HitBoxDimensions;
         }
 
         public bool CheckCollision(Entity other)
@@ -79,5 +96,11 @@ namespace game.Entities
             return GetBounds().Intersects(other.GetBounds());
         }
 
+        public void SrtHitBoxDimensions(FloatRect newDimens)
+        {
+            animateSpriteComponent.HitBoxDimensions = newDimens;
+        }
+
+        public FloatRect HitBoxDimensions => animateSpriteComponent.HitBoxDimensions;
     }
 }

@@ -60,6 +60,8 @@ namespace game
             backgroundMusic.Play();
         }
 
+        public float DeltaTime => GameClock.ElapsedTime.AsSeconds();
+
         public void Run()
         {
             StartBackGroundMusic();

@@ -46,14 +46,8 @@ namespace game.Entities.Abilitites
                     }
                 }
             }
-
-            
-
-
-
-
-
         }
 
+        
     }
 }

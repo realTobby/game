@@ -4,9 +4,6 @@ using SFML.System;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace game.Managers
 {
@@ -14,29 +11,18 @@ namespace game.Managers
     {
         public List<OverworldTile> OverworldTiles = new List<OverworldTile>();
 
-        public Vector2i StartCenterPos = new Vector2i();
-
         public OverworldManager(int startSize)
         {
-            
-            InitOverworld();
-            GenerateNew(startSize / 2*-1, startSize / 2*-1, startSize);
+            GenerateNew(startSize);
         }
 
-        private void InitOverworld()
-        {
-            OverworldTiles.Clear();
-        }
-
-        private void GenerateNew(int startX, int startY, int startGridSize)
+        private void GenerateNew(int gridSize)
         {
             Random rnd = new Random();
 
-            StartCenterPos = new Vector2i(startGridSize / 2, startGridSize / 2);
-            // generate a 10x10 grid of tiles
-            for (int x = startX; x < startX + startGridSize; x++)
+            for (int x = 0; x < gridSize; x++)
             {
-                for (int y = startY; y < startY + startGridSize; y++)
+                for (int y = 0; y < gridSize; y++)
                 {
                     var newTile = new OverworldTile(TextureLoader.Instance.GetTexture("grassyTile", "Tiles"), new Vector2f(x * 32, y * 32));
 
@@ -50,8 +36,6 @@ namespace game.Managers
                         {
                             newTile.Object = new Sprite(TextureLoader.Instance.GetTexture("tree2", "Objects"));
                         }
-
-                        newTile.Object.Position = new Vector2f(newTile.Position.X+24, newTile.Position.Y-2);
                     }
 
                     OverworldTiles.Add(newTile);
@@ -61,13 +45,10 @@ namespace game.Managers
 
         public void Draw()
         {
-            foreach(var tile in OverworldTiles)
+            foreach (var tile in OverworldTiles)
             {
                 Game.Instance.GetRenderWindow().Draw(tile.Sprite);
-            }
 
-            foreach(var tile in OverworldTiles)
-            {
                 if (tile.Object != null)
                 {
                     Game.Instance.GetRenderWindow().Draw(tile.Object);
@@ -77,32 +58,30 @@ namespace game.Managers
 
         private bool ExistsTileAt(Vector2f pos)
         {
-            if(OverworldTiles.Any(t => t.Position == pos))
-            {
-                return true;
-            }
-            return false;
+            return OverworldTiles.Any(t => t.Position == pos);
         }
 
         public void OnPlayerMove(Vector2f playerPos)
         {
+            int tileSize = 32; // Assuming the tile size is 32x32
+            int viewRange = 10;
             Vector2i gridPosition = new Vector2i(
-                (int)(playerPos.X / 16),
-                (int)(playerPos.Y / 16)
+                (int)(playerPos.X / tileSize),
+                (int)(playerPos.Y / tileSize)
             );
 
-            int startX = gridPosition.X - 10;
-            int endX = gridPosition.X + 10;
-            int startY = gridPosition.Y - 10;
-            int endY = gridPosition.Y + 10;
+            int startX = gridPosition.X - viewRange;
+            int endX = gridPosition.X + viewRange;
+            int startY = gridPosition.Y - viewRange;
+            int endY = gridPosition.Y + viewRange;
 
             for (int x = startX; x < endX; x++)
             {
-                for (int y = startX; y < endX; y++)
+                for (int y = startY; y < endY; y++)
                 {
-                    if(!ExistsTileAt(new Vector2f(x,y)))
+                    if (!ExistsTileAt(new Vector2f(x * tileSize, y * tileSize)))
                     {
-                        var newTile = new OverworldTile(TextureLoader.Instance.GetTexture("grassyTile", "Tiles"), new Vector2f(x * 16, y * 16));
+                        var newTile = new OverworldTile(TextureLoader.Instance.GetTexture("grassyTile", "Tiles"), new Vector2f(x * tileSize, y * tileSize));
 
                         OverworldTiles.Add(newTile);
                     }

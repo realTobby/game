@@ -31,11 +31,6 @@ namespace game.Managers
             //Console.WriteLine("Current Enemy Count: " + CurrentEnemies.Count);
         }
 
-        public void Update(Player player, float deltaTime)
-        {
-            EntityManager.Instance.UpdateEnemyEntities(player, deltaTime);
-        }
-
         public void DrawEnemies(float deltaTime)
         {
             foreach (Enemy enemy in GameManager.Instance.GetEntities(new Type[] { typeof(Enemy) }))

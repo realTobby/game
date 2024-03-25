@@ -55,7 +55,7 @@ namespace game.Entities.Abilitites
 
             SetPosition(newPosition);
 
-            HitBoxDimensions = new FloatRect(Position.X, Position.Y, HitBoxDimensions.Width, HitBoxDimensions.Height);
+            base.SrtHitBoxDimensions(new FloatRect(Position.X, Position.Y, HitBoxDimensions.Width, HitBoxDimensions.Height));
 
             Position = newPosition;
 
