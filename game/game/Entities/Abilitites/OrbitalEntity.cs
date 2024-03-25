@@ -2,6 +2,7 @@
 using game.Entities.Enemies;
 using game.Helpers;
 using game.Managers;
+using game.Models;
 using SFML.Graphics;
 using SFML.System;
 using System;
@@ -17,7 +18,8 @@ namespace game.Entities.Abilitites
         private float currentAngle;
 
         public int MaxHit = 1;
-
+        Random rnd = new Random();
+        SpriteSheetLoader texLoad = new SpriteSheetLoader("Assets/Sprites/spritesheet.png");
 
         public OrbitalEntity(Player player, Vector2f initialPosition, float orbitSpeed, float orbitRadius)
             : base("Fireball", initialPosition, TextureLoader.Instance.GetTexture("burning_loop_1", "Entities/Abilities"), 1, 8, Time.FromSeconds(0.1f))
@@ -37,6 +39,7 @@ namespace game.Entities.Abilitites
 
             MaxHit = player.Level / 2;
 
+            base.animateSpriteComponent = new Models.AnimatedSprite(texLoad.GetSpriteFromSheet(rnd.Next(0, 69), rnd.Next(0, 47)), initialPosition);
         }
 
         public override void Update()

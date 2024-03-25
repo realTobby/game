@@ -1,4 +1,5 @@
 ﻿using game.Managers;
+using game.Models;
 using SFML.Graphics;
 using SFML.System;
 using System;
@@ -13,6 +14,9 @@ namespace game.Entities.Enemies
     public class TestEnemy : Enemy
     {
         private RectangleShape debugDraw;
+
+        Random rnd = new Random();
+        SpriteSheetLoader texLoad = new SpriteSheetLoader("Assets/Sprites/spritesheet.png");
 
         public TestEnemy(Vector2f initialPosition, float speed) : base(TextureLoader.Instance.GetTexture("TestEnemy", "Entities/Enemies"), 1, 9, Time.FromSeconds(0.1f), speed, initialPosition)
         {
@@ -35,6 +39,8 @@ namespace game.Entities.Enemies
             
 
             SetPosition(initialPosition);
+
+            base.animateSpriteComponent = new Models.AnimatedSprite(texLoad.GetSpriteFromSheet(rnd.Next(0, 69), rnd.Next(0, 47)), initialPosition);
         }
 
         public override void Update(Player player, float deltaTime)
@@ -52,6 +58,7 @@ namespace game.Entities.Enemies
             base.animateSpriteComponent.HitBoxDimensions = new FloatRect(Position.X, Position.Y, 32, 32);
 
             
+
         }
 
         private void ShowDebugBoundaries()

@@ -1,4 +1,5 @@
-﻿using SFML.Graphics;
+﻿using game.Helpers;
+using SFML.Graphics;
 using SFML.System;
 using System;
 using System.Collections.Generic;
@@ -13,15 +14,17 @@ namespace game.Models
         public Vector2f Position
         {
             get { return Sprite.Position; }
-            set { Sprite.Position = value; }
+            set {
+                UniversalLog.LogInfo("Pos changed lol! : " + value.ToString());
+                Sprite.Position = value; }
         }
 
         public Sprite Sprite { get; set; }
 
-        public OverworldTile(Texture texture, Vector2f pos)
+        public OverworldTile(Sprite sprite, Vector2f pos)
         {
-            Sprite = new Sprite(texture);
-            Position = new Vector2f(pos.X - pos.Y, (pos.X + pos.Y) / 2);
+            Sprite = sprite;
+            Position = pos;
         }
 
         public Sprite Object { get; set; } = null;

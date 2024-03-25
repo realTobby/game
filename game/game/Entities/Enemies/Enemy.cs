@@ -123,6 +123,8 @@ namespace game.Entities.Enemies
                 flashTimer -= deltaTime;
                 if (flashTimer <= 0f)
                 {
+                    if (base.animateSpriteComponent.NormalColors == null) return;
+
                     for (int i = 0; i < base.animateSpriteComponent.sprites.Count(); i++)
                     {
                         base.animateSpriteComponent.sprites[i].Color = base.animateSpriteComponent.NormalColors[i];

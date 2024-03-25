@@ -72,6 +72,17 @@ namespace game.Models
             SetPosition(initialPos);
         }
 
+        // not so animated sprite
+        public AnimatedSprite(Sprite staticSprite, Vector2f initialPos)
+        {
+            sprites = new Sprite[1];
+            sprites[0] = staticSprite;
+            HitBoxDimensions = sprites[0].GetGlobalBounds();
+            isFlipped = false;
+            SetPosition(initialPos);
+        }
+
+
         public void SetScale(float scale)
         {
             for(int i = 0; i < sprites.Length; i++)
@@ -82,6 +93,11 @@ namespace game.Models
 
         public virtual void Update()
         {
+            if(sprites.Count() == 1)
+            {
+                return;
+            }
+
             if (animationTimer.ElapsedTime > frameDuration)
             {
                 currentFrame = (currentFrame + 1) % sprites.Length;

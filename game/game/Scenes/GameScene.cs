@@ -15,6 +15,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.Linq;
 using System.Numerics;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -42,15 +43,20 @@ namespace game.Scenes
 
         public ParticleSystem particleSystem = new ParticleSystem();
 
+        private Sprite debugSprite = null;
+
+        // load every fucking sprite in memory
+        SpriteSheetLoader texLoad = new SpriteSheetLoader("Assets/Sprites/spritesheet.png");
+
         public GameScene()
         {
             if (_instance == null) _instance = this;
 
             _inputManager = new InputManager();
             _uiManager = new UIManager();
-            _overworldManager = new OverworldManager(100);
+            _overworldManager = new OverworldManager(50);
             _viewCamera = new ViewCamera();
-            player = new Player(new Vector2f(0,0));
+            player = new Player(new Vector2f(25*16,25*16));
 
 
             waveTimer = new Clock();
@@ -81,10 +87,19 @@ namespace game.Scenes
             debugEntityCountWhole.SetColor(SFML.Graphics.Color.Red);
             _uiManager.AddComponent(debugEntityCountWhole);
 
+            UI_Text debugTest = new UI_Text("Debug Coords: ", 8, new Vector2f(10, 60), _viewCamera.view, new UIBinding<string>(() => string.Format("X:{0}/Y:{1}", debugX, debugY)));
+            debugTest.SetColor(SFML.Graphics.Color.Red);
+            _uiManager.AddComponent(debugTest);
+
             EntityManager.Instance.StartUpdatingEntities();
 
             //player.Abilities.Add(new OrbitalAbility(player, 10f, 10, 45, 5));
+
+
             
+            debugSprite = texLoad.GetSpriteFromSheet(4,6);
+
+            debugSprite.Position = new Vector2f(0, 25);
 
         }
 
@@ -153,6 +168,9 @@ namespace game.Scenes
             }
         }
 
+        public int debugX = 0;
+        public int debugY = 0;
+
         public override void Update(float deltaTime)
         {
             _inputManager.Update();
@@ -169,6 +187,18 @@ namespace game.Scenes
             UpdatePlayerAbilities(deltaTime);
 
             particleSystem.Update(deltaTime);
+
+
+
+            debugSprite = texLoad.GetSpriteFromSheet(debugX, debugY);
+
+            debugX++;
+
+            if(debugX == 79)
+            {
+                debugY++;
+                debugX = 0;
+            }
 
         }
 
@@ -188,6 +218,7 @@ namespace game.Scenes
             _uiManager.Draw(_viewCamera.view);
             //Game.Instance.GetRenderWindow().Display();
 
+            Game.Instance.GetRenderWindow().Draw(debugSprite);
 
         }
 

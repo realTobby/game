@@ -34,6 +34,9 @@ namespace game.Abilities
             if (nearestEnemy == null)
                 return;
             EntityManager.Instance.AddEntity(new FireballEntity(player.Position, nearestEnemy));
+
+
+
             abilityClock.Restart();
         }
 

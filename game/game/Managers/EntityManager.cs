@@ -7,6 +7,8 @@ using System.Collections.Generic;
 using System.Threading;
 using System;
 using System.Linq;
+using game.Entities.Abilitites;
+using game.Abilities;
 
 namespace game.Managers
 {
@@ -180,6 +182,26 @@ namespace game.Managers
             }
 
             return freeEnemy;
+        }
+
+        public AbilityEntity CreateAbilityEntity(Vector2f pos, Type abilityType)
+        {
+            // check for disabled abilityentity that matches the type
+
+            AbilityEntity freeAbilityEntity = Entities.Where(x => x.IsActive == false && x.GetType() == abilityType).FirstOrDefault() as AbilityEntity;
+
+            if(freeAbilityEntity == null)
+            {
+                // spawn correct shit
+                if(abilityType == typeof(FireballEntity))
+                {
+
+                }
+            }
+
+
+            return freeAbilityEntity;
+
         }
 
 

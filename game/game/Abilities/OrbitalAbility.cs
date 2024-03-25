@@ -36,6 +36,7 @@ namespace game.Abilities
         {
             if(!IsCurrentlyActive)
             {
+               
                 entityCount = player.Level * 2;
 
                 float angleIncrement = 360f / entityCount; // Divide the circle into equal parts based on entity count
