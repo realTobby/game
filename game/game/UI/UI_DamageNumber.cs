@@ -22,11 +22,12 @@ namespace game.UI
             elapsedTime = 0;
 
             // Initialize UI_Text without setting its position here
+            string textNumber = "";//damageAmount.ToString();
             UIBinding<string> damageBinding = new UIBinding<string>(() => damageAmount.ToString());
-            damageText = new UI_Text(damageAmount.ToString(), 0, new Vector2f(0, 0), view, damageBinding);
+            damageText = new UI_Text(textNumber, 0, new Vector2f(0, 0), view, damageBinding);
             damageText.SetColor(new Color(0, 0, 0, 255)); // Start fully opaque
             damageText.SetBold(true);
-            damageText.SetSize(11);
+            damageText.SetSize(17);
 
             //GameScene.Instance._uiManager.AddComponent(this);
         }

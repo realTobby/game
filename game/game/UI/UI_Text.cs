@@ -22,7 +22,7 @@ namespace game.UI
             defaultText = text;
 
             textComp.OutlineColor = Color.White;
-            textComp.OutlineThickness = 2;
+            textComp.OutlineThickness = 1.25f;
         }
 
         public UI_Text(string text, int size, Vector2f pos, View view) : base(pos, view)
@@ -63,8 +63,16 @@ namespace game.UI
             Vector2f offsetPosition = Position + cameraView.Center - cameraView.Size / 2f;
             textComp.Position = offsetPosition;
 
-            // Update the text value
-            if (textBinding != null) textComp.DisplayedString = defaultText + textBinding.Value;
+            string displayText = defaultText;
+
+            if (textBinding != null)
+            {
+                displayText = displayText + textBinding.Value;
+            }
+
+            
+
+            textComp.DisplayedString = displayText;
 
             // Draw the text
             Game.Instance.GetRenderWindow().Draw(textComp);

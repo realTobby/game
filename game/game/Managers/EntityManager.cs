@@ -25,6 +25,9 @@ namespace game.Managers
 
         public static EntityManager Instance => _instance.Value;
 
+        public int GetEnemyPoolSize => Enemies.Count();
+        public int GetDisbaledEnemyCount => Enemies.Where(x => x.IsActive == false).Count();
+
         private EntityManager()
         {
             gemManager = new GemManager();

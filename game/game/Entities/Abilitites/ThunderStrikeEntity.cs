@@ -20,7 +20,7 @@ namespace game.Entities.Abilitites
 
         public ThunderStrikeEntity(Vector2f initialPosition) : base("ThunderStrike", initialPosition, TextureLoader.Instance.GetTexture("thunderStrike", "Entities/Abilities"), 1, 13, Time.FromSeconds(0.08f))
         {
-
+            Damage = 5;
         }
 
         public override void Update()

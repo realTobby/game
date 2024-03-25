@@ -31,7 +31,7 @@ namespace game.Entities.Abilitites
             this.currentAngle = MathF.Atan2(direction.Y, direction.X);
 
             SetPosition(initialPosition);
-            Damage = 1; // Set according to your game's needs
+            Damage = 2; // Set according to your game's needs
 
             CanCheckCollision = true;
 
@@ -77,9 +77,9 @@ namespace game.Entities.Abilitites
 
 
                 // spawn thunderstrike entity here
-                ThunderStrikeEntity newOnHit = new ThunderStrikeEntity(Position);
-                newOnHit.SetScale(Random.Shared.NextFloat(1,2));
-                EntityManager.Instance.AddEntity(newOnHit);
+                //ThunderStrikeEntity newOnHit = new ThunderStrikeEntity(Position);
+                //newOnHit.SetScale(Random.Shared.NextFloat(1,2));
+                //EntityManager.Instance.AddEntity(newOnHit);
 
             }
 

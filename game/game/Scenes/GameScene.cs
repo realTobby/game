@@ -65,9 +65,21 @@ namespace game.Scenes
             xpText.SetColor(SFML.Graphics.Color.Magenta);
             _uiManager.AddComponent(xpText);
 
-            UI_Text debugSoundChannels = new UI_Text("SoundChannels: ", 8, new Vector2f(10,20), _viewCamera.view, new UIBinding<string>(() => soundManager.GetActiveChannels().ToString()));
+            UI_Text debugSoundChannels = new UI_Text("SoundChannels: ", 8, new Vector2f(10, 20), _viewCamera.view, new UIBinding<string>(() => soundManager.GetActiveChannels().ToString()));
             debugSoundChannels.SetColor(SFML.Graphics.Color.Red);
             _uiManager.AddComponent(debugSoundChannels);
+
+            UI_Text debugPoolSizeEnemies = new UI_Text("Enemy Pool Size: ", 8, new Vector2f(10, 30), _viewCamera.view, new UIBinding<string>(() => EntityManager.Instance.GetEnemyPoolSize.ToString()));
+            debugPoolSizeEnemies.SetColor(SFML.Graphics.Color.Red);
+            _uiManager.AddComponent(debugPoolSizeEnemies);
+
+            UI_Text debugDamageNumberPoolSize = new UI_Text("Damager Number Pool Size: ", 8, new Vector2f(10, 40), _viewCamera.view, new UIBinding<string>(() => GameScene.Instance._uiManager.GetDamagerNumberPoolSize.ToString()));
+            debugDamageNumberPoolSize.SetColor(SFML.Graphics.Color.Red);
+            _uiManager.AddComponent(debugDamageNumberPoolSize);
+
+            UI_Text debugEntityCountWhole = new UI_Text("All Entities: ", 8, new Vector2f(10, 50), _viewCamera.view, new UIBinding<string>(() => EntityManager.Instance.Entities.Count().ToString()));
+            debugEntityCountWhole.SetColor(SFML.Graphics.Color.Red);
+            _uiManager.AddComponent(debugEntityCountWhole);
 
             EntityManager.Instance.StartUpdatingEntities();
 

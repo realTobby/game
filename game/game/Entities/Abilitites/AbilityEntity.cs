@@ -15,7 +15,7 @@ namespace game.Entities.Abilitites
     {
         public string AbilityName = string.Empty;
 
-        public int Damage = 1;
+        public int Damage = -1;
 
         public bool CanCheckCollision = false;
 

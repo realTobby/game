@@ -13,6 +13,8 @@ namespace game.UI
 
         public Font MainFont = new Font("Assets/Fonts/m6x11.ttf");
 
+        public int GetDamagerNumberPoolSize => _components.Where(x => x.GetType() == typeof(UI_DamageNumber)).Count();
+
         public UIManager()
         {
             _components = new List<UIComponent>();
@@ -25,8 +27,18 @@ namespace game.UI
 
         public void RemoveComponent(UIComponent component)
         {
-            //_components.Remove(component);
+            
             component.IsActive = false;
+
+            if(component.GetType() == typeof(UI_DamageNumber))
+            {
+                component.IsActive = false;
+            }
+            else
+            {
+                _components.Remove(component);
+            }
+
         }
 
         public void CreateDamageNumber(int amount, Vector2f worldPos, View view, float duration)
@@ -41,9 +53,8 @@ namespace game.UI
             }
             else
             {
-
-                freeDamageNumber.IsActive = true;
                 freeDamageNumber.ResetFromPool(worldPos);
+                freeDamageNumber.IsActive = true;
             }
 
         }

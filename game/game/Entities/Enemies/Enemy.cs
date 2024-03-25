@@ -60,8 +60,7 @@ namespace game.Entities.Enemies
 
         private void CallDamageNumber(int damage)
         {
-            UI_DamageNumber newDamageNumber = new UI_DamageNumber(damage, Position, GameScene.Instance._viewCamera.view, 0.32f);
-            GameScene.Instance._uiManager.AddComponent(newDamageNumber);
+            GameScene.Instance._uiManager.CreateDamageNumber(damage, Position, GameScene.Instance._viewCamera.view, 0.35f);
         }
 
         public override void ResetFromPool(Vector2f position)
@@ -69,6 +68,7 @@ namespace game.Entities.Enemies
             IsActive = true;
             HP = MAXHP;
             SetPosition(position);
+            //GameScene.Instance._uiManager.AddComponent(hpBar);
         }
 
         public bool TakeDamage(int dmg)
@@ -97,6 +97,8 @@ namespace game.Entities.Enemies
 
                 IsActive = false;
                 //EntityManager.Instance.RemoveEntity(this);
+
+                //GameScene.Instance._uiManager.RemoveComponent(hpBar);
 
                 return true;
             }
