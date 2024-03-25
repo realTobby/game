@@ -60,7 +60,7 @@ namespace game.Entities.Enemies
 
         private void CallDamageNumber(int damage)
         {
-            GameScene.Instance._uiManager.CreateDamageNumber(damage, Position, GameScene.Instance._viewCamera.view, 0.35f);
+            GameScene.Instance._uiManager.CreateDamageNumber(damage, Position, GameScene.Instance._viewCamera.view, 0.45f);
         }
 
         public override void ResetFromPool(Vector2f position)
@@ -85,7 +85,7 @@ namespace game.Entities.Enemies
 
             GameScene.Instance._viewCamera.ShakeCamera(3f, 0.115f);
 
-            GameScene.Instance.particleSystem.SpawnDamageParticles(Position, 3, 50, 1); // spawns 10 particles with a speed spread of 50 and a lifetime of 1 second
+            //GameScene.Instance.particleSystem.SpawnDamageParticles(Position, 3, 50, 1); // spawns 10 particles with a speed spread of 50 and a lifetime of 1 second
 
 
             if (HP <= 0)

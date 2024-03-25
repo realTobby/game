@@ -64,7 +64,7 @@ namespace game
 
         public void Run()
         {
-            StartBackGroundMusic();
+            //StartBackGroundMusic();
 
             while (_gameWindow.IsOpen)
             {

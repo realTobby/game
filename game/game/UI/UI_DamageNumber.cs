@@ -14,6 +14,8 @@ namespace game.UI
         private Vector2f worldPosition; // Store the original world position
         private float riseSpeed = 20.0f; // Adjust the speed of rising to your liking
 
+        Random rnd = new Random();
+
         public UI_DamageNumber(int damageAmount, Vector2f worldPosition, View view, float duration = 2.0f) : base(worldPosition, view)
         {
             UniversalLog.LogInfo("newDamagerNumber");
@@ -27,7 +29,12 @@ namespace game.UI
             damageText = new UI_Text(textNumber, 0, new Vector2f(0, 0), view, damageBinding);
             damageText.SetColor(new Color(0, 0, 0, 255)); // Start fully opaque
             damageText.SetBold(true);
-            damageText.SetSize(17);
+            damageText.SetSize(20);
+
+            if(rnd.Next(0,100) == 0)
+            {
+                damageText.SetColor(new Color(231, 41, 41, 255));
+            }
 
             //GameScene.Instance._uiManager.AddComponent(this);
         }

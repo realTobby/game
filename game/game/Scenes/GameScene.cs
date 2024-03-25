@@ -41,8 +41,6 @@ namespace game.Scenes
 
         private SoundManager soundManager;
 
-        public ParticleSystem particleSystem = new ParticleSystem();
-
         private Sprite debugSprite = null;
 
         // load every fucking sprite in memory
@@ -186,7 +184,7 @@ namespace game.Scenes
 
             UpdatePlayerAbilities(deltaTime);
 
-            particleSystem.Update(deltaTime);
+            //particleSystem.Update(deltaTime);
 
 
 
@@ -213,7 +211,7 @@ namespace game.Scenes
 
             gameManager.Draw(deltaTime);
 
-            particleSystem.Draw(_viewCamera.view);
+            //particleSystem.Draw(_viewCamera.view);
 
             _uiManager.Draw(_viewCamera.view);
             //Game.Instance.GetRenderWindow().Display();
