@@ -19,7 +19,7 @@ namespace game.Managers
 
         public void StartWave()
         {
-            if (EntityManager.Instance.Enemies.Count < 125)
+            if (EntityManager.Instance.Enemies.Where(x => x.IsActive).Count() < 75)
             {
                 var toSpawnWaves = enemyWaves.Where(x => x.IsSpawned == false);
 
@@ -28,6 +28,7 @@ namespace game.Managers
                     item.SpawnEnemies();
                 }
             }
+            enemyWaves.Clear();
             //Console.WriteLine("Current Enemy Count: " + CurrentEnemies.Count);
         }
 

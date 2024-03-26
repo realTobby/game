@@ -77,7 +77,7 @@ namespace game.Entities.Abilitites
                     //EntityManager.Instance.RemoveEntity(this);
                 }
 
-                if (!target.IsActive == false) IsActive = false;
+                if (target.IsActive == false) IsActive = false;
             }
 
             
@@ -87,7 +87,7 @@ namespace game.Entities.Abilitites
         private bool CheckCollisionWithEnemy()
         {
 
-            foreach (Enemy enemy in EntityManager.Instance.Enemies.ToList())
+            foreach (Enemy enemy in EntityManager.Instance.Enemies.ToList().Where(x =>x.IsActive))
             {
                 if (CheckCollision(enemy))
                 {

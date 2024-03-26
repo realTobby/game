@@ -30,7 +30,7 @@ namespace game.Entities.Abilitites
         {
             SetPosition(position);
             //IsActive = true;
-            UniversalLog.LogInfo("hier könnte ihre reset AbilityEntity Logik stehen");
+            //UniversalLog.LogInfo("hier könnte ihre reset AbilityEntity Logik stehen");
         }
 
         public override void Update()

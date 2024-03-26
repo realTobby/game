@@ -62,6 +62,7 @@ namespace game.Entities.Pickups
         public override void ResetFromPool(Vector2f position)
         {
             base.IsActive = true;
+            IsMagnetized = false;
             SetPosition(position);
         }
     }

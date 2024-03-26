@@ -11,6 +11,7 @@ using SFML.System;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Reflection;
 
 public class Player : Entity
@@ -33,14 +34,13 @@ public class Player : Entity
         : base("Entities", "priestess", 4, initialPosition)
     {
         precisePosition = initialPosition;
-        Abilities.Add(new FireballAbility(this, 1.25f, 25f, 5f));
+        //Abilities.Add(new FireballAbility(this, 1.25f, 25f, 5f));
 
         powerupMenu = new UI_PowerupMenu(new Vector2f(100, 100), GameScene.Instance._viewCamera.view);
         GameScene.Instance._uiManager.AddComponent(powerupMenu);
-
         SetScale(1.5f);
 
-        //Abilities.Add(new OrbitalAbility(this, 1, 5, 25, 10));
+        Abilities.Add(new OrbitalAbility(this, 5f, 5f, 100f, 3));
     }
 
     public string GetUIXPString()
@@ -63,7 +63,7 @@ public class Player : Entity
 
     private void CheckCollisionWithPickups()
     {
-        foreach (Gem gem in EntityManager.Instance.gemEntities.ToList())
+        foreach (Gem gem in EntityManager.Instance.gemEntities.ToList().Where(x =>x.IsActive))
         {
             if (CheckCollision(gem))
             {

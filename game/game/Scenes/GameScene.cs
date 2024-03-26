@@ -3,6 +3,7 @@ using game.Controllers;
 using game.Controllers.game.Controllers;
 using game.Entities;
 using game.Entities.Enemies;
+using game.Helpers;
 using game.Managers;
 using game.Models;
 using game.UI;
@@ -103,8 +104,10 @@ namespace game.Scenes
 
         private void GenerateNewWave()
         {
-            if(EntityManager.Instance.Enemies.Count < 125)
+            UniversalLog.LogInfo("trying to generate new wave...");
+            if(EntityManager.Instance.Enemies.Where(x => x.IsActive).Count() < 50)
             {
+                UniversalLog.LogInfo("can create new wave!");
                 EnemyWave wave = new EnemyWave(1f, 25f);
 
                 int num = rnd.Next(5, 10);

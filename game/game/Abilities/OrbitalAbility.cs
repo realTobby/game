@@ -1,11 +1,13 @@
 ﻿using game.Entities;
 using game.Entities.Abilitites;
+using game.Entities.Enemies;
 using game.Helpers;
 using game.Managers;
 using game.Scenes;
 using SFML.System;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Numerics;
 
 namespace game.Abilities
@@ -36,8 +38,9 @@ namespace game.Abilities
         {
             if(!IsCurrentlyActive)
             {
-               
-                entityCount = player.Level * 2;
+                UniversalLog.LogInfo("activating OrbitaAbility");
+                UniversalLog.LogInfo("OrbitalAbilityEntityCount: " + orbitals.Count.ToString());
+                entityCount = 10;
 
                 float angleIncrement = 360f / entityCount; // Divide the circle into equal parts based on entity count
                 for (int i = 0; i < entityCount; i++)
@@ -63,6 +66,7 @@ namespace game.Abilities
 
                 IsCurrentlyActive = true;
                 abilityClock.Restart();
+                UniversalLog.LogInfo("OrbitalAbilityActivated-OrbitalAbilityEntityCount: " + orbitals.Count.ToString());
             }
 
             
@@ -72,12 +76,24 @@ namespace game.Abilities
         {
             if (IsCurrentlyActive)
             {
-                // Remove any orbital entities that have been destroyed or are no longer active
-                orbitals.RemoveAll(orbital => !EntityManager.Instance.EntityExists(orbital));
+                //UniversalLog.LogInfo("OrbitalAbilityEntityCount: " + orbitals.Count.ToString());
+                // Get a list of inactive orbital entities
+                var inactiveOrbitals = EntityManager.Instance.abilityEntities
+                    .OfType<OrbitalEntity>()
+                    .Where(x => !x.IsActive) // Use !x.IsActive to find inactive orbitals
+                    .ToList();
+
+                //UniversalLog.LogInfo("inactiveOrbitals found: " + inactiveOrbitals.Count.ToString());
+
+                // Remove any orbital entities that are in the inactiveOrbitals list
+                orbitals.RemoveAll(orbital => inactiveOrbitals.Contains(orbital));
+
+                //UniversalLog.LogInfo("OrbitalAbilityEntityCount-afterRemovingInactive: " + orbitals.Count.ToString());
 
                 // If there are no more orbitals, set the ability to inactive
                 if (orbitals.Count == 0)
                 {
+                    //UniversalLog.LogInfo("OrbitaAbility done.");
                     IsCurrentlyActive = false;
                 }
             }

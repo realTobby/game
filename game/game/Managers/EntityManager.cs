@@ -46,6 +46,52 @@ namespace game.Managers
             }
         }
 
+        public List<Enemy> Enemies
+        {
+            get
+            {
+                lock (_lock)
+                {
+                    // Use LINQ to filter and cast entities to Enemy.
+                    return AllEntities.ToList().OfType<Enemy>().ToList();
+                }
+            }
+        }
+
+        public List<Entity> noEnemyEntities
+        {
+            get
+            {
+                lock (_lock)
+                {
+                    return AllEntities.ToList().OfType<Entity>().Where(x => !(x is Enemy)).ToList();
+                }
+            }
+        }
+
+        public List<AbilityEntity> abilityEntities
+        {
+            get
+            {
+                lock (_lock)
+                {
+                    return AllEntities.ToList().OfType<AbilityEntity>().ToList();
+                }
+            }
+        }
+
+        public List<Gem> gemEntities
+        {
+            get
+            {
+                lock (_lock)
+                {
+                    return AllEntities.ToList().OfType<Gem>().ToList();
+                }
+            }
+        }
+
+
         public void StartUpdatingEntities()
         {
             lock (_lock)
@@ -70,51 +116,7 @@ namespace game.Managers
             }
         }
 
-        public List<Enemy> Enemies
-        {       
-            get
-            {
-                lock (_lock)
-                {
-                    // Use LINQ to filter and cast entities to Enemy.
-                    return AllEntities.ToList().OfType<Enemy>().Where(x => x.IsActive).ToList();
-                }
-            }
-        }
-
-        public List<Entity> noEnemyEntities
-        {
-            get
-            {
-                lock (_lock)
-                {
-                    return AllEntities.ToList().OfType<Entity>().Where(x => !(x is Enemy) && x.IsActive).ToList();
-                }
-            }
-        }
-
-        public List<AbilityEntity> abilityEntities
-        {
-            get
-            {
-                lock(_lock)
-                {
-                    return AllEntities.ToList().OfType<AbilityEntity>().Where(x=>x.IsActive).ToList();
-                }
-            }
-        }
-
-        public List <Gem> gemEntities
-        {
-            get
-            {
-                lock(_lock)
-                {
-                    return AllEntities.ToList().OfType<Gem>().Where(x => x.IsActive).ToList();
-                }
-            }
-        }
-
+        
         private void UpdateLoop()
         {
             var clock = new Clock();
@@ -205,6 +207,7 @@ namespace game.Managers
                 if(abilityType == typeof(OrbitalEntity))
                 {
                     freeAbilityEntity = new OrbitalEntity(GameScene.Instance.player, pos, 0, 0);
+                    //freeAbilityEntity.IsActive = true;
                 }
 
                 if(freeAbilityEntity != null)

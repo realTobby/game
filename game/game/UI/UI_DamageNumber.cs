@@ -18,7 +18,7 @@ namespace game.UI
 
         public UI_DamageNumber(int damageAmount, Vector2f worldPosition, View view, float duration = 2.0f) : base(worldPosition, view)
         {
-            UniversalLog.LogInfo("newDamagerNumber");
+            //UniversalLog.LogInfo("newDamagerNumber");
             this.worldPosition = worldPosition; // Save the world position
             this.duration = duration;
             elapsedTime = 0;

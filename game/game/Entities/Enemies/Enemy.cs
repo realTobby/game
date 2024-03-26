@@ -73,7 +73,7 @@ namespace game.Entities.Enemies
 
         public bool TakeDamage(int dmg)
         {
-            UniversalLog.LogInfo("Entity took damage " + dmg);
+            //UniversalLog.LogInfo("Entity took damage " + dmg);
 
             if(!CanBeDamaged) return false;
             CanBeDamaged = false;
@@ -217,7 +217,7 @@ namespace game.Entities.Enemies
         {
             var abilityEntities = EntityManager.Instance.abilityEntities;
             //Console.WriteLine(abilityEntities.Count() + " abilities could hurt me!");
-            foreach (AbilityEntity ability in abilityEntities)
+            foreach (AbilityEntity ability in abilityEntities.Where(x =>x.IsActive))
             {
                 if(ability.CanCheckCollision)
                 {

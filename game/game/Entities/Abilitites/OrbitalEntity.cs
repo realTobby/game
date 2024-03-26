@@ -22,7 +22,7 @@ namespace game.Entities.Abilitites
         SpriteSheetLoader texLoad = new SpriteSheetLoader("Assets/Sprites/spritesheet.png");
 
         public OrbitalEntity(Player player, Vector2f initialPosition, float orbitSpeed, float orbitRadius)
-            : base("Fireball", initialPosition, TextureLoader.Instance.GetTexture("burning_loop_1", "Entities/Abilities"), 1, 8, Time.FromSeconds(0.1f))
+            : base("OrbitalEntity", initialPosition, TextureLoader.Instance.GetTexture("burning_loop_1", "Entities/Abilities"), 1, 8, Time.FromSeconds(0.1f))
         {
             this.orbitCenterPlayer = player;
             this.orbitSpeed = orbitSpeed;
@@ -46,6 +46,8 @@ namespace game.Entities.Abilitites
         {
             this.orbitSpeed = orbitSpeed;
             this.orbitRadius = orbitRadius;
+            MaxHit = 1;
+            CanCheckCollision = true;
         }
 
         public override void Update()
@@ -66,31 +68,17 @@ namespace game.Entities.Abilitites
 
             base.SrtHitBoxDimensions(new FloatRect(Position.X, Position.Y, HitBoxDimensions.Width, HitBoxDimensions.Height));
 
-            Position = newPosition;
-
-
             var enemy = CheckCollisionWithEnemy();
             if(enemy != null)
             {
                 MaxHit--;
-
-                //ThunderStrikeEntity newOnHit = new ThunderStrikeEntity(Position);
-                //EntityManager.Instance.AddEntity(newOnHit);
+                enemy.AbilityCollision(this);
 
             }
 
-            if(MaxHit == 0)
+            if(MaxHit <= 0)
             {
-
                 IsActive = false;
-                //EntityManager.Instance.RemoveEntity(this);
-
-
-                // spawn thunderstrike entity here
-                //ThunderStrikeEntity newOnHit = new ThunderStrikeEntity(Position);
-                //newOnHit.SetScale(Random.Shared.NextFloat(1,2));
-                //EntityManager.Instance.AddEntity(newOnHit);
-
             }
 
             base.Update();
@@ -99,7 +87,7 @@ namespace game.Entities.Abilitites
         private Enemy CheckCollisionWithEnemy()
         {
 
-            foreach (Enemy enemy in EntityManager.Instance.Enemies.ToList())
+            foreach (Enemy enemy in EntityManager.Instance.Enemies.ToList().Where(x => x.IsActive))
             {
                 if (CheckCollision(enemy))
                 {

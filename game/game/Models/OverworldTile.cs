@@ -15,7 +15,7 @@ namespace game.Models
         {
             get { return Sprite.Position; }
             set {
-                UniversalLog.LogInfo("Pos changed lol! : " + value.ToString());
+                //UniversalLog.LogInfo("Pos changed lol! : " + value.ToString());
                 Sprite.Position = value; }
         }
 
