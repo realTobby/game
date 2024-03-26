@@ -26,8 +26,8 @@ namespace game.Managers
 
         public static EntityManager Instance => _instance.Value;
 
-        public int GetEnemyPoolSize => allEntities.Value.Where(x => x.GetType() == typeof(Enemy)).Count();
-        public int GetDisbaledEnemyCount => allEntities.Value.Where(x => x.GetType() == typeof(Enemy) && x.IsActive == false).Count();
+        public int GetEnemyPoolSize => AllEntities.Where(x => x.GetType() == typeof(Enemy)).Count();
+        public int GetDisbaledEnemyCount => AllEntities.Where(x => x.GetType() == typeof(Enemy) && x.IsActive == false).Count();
 
         private EntityManager()
         {
@@ -77,7 +77,7 @@ namespace game.Managers
                 lock (_lock)
                 {
                     // Use LINQ to filter and cast entities to Enemy.
-                    return allEntities.Value.ToList().OfType<Enemy>().Where(x => x.IsActive).ToList();
+                    return AllEntities.ToList().OfType<Enemy>().Where(x => x.IsActive).ToList();
                 }
             }
         }
@@ -88,7 +88,7 @@ namespace game.Managers
             {
                 lock (_lock)
                 {
-                    return allEntities.Value.ToList().OfType<Entity>().Where(x => !(x is Enemy) && x.IsActive).ToList();
+                    return AllEntities.ToList().OfType<Entity>().Where(x => !(x is Enemy) && x.IsActive).ToList();
                 }
             }
         }
@@ -99,7 +99,7 @@ namespace game.Managers
             {
                 lock(_lock)
                 {
-                    return allEntities.Value.ToList().OfType<AbilityEntity>().Where(x=>x.IsActive).ToList();
+                    return AllEntities.ToList().OfType<AbilityEntity>().Where(x=>x.IsActive).ToList();
                 }
             }
         }
@@ -110,7 +110,7 @@ namespace game.Managers
             {
                 lock(_lock)
                 {
-                    return allEntities.Value.ToList().OfType<Gem>().Where(x => x.IsActive).ToList();
+                    return AllEntities.ToList().OfType<Gem>().Where(x => x.IsActive).ToList();
                 }
             }
         }
@@ -146,7 +146,7 @@ namespace game.Managers
         {
             lock (_lock)
             {
-                foreach (var entity in allEntities.Value)
+                foreach (var entity in AllEntities)
                 {
                     entity?.Draw(deltaTime);
                 }
@@ -157,19 +157,23 @@ namespace game.Managers
         {
             lock (_lock)
             {
-                return allEntities.Value.Contains(entityToCheck);
+                return AllEntities.Contains(entityToCheck);
             }
         }
 
         public Enemy CreateEnemy(Vector2f pos)
         {
             // get free enemy from pool
-            var freeEnemy = allEntities.Value.Where(x => x.IsActive == false && x.GetType() == typeof(Enemy)).FirstOrDefault() as Enemy;
+            var freeEnemy = AllEntities.Where(x => x.IsActive == false && x.GetType() == typeof(Enemy)).FirstOrDefault() as Enemy;
             
             if(freeEnemy == null)
             {
                 freeEnemy = new TestEnemy(pos, 25);
-                allEntities.Value.Add(freeEnemy);
+                lock(_lock)
+                {
+                    allEntities.Value.Add(freeEnemy);
+                }
+                
             }
             else
             {
@@ -182,7 +186,7 @@ namespace game.Managers
         public AbilityEntity CreateAbilityEntity(Vector2f pos, Type abilityType)
         {
             // Check for an inactive AbilityEntity of the matching type
-            AbilityEntity freeAbilityEntity = allEntities.Value.FirstOrDefault(x => !x.IsActive && x.GetType() == abilityType) as AbilityEntity;
+            AbilityEntity freeAbilityEntity = AllEntities.FirstOrDefault(x => !x.IsActive && x.GetType() == abilityType) as AbilityEntity;
 
             if (freeAbilityEntity == null)
             {
@@ -205,7 +209,11 @@ namespace game.Managers
 
                 if(freeAbilityEntity != null)
                 {
-                    allEntities.Value.Add(freeAbilityEntity);
+                    lock(_lock)
+                    {
+                        allEntities.Value.Add(freeAbilityEntity);
+                    }
+                    
                 }
 
             }
@@ -229,9 +237,13 @@ namespace game.Managers
             if(freeGem == null)
             {
                 freeGem = new Gem(pos);
-                allEntities.Value.Add(freeGem);
+                lock(_lock)
+                {
+                    allEntities.Value.Add(freeGem);
+                }
+                
             }
-
+           
             freeGem.ResetFromPool(pos);
 
             return freeGem;
@@ -239,7 +251,11 @@ namespace game.Managers
 
         public void AddMaxGemEntity(MaxiGem maxiGem)
         {
-            allEntities.Value.Add(maxiGem);
+            lock(_lock)
+            {
+                allEntities.Value.Add(maxiGem);
+            }
+            
         }
     }
 }
