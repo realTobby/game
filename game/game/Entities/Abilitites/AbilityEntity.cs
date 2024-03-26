@@ -28,7 +28,8 @@ namespace game.Entities.Abilitites
 
         public override void ResetFromPool(Vector2f position)
         {
-            IsActive = true;
+            SetPosition(position);
+            //IsActive = true;
             UniversalLog.LogInfo("hier könnte ihre reset AbilityEntity Logik stehen");
         }
 
@@ -41,11 +42,7 @@ namespace game.Entities.Abilitites
 
             if(CanCheckCollision)
             {
-                var enemies = GameManager.Instance.GetEntities(new Type[] { typeof(Enemy) });
-
-                List<Enemy> listOfY = enemies.Cast<Enemy>().ToList();
-
-                foreach (var enemy in listOfY)
+                foreach (var enemy in EntityManager.Instance.Enemies.ToList())
                 {
                     if (enemy.IsActive == false) continue;
                     if (CheckCollision(enemy))

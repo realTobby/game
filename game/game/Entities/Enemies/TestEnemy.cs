@@ -20,7 +20,7 @@ namespace game.Entities.Enemies
 
         public TestEnemy(Vector2f initialPosition, float speed) : base(TextureLoader.Instance.GetTexture("TestEnemy", "Entities/Enemies"), 1, 9, Time.FromSeconds(0.1f), speed, initialPosition)
         {
-            HP = 5;
+            HP = 1;
             Damage = 5;
 
             base.MinDistance = 45f;
@@ -44,9 +44,9 @@ namespace game.Entities.Enemies
             //base.animateSpriteComponent = new Models.AnimatedSprite(texLoad.GetSpriteFromSheet(rnd.Next(0, 69), rnd.Next(0, 47)), initialPosition);
         }
 
-        public override void Update(Player player, float deltaTime)
+        public override void Update()
         {
-            base.Update(player, deltaTime);
+            base.Update();
 
 
             var width = base.animateSpriteComponent.sprites[0].TextureRect.Width;

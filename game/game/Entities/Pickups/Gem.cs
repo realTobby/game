@@ -36,13 +36,15 @@ namespace game.Entities.Pickups
         public virtual int Pickup()
         {
             SoundManager.Instance.PlayGemPickup();
-            EntityManager.Instance.RemoveEntity(this);
+            IsActive = false;
+            //EntityManager.Instance.RemoveEntity(this);
             return XPGAIN;
         }
 
 
         public override void Update()
         {
+            if (!IsActive) return;
 
             base.SrtHitBoxDimensions(new FloatRect(Position.X, Position.Y, 16, 16));
 
@@ -53,6 +55,7 @@ namespace game.Entities.Pickups
 
         public override void Draw(float deltaTime)
         {
+            if (!IsActive) return;
             base.Draw(deltaTime);
         }
 

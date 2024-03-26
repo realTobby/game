@@ -31,9 +31,13 @@ namespace game.Managers
 
         public void MagnetizeGems()
         {
-            foreach (Gem gem in GetEntities(new Type[2] { typeof(Gem), typeof(MaxiGem) }))
+            foreach (Entity unknownEntity in EntityManager.Instance.noEnemyEntities.ToList())
             {
-                gem.IsMagnetized = true;
+                if(unknownEntity.GetType() == typeof(Gem))
+                {
+                    unknownEntity.IsMagnetized = true;
+                }
+                
             }
 
             //foreach (Enemy enemy in GetEntities(new Type[1] { typeof(Enemy)}))
@@ -48,22 +52,7 @@ namespace game.Managers
             entityManager = EntityManager.Instance;
         }
 
-        public List<Entity> GetEntities(Type[] baseTypes)
-        {
-            return EntityManager.Instance.Entities
-                .Where(x => x != null && baseTypes.Any(baseType => baseType.IsAssignableFrom(x.GetType())))
-                .ToList().Where(enemy => enemy.IsActive == true).ToList();
-        }
-
-
-        public bool EntityExists(Entity entity)
-        {
-
-            if (!entity.IsActive) return false;
-
-            return EntityManager.Instance.Entities.Contains(entity);
-        }
-
+        private static readonly object _lock = new object();
 
         public void Draw(float deltaTime)
         {

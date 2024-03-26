@@ -19,7 +19,7 @@ namespace game.Managers
 
         public void StartWave()
         {
-            if (GameManager.Instance.GetEntities(new Type[] { typeof(Enemy) }).Count < 125)
+            if (EntityManager.Instance.Enemies.Count < 125)
             {
                 var toSpawnWaves = enemyWaves.Where(x => x.IsSpawned == false);
 
@@ -29,14 +29,6 @@ namespace game.Managers
                 }
             }
             //Console.WriteLine("Current Enemy Count: " + CurrentEnemies.Count);
-        }
-
-        public void DrawEnemies(float deltaTime)
-        {
-            foreach (Enemy enemy in GameManager.Instance.GetEntities(new Type[] { typeof(Enemy) }))
-            {
-                enemy.Draw(deltaTime);
-            }
         }
 
     }

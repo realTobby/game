@@ -26,12 +26,13 @@ namespace game.Managers
                 foreach(var item in ActiveGems.ToList())
                 {
                     totalXP = totalXP + item.XPGAIN;
-                    EntityManager.Instance.RemoveEntity(item);
+                    item.IsActive = false;
+                    //EntityManager.Instance.RemoveEntity(item);
                 }
 
                 ActiveGems.Clear();
                 MaxiGem maxiGem = new MaxiGem(randomPos, totalXP);
-                EntityManager.Instance.AddEntity(maxiGem);
+                EntityManager.Instance.AddMaxGemEntity(maxiGem);
             }
         }
 

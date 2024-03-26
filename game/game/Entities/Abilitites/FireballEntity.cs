@@ -32,16 +32,30 @@ namespace game.Entities.Abilitites
             Damage = 1;
         }
 
+
+
         public override void Draw(float deltaTime)
         {
+            if (!IsActive) return;
+
             base.Draw(deltaTime);
+        }
+
+        public void SetTarget(Enemy enemyTarget)
+        {
+            target = enemyTarget;
+            killTimer.Restart();
+            IsActive = true;
         }
 
         public override void Update()
         {
+            if (!IsActive) return;
+
             if(killTimer.ElapsedTime > Time.FromSeconds(4))
             {
-                EntityManager.Instance.RemoveEntity(this);
+                //EntityManager.Instance.RemoveEntity(this);
+                IsActive = false;
             }
 
             base.SrtHitBoxDimensions(new FloatRect(Position.X, Position.Y, HitBoxDimensions.Width, HitBoxDimensions.Height));
@@ -59,14 +73,11 @@ namespace game.Entities.Abilitites
                 // Check if the fireball has reached its target
                 if (CheckCollisionWithEnemy())
                 {
-
-                    EntityManager.Instance.RemoveEntity(this);
+                    IsActive = false;
+                    //EntityManager.Instance.RemoveEntity(this);
                 }
 
-                if (!GameManager.Instance.EntityExists(target))
-                {
-                    EntityManager.Instance.RemoveEntity(this);
-                }
+                if (!target.IsActive == false) IsActive = false;
             }
 
             
@@ -76,7 +87,7 @@ namespace game.Entities.Abilitites
         private bool CheckCollisionWithEnemy()
         {
 
-            foreach (Enemy enemy in GameManager.Instance.GetEntities(new Type[] { typeof(Enemy) }).Cast<Enemy>().ToList())
+            foreach (Enemy enemy in EntityManager.Instance.Enemies.ToList())
             {
                 if (CheckCollision(enemy))
                 {

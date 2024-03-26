@@ -19,16 +19,15 @@ namespace game.Managers
 
         private GemManager gemManager;
 
-        private Lazy<List<Entity>> entities = new Lazy<List<Entity>>(() => new List<Entity>());
-        private List<Enemy> enemies = new List<Enemy>();
+        private Lazy<List<Entity>> allEntities = new Lazy<List<Entity>>(() => new List<Entity>());
 
         private Thread updateThread;
         private bool isUpdating;
 
         public static EntityManager Instance => _instance.Value;
 
-        public int GetEnemyPoolSize => Enemies.Count();
-        public int GetDisbaledEnemyCount => Enemies.Where(x => x.IsActive == false).Count();
+        public int GetEnemyPoolSize => allEntities.Value.Where(x => x.GetType() == typeof(Enemy)).Count();
+        public int GetDisbaledEnemyCount => allEntities.Value.Where(x => x.GetType() == typeof(Enemy) && x.IsActive == false).Count();
 
         private EntityManager()
         {
@@ -36,61 +35,13 @@ namespace game.Managers
             updateThread = new Thread(UpdateLoop) { IsBackground = true };
         }
 
-        public IEnumerable<Entity> Entities
+        public IEnumerable<Entity> AllEntities
         {
             get
             {
                 lock (_lock)
                 {
-                    return entities.Value.ToArray();
-                }
-            }
-        }
-
-        public IEnumerable<Enemy> Enemies
-        {
-            get
-            {
-                lock (_lock)
-                {
-                    return enemies.ToArray();
-                }
-            }
-        }
-
-        public void AddEntity(Entity entity)
-        {
-            lock (_lock)
-            {
-                entities.Value.Add(entity);
-
-                switch (entity)
-                {
-                    case Gem gem:
-                        gemManager.ActiveGems.Add(gem);
-                        break;
-                    case Enemy enemy:
-                        enemies.Add(enemy);
-                        break;
-                }
-            }
-        }
-
-        public void RemoveEntity(Entity entity)
-        {
-            lock (_lock)
-            {
-                entities.Value.Remove(entity);
-
-                switch (entity)
-                {
-                    case Gem gem:
-                        gemManager.ActiveGems.Remove(gem);
-                        break;
-                    case Enemy enemy:
-                        //enemies.Remove(enemy);
-                        enemy.IsActive = false;
-                        break;
+                    return allEntities.Value.ToList();
                 }
             }
         }
@@ -119,6 +70,51 @@ namespace game.Managers
             }
         }
 
+        public List<Enemy> Enemies
+        {       
+            get
+            {
+                lock (_lock)
+                {
+                    // Use LINQ to filter and cast entities to Enemy.
+                    return allEntities.Value.ToList().OfType<Enemy>().Where(x => x.IsActive).ToList();
+                }
+            }
+        }
+
+        public List<Entity> noEnemyEntities
+        {
+            get
+            {
+                lock (_lock)
+                {
+                    return allEntities.Value.ToList().OfType<Entity>().Where(x => !(x is Enemy) && x.IsActive).ToList();
+                }
+            }
+        }
+
+        public List<AbilityEntity> abilityEntities
+        {
+            get
+            {
+                lock(_lock)
+                {
+                    return allEntities.Value.ToList().OfType<AbilityEntity>().Where(x=>x.IsActive).ToList();
+                }
+            }
+        }
+
+        public List <Gem> gemEntities
+        {
+            get
+            {
+                lock(_lock)
+                {
+                    return allEntities.Value.ToList().OfType<Gem>().Where(x => x.IsActive).ToList();
+                }
+            }
+        }
+
         private void UpdateLoop()
         {
             var clock = new Clock();
@@ -131,19 +127,18 @@ namespace game.Managers
 
                     gemManager.Update();
 
-                    foreach (var entity in entities.Value.ToArray())
+                    foreach (var entity in noEnemyEntities)
                     {
                         entity?.Update();
                     }
 
-                    foreach (var enemy in enemies.ToArray())
+                    foreach (Enemy enemy in Enemies)
                     {
-                        if (!enemy.IsActive) continue;
-                        enemy?.Update(GameScene.Instance.player, deltaTime);
+                        enemy.Update();
                     }
                 }
 
-                Thread.Sleep(10);
+                Thread.Sleep(5);
             }
         }
 
@@ -151,7 +146,7 @@ namespace game.Managers
         {
             lock (_lock)
             {
-                foreach (var entity in entities.Value)
+                foreach (var entity in allEntities.Value)
                 {
                     entity?.Draw(deltaTime);
                 }
@@ -162,19 +157,19 @@ namespace game.Managers
         {
             lock (_lock)
             {
-                return entities.Value.Contains(entityToCheck);
+                return allEntities.Value.Contains(entityToCheck);
             }
         }
 
         public Enemy CreateEnemy(Vector2f pos)
         {
             // get free enemy from pool
-            var freeEnemy = Enemies.Where(x => x.IsActive == false).FirstOrDefault();
+            var freeEnemy = allEntities.Value.Where(x => x.IsActive == false && x.GetType() == typeof(Enemy)).FirstOrDefault() as Enemy;
             
             if(freeEnemy == null)
             {
                 freeEnemy = new TestEnemy(pos, 25);
-                AddEntity(freeEnemy);
+                allEntities.Value.Add(freeEnemy);
             }
             else
             {
@@ -186,24 +181,65 @@ namespace game.Managers
 
         public AbilityEntity CreateAbilityEntity(Vector2f pos, Type abilityType)
         {
-            // check for disabled abilityentity that matches the type
+            // Check for an inactive AbilityEntity of the matching type
+            AbilityEntity freeAbilityEntity = allEntities.Value.FirstOrDefault(x => !x.IsActive && x.GetType() == abilityType) as AbilityEntity;
 
-            AbilityEntity freeAbilityEntity = Entities.Where(x => x.IsActive == false && x.GetType() == abilityType).FirstOrDefault() as AbilityEntity;
-
-            if(freeAbilityEntity == null)
+            if (freeAbilityEntity == null)
             {
-                // spawn correct shit
-                if(abilityType == typeof(FireballEntity))
+                // If no inactive entities are found, create a new one based on the type
+                if (abilityType == typeof(FireballEntity))
                 {
-
+                    // Assuming FireballEntity has a constructor that takes Vector2f position
+                    freeAbilityEntity = new FireballEntity(pos, null); // You might need to adjust this based on your constructors
                 }
+                
+                if(abilityType == typeof(ThunderStrikeEntity))
+                {
+                    freeAbilityEntity = new ThunderStrikeEntity(pos);
+                }
+
+                if(abilityType == typeof(OrbitalEntity))
+                {
+                    freeAbilityEntity = new OrbitalEntity(GameScene.Instance.player, pos, 0, 0);
+                }
+
+                if(freeAbilityEntity != null)
+                {
+                    allEntities.Value.Add(freeAbilityEntity);
+                }
+
+            }
+            else
+            {
+                // If an inactive entity is found, reset it for reuse
+                freeAbilityEntity.ResetFromPool(pos);
             }
 
+            
 
+            // Activate the entity
+            //freeAbilityEntity.IsActive = true;
             return freeAbilityEntity;
-
         }
 
+        public Gem CreateGem(float XP, Vector2f pos)
+        {
+            Gem freeGem = noEnemyEntities.FirstOrDefault(x => !x.IsActive && x.GetType() == typeof(Gem)) as Gem;
 
+            if(freeGem == null)
+            {
+                freeGem = new Gem(pos);
+                allEntities.Value.Add(freeGem);
+            }
+
+            freeGem.ResetFromPool(pos);
+
+            return freeGem;
+        }
+
+        public void AddMaxGemEntity(MaxiGem maxiGem)
+        {
+            allEntities.Value.Add(maxiGem);
+        }
     }
 }

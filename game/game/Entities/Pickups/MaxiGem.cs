@@ -26,7 +26,8 @@ namespace game.Entities.Pickups
         {
             SoundManager.Instance.PlayGemPickup();
 
-            EntityManager.Instance.RemoveEntity(this);
+            IsActive = false;
+            //EntityManager.Instance.RemoveEntity(this);
 
             return XPGAIN;
         }

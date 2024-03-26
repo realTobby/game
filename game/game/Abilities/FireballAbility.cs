@@ -30,10 +30,14 @@ namespace game.Abilities
 
         public override void Activate()
         {
-            Enemy nearestEnemy = GameScene.Instance.FindNearestEnemy(player.Position, GameManager.Instance.GetEntities(new Type[] { typeof(Enemy) }).Cast<Enemy>().ToList() );
+            Enemy nearestEnemy = GameScene.Instance.FindNearestEnemy(player.Position, EntityManager.Instance.Enemies.ToList());
             if (nearestEnemy == null)
                 return;
-            EntityManager.Instance.AddEntity(new FireballEntity(player.Position, nearestEnemy));
+
+            FireballEntity fireballEntity = EntityManager.Instance.CreateAbilityEntity(player.Position, typeof(FireballEntity)) as FireballEntity;
+            fireballEntity.SetTarget(nearestEnemy);
+            fireballEntity.SetPosition(player.Position);
+            //EntityManager.Instance.AddEntity(new FireballEntity(player.Position, nearestEnemy));
 
 
 

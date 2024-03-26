@@ -25,6 +25,8 @@ namespace game.Entities.Abilitites
 
         public override void Update()
         {
+            if (!IsActive) return;
+
             base.Update();
 
             base.SrtHitBoxDimensions(new FloatRect(Position.X, Position.Y, HitBoxDimensions.Width, HitBoxDimensions.Height));
@@ -38,7 +40,8 @@ namespace game.Entities.Abilitites
 
             if (base.animateSpriteComponent.currentFrame >= base.animateSpriteComponent.sprites.Length - 1)
             {
-                EntityManager.Instance.RemoveEntity(this);
+                IsActive = false;
+                //EntityManager.Instance.RemoveEntity(this);
             }
 
         }

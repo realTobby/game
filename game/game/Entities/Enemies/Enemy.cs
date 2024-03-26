@@ -90,8 +90,8 @@ namespace game.Entities.Enemies
 
             if (HP <= 0)
             {
-                var bluegem = new Gem(Position);
-                EntityManager.Instance.AddEntity(bluegem);
+                var bluegem = EntityManager.Instance.CreateGem(1, this.Position);
+                //EntityManager.Instance.AddEntity(bluegem);
 
                 GameScene.Instance._uiManager.RemoveComponent(hpBar);
 
@@ -152,8 +152,11 @@ namespace game.Entities.Enemies
             }
         }
 
-        private void MoveTowardsPlayer(Player player, float deltaTime)
+        private void MoveTowardsPlayer()
         {
+            Player player = GameScene.Instance.player;
+            float deltaTime = Game.Instance.DeltaTime;
+
             Vector2f direction = player.Position - Position;
             float magnitude = (float)Math.Sqrt(direction.X * direction.X + direction.Y * direction.Y);
 
@@ -175,12 +178,12 @@ namespace game.Entities.Enemies
             }
         }
 
-        public virtual void Update(Player player, float deltaTime)
+        public override void Update()
         {
             if (GameManager.Instance.IsGamePaused == false)
             {
                 base.Update();
-                MoveTowardsPlayer(player, deltaTime);
+                MoveTowardsPlayer();
                 SetPosition(Position);
 
                 if (hpBar != null)
@@ -212,7 +215,7 @@ namespace game.Entities.Enemies
 
         private void CheckCollisionWithEntityType(Type[] entityTypse)
         {
-            var abilityEntities = GameManager.Instance.GetEntities(entityTypse);
+            var abilityEntities = EntityManager.Instance.abilityEntities;
             //Console.WriteLine(abilityEntities.Count() + " abilities could hurt me!");
             foreach (AbilityEntity ability in abilityEntities)
             {

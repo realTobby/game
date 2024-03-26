@@ -63,7 +63,7 @@ public class Player : Entity
 
     private void CheckCollisionWithPickups()
     {
-        foreach (Gem gem in GameManager.Instance.GetEntities(new Type[] { typeof(Gem), typeof(MaxiGem) }))
+        foreach (Gem gem in EntityManager.Instance.gemEntities.ToList())
         {
             if (CheckCollision(gem))
             {

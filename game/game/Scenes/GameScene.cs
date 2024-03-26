@@ -81,7 +81,7 @@ namespace game.Scenes
             debugDamageNumberPoolSize.SetColor(SFML.Graphics.Color.Red);
             _uiManager.AddComponent(debugDamageNumberPoolSize);
 
-            UI_Text debugEntityCountWhole = new UI_Text("All Entities: ", 8, new Vector2f(10, 50), _viewCamera.view, new UIBinding<string>(() => EntityManager.Instance.Entities.Count().ToString()));
+            UI_Text debugEntityCountWhole = new UI_Text("All Entities: ", 8, new Vector2f(10, 50), _viewCamera.view, new UIBinding<string>(() => EntityManager.Instance.AllEntities.Count().ToString()));
             debugEntityCountWhole.SetColor(SFML.Graphics.Color.Red);
             _uiManager.AddComponent(debugEntityCountWhole);
 
@@ -103,7 +103,7 @@ namespace game.Scenes
 
         private void GenerateNewWave()
         {
-            if(GameManager.Instance.GetEntities(new Type[] { typeof(Enemy) }).Cast<Enemy>().ToList().Count < 125)
+            if(EntityManager.Instance.Enemies.Count < 125)
             {
                 EnemyWave wave = new EnemyWave(1f, 25f);
 
@@ -205,7 +205,7 @@ namespace game.Scenes
             _overworldManager?.Draw();
 
             //HandleAnimations();
-            gameManager._waveManager.DrawEnemies(deltaTime);
+            //gameManager._waveManager.DrawEnemies(deltaTime);
 
             player.Draw(deltaTime);
 

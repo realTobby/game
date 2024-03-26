@@ -32,8 +32,10 @@ namespace game.Managers
         {
             foreach (Vector2f position in spawnPositions)
             {
-                EntityManager.Instance.CreateEnemy(position);
+                var enemy = EntityManager.Instance.CreateEnemy(position);
 
+                enemy.ResetFromPool(position);
+                enemy.IsActive = true;
 
                 //// Create an enemy at each spawn position
                 //TestEnemy enemy = new TestEnemy(position, enemySpeed);

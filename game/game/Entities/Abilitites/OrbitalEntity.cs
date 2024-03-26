@@ -42,6 +42,12 @@ namespace game.Entities.Abilitites
             base.animateSpriteComponent = new Models.AnimatedSprite(texLoad.GetSpriteFromSheet(12, 34), initialPosition);
         }
 
+        public void SetStats(float orbitSpeed, float orbitRadius)
+        {
+            this.orbitSpeed = orbitSpeed;
+            this.orbitRadius = orbitRadius;
+        }
+
         public override void Update()
         {
             SetScale(Random.Shared.NextFloat(1f, 3f));
@@ -76,7 +82,8 @@ namespace game.Entities.Abilitites
             if(MaxHit == 0)
             {
 
-                EntityManager.Instance.RemoveEntity(this);
+                IsActive = false;
+                //EntityManager.Instance.RemoveEntity(this);
 
 
                 // spawn thunderstrike entity here
@@ -92,7 +99,7 @@ namespace game.Entities.Abilitites
         private Enemy CheckCollisionWithEnemy()
         {
 
-            foreach (Enemy enemy in GameManager.Instance.GetEntities(new Type[] { typeof(Enemy) }).Cast<Enemy>().ToList())
+            foreach (Enemy enemy in EntityManager.Instance.Enemies.ToList())
             {
                 if (CheckCollision(enemy))
                 {

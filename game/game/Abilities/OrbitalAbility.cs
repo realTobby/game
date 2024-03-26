@@ -47,11 +47,15 @@ namespace game.Abilities
                         player.Position.X + MathF.Cos(angle) * circleRadius,
                         player.Position.Y + MathF.Sin(angle) * circleRadius
                     );
-                    OrbitalEntity orbitalEntity = new OrbitalEntity(player, spawnPosition, circleSpeed, circleRadius);
 
-                    orbitalEntity.SetScale(Random.Shared.NextFloat(1f, 3f));
-                    
-                    EntityManager.Instance.AddEntity(orbitalEntity);
+                    var orbitalEntity = EntityManager.Instance.CreateAbilityEntity(spawnPosition, typeof(OrbitalEntity)) as OrbitalEntity;
+                    orbitalEntity.SetPosition(spawnPosition);
+                    orbitalEntity.SetStats(circleSpeed, circleRadius);
+                    orbitalEntity.IsActive = true;
+
+                    //OrbitalEntity orbitalEntity = new OrbitalEntity(player, spawnPosition, circleSpeed, circleRadius);
+                    //orbitalEntity.SetScale(Random.Shared.NextFloat(1f, 3f));
+                    //EntityManager.Instance.AddEntity(orbitalEntity);
 
                     orbitals.Add(orbitalEntity);
                 }

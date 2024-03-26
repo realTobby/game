@@ -47,6 +47,7 @@ namespace game.Entities
         public void SetPosition(Vector2f pos)
         {
             animateSpriteComponent.SetPosition(pos);
+            Position = pos;
         }
 
         public void SetScale(float scale)
