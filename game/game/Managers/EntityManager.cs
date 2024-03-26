@@ -19,7 +19,7 @@ namespace game.Managers
 
         private GemManager gemManager;
 
-        private List<Entity> entities = new List<Entity>();
+        private Lazy<List<Entity>> entities = new Lazy<List<Entity>>(() => new List<Entity>());
         private List<Enemy> enemies = new List<Enemy>();
 
         private Thread updateThread;
@@ -42,7 +42,7 @@ namespace game.Managers
             {
                 lock (_lock)
                 {
-                    return entities.ToArray();
+                    return entities.Value.ToArray();
                 }
             }
         }
@@ -62,7 +62,7 @@ namespace game.Managers
         {
             lock (_lock)
             {
-                entities.Add(entity);
+                entities.Value.Add(entity);
 
                 switch (entity)
                 {
@@ -80,7 +80,7 @@ namespace game.Managers
         {
             lock (_lock)
             {
-                entities.Remove(entity);
+                entities.Value.Remove(entity);
 
                 switch (entity)
                 {
@@ -131,7 +131,7 @@ namespace game.Managers
 
                     gemManager.Update();
 
-                    foreach (var entity in entities.ToArray())
+                    foreach (var entity in entities.Value.ToArray())
                     {
                         entity?.Update();
                     }
@@ -151,7 +151,7 @@ namespace game.Managers
         {
             lock (_lock)
             {
-                foreach (var entity in entities)
+                foreach (var entity in entities.Value)
                 {
                     entity?.Draw(deltaTime);
                 }
@@ -162,7 +162,7 @@ namespace game.Managers
         {
             lock (_lock)
             {
-                return entities.Contains(entityToCheck);
+                return entities.Value.Contains(entityToCheck);
             }
         }
 

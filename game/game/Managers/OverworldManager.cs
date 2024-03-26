@@ -23,7 +23,7 @@ namespace game.Managers
         public enum TileType { Grass, Water, Rocks, Trees }
 
         // Noise parameters
-        private const float NoiseScale = 0.05f;
+        private const float NoiseScale = 0.1f;
         private const int Seed = 1234;
 
         private PerlinNoise perlinNoise;

@@ -34,7 +34,7 @@ namespace game.Abilities
             }
             else if (abilityType == typeof(OrbitalAbility))
             {
-                constructorArgs = new object[] { player, 5f, 5f, 100f, 3 }; // Assuming default values
+                constructorArgs = new object[] { player, 5f, 5f, 50f, 3 }; // Assuming default values
             }
             else if (abilityType == typeof(ThunderStrikeAbility))
             {

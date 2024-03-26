@@ -37,6 +37,10 @@ public class Player : Entity
 
         powerupMenu = new UI_PowerupMenu(new Vector2f(100, 100), GameScene.Instance._viewCamera.view);
         GameScene.Instance._uiManager.AddComponent(powerupMenu);
+
+        SetScale(1.5f);
+
+        //Abilities.Add(new OrbitalAbility(this, 1, 5, 25, 10));
     }
 
     public string GetUIXPString()

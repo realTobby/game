@@ -39,7 +39,7 @@ namespace game.Entities.Abilitites
 
             MaxHit = player.Level / 2;
 
-            base.animateSpriteComponent = new Models.AnimatedSprite(texLoad.GetSpriteFromSheet(rnd.Next(0, 69), rnd.Next(0, 47)), initialPosition);
+            base.animateSpriteComponent = new Models.AnimatedSprite(texLoad.GetSpriteFromSheet(12, 34), initialPosition);
         }
 
         public override void Update()
