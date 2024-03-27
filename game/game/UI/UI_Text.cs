@@ -1,8 +1,10 @@
-﻿using game.Scenes;
+﻿using game.Managers;
+using game.Scenes;
 using SFML.Graphics;
 using SFML.System;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -78,6 +80,26 @@ namespace game.UI
             renderTexture.Draw(textComp);
 
             base.EndUIDraw();
+        }
+
+        public override void DrawDirectlyToWindow()
+        {
+            // Update the position relative to the camera view
+            textComp.Position = Position;
+
+            string displayText = defaultText;
+
+            if (textBinding != null)
+            {
+                displayText = displayText + textBinding.Value;
+            }
+
+
+
+            textComp.DisplayedString = displayText;
+
+            // Draw the text
+            Game.Instance.GetRenderWindow().Draw(textComp);
         }
 
         public override void Update()

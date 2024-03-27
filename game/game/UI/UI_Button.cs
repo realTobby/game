@@ -56,6 +56,12 @@ namespace game.UI
 
         }
 
+        public override void DrawDirectlyToWindow()
+        {
+            _buttonSprite.Position = Position;
+            Game.Instance.GetRenderWindow().Draw(_buttonSprite);
+        }
+
         public override void Update()
         {
             var mousePos = Mouse.GetPosition(Game.Instance.GetRenderWindow());

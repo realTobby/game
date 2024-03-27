@@ -98,6 +98,17 @@ namespace game.UI
             window.SetView(originalView);
         }
 
+        public void DrawDirectlyToWindow()
+        {
+            RenderWindow window = Game.Instance.GetRenderWindow();
+            foreach (UIComponent component in _components.ToList())
+            {
+                if (component != null) component.DrawDirectlyToWindow();
+
+            }
+        }
+
+
         
     }
 }

@@ -126,5 +126,14 @@ namespace game.Controllers
             return worldPosition - viewTopLeft;
         }
 
+        public FloatRect GetViewBounds()
+        {
+            var viewCenter = view.Center;
+            var viewSize = view.Size;
+            var halfSize = new Vector2f(viewSize.X / 2f, viewSize.Y / 2f);
+            return new FloatRect(viewCenter - halfSize, viewSize);
+        }
+
+
     }
 }

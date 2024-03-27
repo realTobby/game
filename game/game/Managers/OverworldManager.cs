@@ -1,4 +1,5 @@
-﻿using game.Helpers;
+﻿using game.Controllers;
+using game.Helpers;
 using game.Models;
 using SFML.Graphics;
 using SFML.System;
@@ -115,15 +116,33 @@ namespace game.Managers
 
 
 
-        public void Draw(RenderTexture renderTexture)
+        public void Draw(RenderTexture renderTexture, ViewCamera camera)
         {
+            FloatRect viewBounds = camera.GetViewBounds();
+
+            // Define how much extra space you want to include around the view (in tiles)
+            float extraMargin = 50; // This could be any value depending on how many extra tiles you want
+
+            // Expand the viewBounds by the extraMargin
+            FloatRect expandedBounds = new FloatRect(
+                viewBounds.Left - extraMargin,
+                viewBounds.Top - extraMargin,
+                viewBounds.Width + (extraMargin * 2),
+                viewBounds.Height + (extraMargin * 2)
+            );
+
             foreach (var tile in OverworldTiles)
             {
-                renderTexture.Draw(tile.Sprite);
-
-                if (tile.Object != null)
+                // Check if the tile's position (considering its entirety) is within the expanded bounds
+                // Assuming the tile's size is 1x1 for simplicity; adjust as necessary
+                if (expandedBounds.Contains(tile.Position.X, tile.Position.Y))
                 {
-                    renderTexture.Draw(tile.Object);
+                    renderTexture.Draw(tile.Sprite);
+
+                    if (tile.Object != null)
+                    {
+                        renderTexture.Draw(tile.Object);
+                    }
                 }
             }
         }

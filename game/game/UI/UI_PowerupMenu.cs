@@ -73,5 +73,14 @@ namespace game.UI
 
             
         }
+
+        public override void DrawDirectlyToWindow()
+        {
+            if (GameManager.Instance.IsGamePaused == true && IsMenuOpen == true)
+            {
+                backgroundShape.Position = Position;
+                Game.Instance.GetRenderWindow().Draw(backgroundShape);
+            }
+        }
     }
 }

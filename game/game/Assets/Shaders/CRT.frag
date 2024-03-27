@@ -15,17 +15,20 @@ void main() {
     // Sample the texture at the distorted coordinate
     vec4 color = texture2D(texture, uv);
 
-    // Add scanlines
-    float scanline = sin(uv.y * resolution.y * 3.14159);
-    color.rgb *= 0.9 + 0.1 * scanline;
+    // Add more visible scanlines by increasing the frequency and contrast
+    float scanlineIntensity = 1.25; // Increase this to make scanlines darker
+    float scanlineFrequency = resolution.y * 0.75; // Adjust frequency for denser scanlines
+    float scanlineEffect = sin(uv.y * scanlineFrequency * 3.14159) * scanlineIntensity;
+    
+    // Modify the color based on the scanline effect
+    color.rgb *= 0.7 + 0.3 * scanlineEffect; // Adjust these values to fine-tune the visibility
 
     // Check if the uv coordinates are outside the 0 to 1 range
     if (uv.x < 0.0 || uv.x > 1.0 || uv.y < 0.0 || uv.y > 1.0) {
         // Set the color to black if the pixel is out of bounds
         gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);
     } else {
-        // Sample the texture at the distorted coordinate
-        // Output the final color
+        // Output the final color with enhanced scanlines
         gl_FragColor = color;
     }
 }

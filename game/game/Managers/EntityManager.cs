@@ -26,8 +26,8 @@ namespace game.Managers
 
         public static EntityManager Instance => _instance.Value;
 
-        public int GetEnemyPoolSize => AllEntities.Where(x => x.GetType() == typeof(Enemy)).Count();
-        public int GetDisbaledEnemyCount => AllEntities.Where(x => x.GetType() == typeof(Enemy) && x.IsActive == false).Count();
+        public int GetEnemyPoolSize => AllEntities.Where(x => x.GetType() == typeof(TestEnemy)).Count();
+        public int GetDisbaledEnemyCount => AllEntities.Where(x => x.GetType() == typeof(TestEnemy) && x.IsActive == false).Count();
 
         private EntityManager()
         {

@@ -42,6 +42,9 @@ namespace game.UI
 
         public abstract void Draw(RenderTexture renderTexture);
 
+        public abstract void DrawDirectlyToWindow();
+
+
         View originalViewTMP;
 
         public void StartUIDraw()

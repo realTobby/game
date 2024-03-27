@@ -77,6 +77,11 @@ namespace game.UI
             damageText.Draw(renderTexture);
         }
 
-        
+        public override void DrawDirectlyToWindow()
+        {
+            damageText.Position = Position;
+            damageText.DrawDirectlyToWindow();
+        }
+
     }
 }

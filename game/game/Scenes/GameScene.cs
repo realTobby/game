@@ -67,9 +67,10 @@ namespace game.Scenes
 
             _inputManager = new InputManager();
             _uiManager = new UIManager();
-            _overworldManager = new OverworldManager(50);
+
+            _overworldManager = new OverworldManager(300);
             _viewCamera = new ViewCamera();
-            player = new Player(new Vector2f(25*16,25*16));
+            player = new Player(new Vector2f(25 * 16, 25 * 16));
 
 
             waveTimer = new Clock();
@@ -245,7 +246,7 @@ namespace game.Scenes
 
             renderTexture.Clear(Color.Black);
             renderTexture.SetView(_viewCamera.view);
-            _overworldManager?.Draw(renderTexture);
+            _overworldManager?.Draw(renderTexture, _viewCamera);
             player.Draw(renderTexture, deltaTime);
             gameManager.Draw(renderTexture, deltaTime);
             _uiManager.Draw(renderTexture);
@@ -260,6 +261,8 @@ namespace game.Scenes
 
 
             Game.Instance.GetRenderWindow().Draw(sceneSprite, new RenderStates(CRTShader));
+
+            //_uiManager.DrawDirectlyToWindow();
         }
 
         private void UpdatePlayerAbilities(float deltaTime)
