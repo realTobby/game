@@ -225,6 +225,8 @@ namespace game.Scenes
 
         public override void Draw(RenderTexture renderTexture, float deltaTime)
         {
+            
+
             //_overworldManager?.Draw();
 
             ////HandleAnimations();
@@ -248,7 +250,15 @@ namespace game.Scenes
             gameManager.Draw(renderTexture, deltaTime);
             _uiManager.Draw(renderTexture);
             renderTexture.Display(); // This is necessary to finalize the drawing on the renderTexture
+
+            
             Sprite sceneSprite = new Sprite(renderTexture.Texture);
+            //sceneSprite.Origin = _viewCamera.view.Center;
+            //sceneSprite.Position = new Vector2f(sceneSprite.Position.X+renderTexture.Size.X/2, sceneSprite.Position.Y);
+            Game.Instance.GetRenderWindow().Clear();
+            sceneSprite.Position = new Vector2f(-500, 0);
+
+
             Game.Instance.GetRenderWindow().Draw(sceneSprite, new RenderStates(CRTShader));
         }
 

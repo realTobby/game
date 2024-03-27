@@ -25,10 +25,10 @@ namespace game.Controllers
 
         public ViewCamera()
         {
-            renderTexture = new RenderTexture(Game.Instance.GetRenderWindow().Size.X, Game.Instance.GetRenderWindow().Size.Y);
+            renderTexture = new RenderTexture(1000, 1000);
             
 
-            view = new View(new FloatRect(0, 0, Game.Instance.GetRenderWindow().Size.X / 2, Game.Instance.GetRenderWindow().Size.Y / 2));
+            view = new View(new FloatRect(0, 0, 800, 600));
 
             originalCenter = view.Center;
         }
@@ -44,7 +44,7 @@ namespace game.Controllers
                 UpdateShake();
             }
 
-            Game.Instance.GetRenderWindow().SetView(view);
+            //Game.Instance.GetRenderWindow().SetView(view);
 
             // Clear the RenderTexture
             renderTexture.Clear(Color.Black);
@@ -60,11 +60,16 @@ namespace game.Controllers
 
             // Now draw the texture to the window with the shader applied
             Sprite sceneSprite = new Sprite(renderTexture.Texture);
-            shader.SetUniform("resolution", new Vector2f(renderTexture.Size.X, renderTexture.Size.Y));
+            shader.SetUniform("resolution", new Vector2f(Game.Instance.GetRenderWindow().Size.X, Game.Instance.GetRenderWindow().Size.Y));
+            //sceneSprite.Position = new Vector2f(500, 0);
+            //sceneSprite.Position = new Vector2f(sceneSprite.Position.X+renderTexture.Size.X/2, sceneSprite.Position.Y);
+
+            
+
             Game.Instance.GetRenderWindow().Draw(sceneSprite, new RenderStates(shader));
 
             // Now, set the view back for the window
-            Game.Instance.GetRenderWindow().SetView(view);
+            //Game.Instance.GetRenderWindow().SetView(view);
         }
 
         public void ShakeCamera(float intensity, float duration)
