@@ -256,7 +256,7 @@ namespace game.Scenes
             //sceneSprite.Origin = _viewCamera.view.Center;
             //sceneSprite.Position = new Vector2f(sceneSprite.Position.X+renderTexture.Size.X/2, sceneSprite.Position.Y);
             Game.Instance.GetRenderWindow().Clear();
-            sceneSprite.Position = new Vector2f(-500, 0);
+            //sceneSprite.Position = new Vector2f(-500, 0);
 
 
             Game.Instance.GetRenderWindow().Draw(sceneSprite, new RenderStates(CRTShader));
