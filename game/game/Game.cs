@@ -29,6 +29,8 @@ namespace game
         public TextureLoader TextureLoader = new TextureLoader();
         Music backgroundMusic = new Music("Assets/BGM/SuperHero_original.ogg");
 
+        public RenderTexture renderTextureForShaders;
+
         public void SceneTransition(Scene nextScene)
         {
             sceneManager.PushScene(nextScene);
@@ -38,14 +40,21 @@ namespace game
         {
             if (_instance == null) _instance = this;
 
-            var mode = new VideoMode(800, 600);
-            _gameWindow = new RenderWindow(mode, "Game");
+            
+
+            // Use the current desktop resolution for fullscreen mode
+            var mode = VideoMode.FullscreenModes[0];
+            _gameWindow = new RenderWindow(mode, "Game", Styles.Fullscreen); // Set window to fullscreen
             _gameWindow.SetFramerateLimit(60);
             _gameWindow.Closed += (sender, e) => StopGame();
+
+            renderTextureForShaders = new RenderTexture(Game.Instance.GetRenderWindow().Size.X, Game.Instance.GetRenderWindow().Size.Y);
+            renderTextureForShaders.Clear(Color.Black);
 
             sceneManager = new SceneManager();
             sceneManager.PushScene(new MainMenuScene());
         }
+
 
         private void StopGame()
         {
@@ -75,7 +84,7 @@ namespace game
                
 
                 sceneManager.Update(deltaTime);
-                sceneManager.Draw(deltaTime);
+                sceneManager.Draw(renderTextureForShaders, deltaTime);
 
                 GameClock.Restart();
 

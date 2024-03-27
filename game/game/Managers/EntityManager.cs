@@ -144,13 +144,13 @@ namespace game.Managers
             }
         }
 
-        public void DrawEntities(float deltaTime)
+        public void DrawEntities(SFML.Graphics.RenderTexture renderTexture, float deltaTime)
         {
             lock (_lock)
             {
                 foreach (var entity in AllEntities)
                 {
-                    entity?.Draw(deltaTime);
+                    entity?.Draw(renderTexture, deltaTime);
                 }
             }
         }

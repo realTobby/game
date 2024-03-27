@@ -92,10 +92,10 @@ namespace game.Entities
             
         }
 
-        public virtual void Draw(float deltaTime)
+        public virtual void Draw(RenderTexture renderTexture, float deltaTime)
         {
             if (!IsActive) return;
-            animateSpriteComponent.Draw(deltaTime);
+            animateSpriteComponent.Draw(renderTexture, deltaTime);
         }
 
         public FloatRect GetBounds()

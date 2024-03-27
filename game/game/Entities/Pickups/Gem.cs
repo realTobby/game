@@ -53,10 +53,10 @@ namespace game.Entities.Pickups
             
         }
 
-        public override void Draw(float deltaTime)
+        public override void Draw(RenderTexture renderTexture, float deltaTime)
         {
             if (!IsActive) return;
-            base.Draw(deltaTime);
+            base.Draw(renderTexture, deltaTime);
         }
 
         public override void ResetFromPool(Vector2f position)

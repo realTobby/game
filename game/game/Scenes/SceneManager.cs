@@ -34,10 +34,10 @@ namespace game.Scenes
             scene.Update(deltaTime);
         }
 
-        public void Draw(float deltaTime)
+        public void Draw(SFML.Graphics.RenderTexture renderTexture, float deltaTime)
         {
             Scene scene = scenes.Peek();
-            scene.Draw(deltaTime);
+            scene.Draw(renderTexture, deltaTime);
         }
     }
 }

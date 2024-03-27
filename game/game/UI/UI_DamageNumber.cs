@@ -64,7 +64,7 @@ namespace game.UI
             }
         }
 
-        public override void Draw()
+        public override void Draw(RenderTexture renderTexture)
         {
             if (!base.IsActive) return;
 
@@ -74,7 +74,7 @@ namespace game.UI
             // Update the UI_Text component's position before drawing
             damageText.Position = viewRelativePosition;
 
-            damageText.Draw();
+            damageText.Draw(renderTexture);
         }
 
         

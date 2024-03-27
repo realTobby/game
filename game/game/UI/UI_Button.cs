@@ -39,7 +39,7 @@ namespace game.UI
             _buttonSprite.Color = normalColor;
         }
 
-        public override void Draw()
+        public override void Draw(RenderTexture renderTexture)
         {
             base.StartUIDraw();
 
@@ -48,9 +48,9 @@ namespace game.UI
 
             _buttonSprite.Position = offsetPosition;
 
-            Game.Instance.GetRenderWindow().Draw(_buttonSprite);
+            renderTexture.Draw(_buttonSprite);
 
-            if (!string.IsNullOrEmpty(_buttonText)) _text.Draw();
+            if (!string.IsNullOrEmpty(_buttonText)) _text.Draw(renderTexture);
 
             base.EndUIDraw();
 

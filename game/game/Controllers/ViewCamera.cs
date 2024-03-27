@@ -2,12 +2,15 @@
 using game.Scenes;
 using SFML.Graphics;
 using SFML.System;
+using SFML.Window;
 using System;
 
 namespace game.Controllers
 {
     public class ViewCamera
     {
+        private RenderTexture renderTexture;
+
         float cameraSpeed = 150f;
         Random random = new Random();
 
@@ -22,11 +25,16 @@ namespace game.Controllers
 
         public ViewCamera()
         {
+            renderTexture = new RenderTexture(Game.Instance.GetRenderWindow().Size.X, Game.Instance.GetRenderWindow().Size.Y);
+            
+
             view = new View(new FloatRect(0, 0, Game.Instance.GetRenderWindow().Size.X / 2, Game.Instance.GetRenderWindow().Size.Y / 2));
+
             originalCenter = view.Center;
         }
 
-        public void Update(Vector2f targetPos)
+
+        public void Update(Vector2f targetPos, Shader shader)
         {
             TargetPosition = targetPos;
             TrackPlayer();
@@ -36,6 +44,26 @@ namespace game.Controllers
                 UpdateShake();
             }
 
+            Game.Instance.GetRenderWindow().SetView(view);
+
+            // Clear the RenderTexture
+            renderTexture.Clear(Color.Black);
+
+            // Set the view of the RenderTexture
+            renderTexture.SetView(view);
+
+            // Draw everything to the RenderTexture instead of the window
+            // sceneManager.Draw(renderTexture, deltaTime); // Example, replace with actual drawing code
+
+            // Display to finalize the texture
+            renderTexture.Display();
+
+            // Now draw the texture to the window with the shader applied
+            Sprite sceneSprite = new Sprite(renderTexture.Texture);
+            shader.SetUniform("resolution", new Vector2f(renderTexture.Size.X, renderTexture.Size.Y));
+            Game.Instance.GetRenderWindow().Draw(sceneSprite, new RenderStates(shader));
+
+            // Now, set the view back for the window
             Game.Instance.GetRenderWindow().SetView(view);
         }
 

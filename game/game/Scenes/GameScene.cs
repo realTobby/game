@@ -14,11 +14,13 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Numerics;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using Color = SFML.Graphics.Color;
 
 namespace game.Scenes
 {
@@ -44,11 +46,23 @@ namespace game.Scenes
 
         private Sprite debugSprite = null;
 
+        // Load your shader
+        Shader CRTShader;
+
         // load every fucking sprite in memory
         SpriteSheetLoader texLoad = new SpriteSheetLoader("Assets/Sprites/spritesheet.png");
 
         public GameScene()
         {
+            string shaderPath = "Assets/Shaders/CRT.frag";
+            if (!File.Exists(shaderPath))
+            {
+                throw new FileNotFoundException($"The shader file was not found: {shaderPath}");
+            }
+
+            // If the file exists, try to load it
+            CRTShader = new Shader(null, null, shaderPath);
+
             if (_instance == null) _instance = this;
 
             _inputManager = new InputManager();
@@ -172,16 +186,22 @@ namespace game.Scenes
         public int debugX = 0;
         public int debugY = 0;
 
+        
+
         public override void Update(float deltaTime)
         {
+            
+            
+
+            _viewCamera.Update(player.Position, CRTShader);
+            //gameManager._waveManager.Update(player, deltaTime);
+
             _inputManager.Update();
 
             HandlePlayerMovement(deltaTime);
 
             _uiManager.Update();
             player.Update(deltaTime);
-            _viewCamera.Update(player.Position);
-            //gameManager._waveManager.Update(player, deltaTime);
 
             UpdateEnemyWave();
 
@@ -203,24 +223,33 @@ namespace game.Scenes
 
         }
 
-        public override void Draw(float deltaTime)
+        public override void Draw(RenderTexture renderTexture, float deltaTime)
         {
-            _overworldManager?.Draw();
+            //_overworldManager?.Draw();
 
-            //HandleAnimations();
-            //gameManager._waveManager.DrawEnemies(deltaTime);
+            ////HandleAnimations();
+            ////gameManager._waveManager.DrawEnemies(deltaTime);
 
-            player.Draw(deltaTime);
+            //player.Draw(deltaTime);
 
-            gameManager.Draw(deltaTime);
+            //gameManager.Draw(deltaTime);
 
-            //particleSystem.Draw(_viewCamera.view);
+            ////particleSystem.Draw(_viewCamera.view);
 
-            _uiManager.Draw(_viewCamera.view);
-            //Game.Instance.GetRenderWindow().Display();
+            //_uiManager.Draw(_viewCamera.view);
+            ////Game.Instance.GetRenderWindow().Display();
 
-            Game.Instance.GetRenderWindow().Draw(debugSprite);
+            //Game.Instance.GetRenderWindow().Draw(debugSprite);
 
+            renderTexture.Clear(Color.Black);
+            renderTexture.SetView(_viewCamera.view);
+            _overworldManager?.Draw(renderTexture);
+            player.Draw(renderTexture, deltaTime);
+            gameManager.Draw(renderTexture, deltaTime);
+            _uiManager.Draw(renderTexture);
+            renderTexture.Display(); // This is necessary to finalize the drawing on the renderTexture
+            Sprite sceneSprite = new Sprite(renderTexture.Texture);
+            Game.Instance.GetRenderWindow().Draw(sceneSprite, new RenderStates(CRTShader));
         }
 
         private void UpdatePlayerAbilities(float deltaTime)

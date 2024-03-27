@@ -15,7 +15,7 @@ namespace game.UI
 {
     public class UI_PowerupMenu : UIComponent
     {
-        RectangleShape backgroundShape;
+        Sprite backgroundShape;
 
         UI_Button closeButton;
 
@@ -28,11 +28,11 @@ namespace game.UI
         public UI_PowerupMenu(Vector2f position, View view) : base(position, view)
         {
 
-            backgroundShape = new RectangleShape(new Vector2f(100, 100));
-            backgroundShape.FillColor = Color.Red;
+            backgroundShape = new Sprite(TextureLoader.Instance.GetTexture("menuBackground", "UI"));
             backgroundShape.Position = position;
+            backgroundShape.Origin = new Vector2f(backgroundShape.Texture.Size.X/2, backgroundShape.Texture.Size.Y/2);
 
-            closeButton = new UI_Button(position, "Close", 10, 50, 32, new SFML.Graphics.Sprite(TextureLoader.Instance.GetTexture("startGameButton", "UI")), view);
+            closeButton = new UI_Button(position, "Close", 10, 50, 32, new SFML.Graphics.Sprite(TextureLoader.Instance.GetTexture("button", "UI")), view);
             closeButton.ClickAction += CloseButton_ClickAction;
 
         }
@@ -54,7 +54,7 @@ namespace game.UI
             closeButton.Update();
         }
 
-        public override void Draw()
+        public override void Draw(RenderTexture renderTexture)
         {
             if(GameManager.Instance.IsGamePaused == true && IsMenuOpen == true)
             {
@@ -63,10 +63,10 @@ namespace game.UI
                 // Update the position relative to the camera view
                 Vector2f offsetPosition = Position + cameraView.Center - cameraView.Size / 2f;
                 backgroundShape.Position = offsetPosition;
-                Game.Instance.GetRenderWindow().Draw(backgroundShape);
+                renderTexture.Draw(backgroundShape);
 
                 
-                closeButton.Draw();
+                closeButton.Draw(renderTexture);
 
                 base.EndUIDraw();
             }

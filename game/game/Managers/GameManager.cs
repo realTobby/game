@@ -54,9 +54,9 @@ namespace game.Managers
 
         private static readonly object _lock = new object();
 
-        public void Draw(float deltaTime)
+        public void Draw(SFML.Graphics.RenderTexture renderTexture, float deltaTime)
         {
-            EntityManager.Instance.DrawEntities(deltaTime);
+            EntityManager.Instance.DrawEntities(renderTexture, deltaTime);
         }
 
         public void StopGame()

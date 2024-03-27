@@ -40,7 +40,7 @@ namespace game.UI
 
         public abstract void Update();
 
-        public abstract void Draw();
+        public abstract void Draw(RenderTexture renderTexture);
 
         View originalViewTMP;
 

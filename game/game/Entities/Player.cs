@@ -36,11 +36,16 @@ public class Player : Entity
         precisePosition = initialPosition;
         //Abilities.Add(new FireballAbility(this, 1.25f, 25f, 5f));
 
-        powerupMenu = new UI_PowerupMenu(new Vector2f(100, 100), GameScene.Instance._viewCamera.view);
+
+
+        powerupMenu = new UI_PowerupMenu(GameScene.Instance._viewCamera.view.Center, GameScene.Instance._viewCamera.view);
         GameScene.Instance._uiManager.AddComponent(powerupMenu);
         SetScale(1.5f);
 
         Abilities.Add(new OrbitalAbility(this, 5f, 5f, 100f, 3));
+
+
+        powerupMenu.OpenWindow();
     }
 
     public string GetUIXPString()
@@ -81,6 +86,7 @@ public class Player : Entity
 
                         UniversalLog.LogInfo("level up!");
 
+                        PlaySFX();
 
                         AbilityFactory af = new AbilityFactory();
                         var newAbility = af.CreateRandomAbility(this);
@@ -99,11 +105,18 @@ public class Player : Entity
         }
     }
 
-    public void Draw(float deltaTime)
+    private void PlaySFX()
+    {
+        SoundManager.Instance.PlayLevelup();
+
+
+    }
+
+    public void Draw(RenderTexture renderTexture, float deltaTime)
     {
         Vector2f roundedPosition = new Vector2f((float)Math.Round(precisePosition.X), (float)Math.Round(precisePosition.Y));
         base.SetPosition(roundedPosition);
-        base.Draw(deltaTime);
+        base.Draw(renderTexture, deltaTime);
     }
 
     public void MoveLeft(float deltaTime)

@@ -112,9 +112,9 @@ namespace game.Models
             }
         }
 
-        public void Draw(float deltaTime)
+        public void Draw(RenderTexture renderTexture, float deltaTime)
         {
-            Game.Instance.GetRenderWindow().Draw(sprites[currentFrame]);
+            renderTexture.Draw(sprites[currentFrame]);
         }
 
         public void SetPosition(Vector2f position)

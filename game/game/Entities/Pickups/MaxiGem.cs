@@ -39,9 +39,9 @@ namespace game.Entities.Pickups
             base.Update();
         }
 
-        public override void Draw(float deltaTime)
+        public override void Draw(RenderTexture renderTexture, float deltaTime)
         {
-            base.Draw(deltaTime);
+            base.Draw(renderTexture, deltaTime);
         }
     }
 }

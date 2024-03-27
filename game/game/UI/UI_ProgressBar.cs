@@ -74,7 +74,7 @@ namespace game.UI
             fillShape.Position = position;
         }
 
-        public override void Draw()
+        public override void Draw(RenderTexture renderTexture)
         {
             if(FollowUI) base.StartUIDraw();
 
@@ -99,8 +99,8 @@ namespace game.UI
                 size.X = backgroundShape.Size.X * ((float)_currentValue / (float)_maxValue);
                 fillShape.Size = new Vector2f(size.X, size.Y);
 
-                Game.Instance.GetRenderWindow().Draw(backgroundShape);
-                Game.Instance.GetRenderWindow().Draw(fillShape);
+                renderTexture.Draw(backgroundShape);
+                renderTexture.Draw(fillShape);
             }
 
             

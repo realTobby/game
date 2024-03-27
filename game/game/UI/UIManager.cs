@@ -68,16 +68,16 @@ namespace game.UI
             }
         }
 
-        public void Draw()
+        public void Draw(RenderTexture renderTexture)
         {
             foreach (UIComponent component in _components.ToList())
             {
-                if(component != null) component.Draw();
+                if(component != null) component.Draw(renderTexture);
 
             }
         }
 
-        public void Draw(View view)
+        public void Draw(RenderTexture renderTexture, View view)
         {
             RenderWindow window = Game.Instance.GetRenderWindow();
 
@@ -90,7 +90,7 @@ namespace game.UI
             // Draw the UI components
             foreach (UIComponent component in _components.ToList())
             {
-                if(component != null) component.Draw();
+                if(component != null) component.Draw(renderTexture);
 
             }
 

@@ -68,9 +68,9 @@ namespace game.Entities.Enemies
             Game.Instance.GetRenderWindow().Draw(debugDraw);
         }
 
-        public override void Draw(float deltaTime)
+        public override void Draw(RenderTexture renderTexture, float deltaTime)
         {
-            base.Draw(deltaTime);
+            base.Draw(renderTexture, deltaTime);
             //ShowDebugBoundaries();
         }
 

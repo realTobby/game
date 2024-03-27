@@ -115,15 +115,15 @@ namespace game.Managers
 
 
 
-        public void Draw()
+        public void Draw(RenderTexture renderTexture)
         {
             foreach (var tile in OverworldTiles)
             {
-                Game.Instance.GetRenderWindow().Draw(tile.Sprite);
+                renderTexture.Draw(tile.Sprite);
 
                 if (tile.Object != null)
                 {
-                    Game.Instance.GetRenderWindow().Draw(tile.Object);
+                    renderTexture.Draw(tile.Object);
                 }
             }
         }

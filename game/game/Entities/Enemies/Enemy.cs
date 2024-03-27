@@ -109,9 +109,9 @@ namespace game.Entities.Enemies
             return false;
         }
 
-        public override void Draw(float deltaTime)
+        public override void Draw(RenderTexture renderTexture, float deltaTime)
         {
-            base.Draw(deltaTime);
+            base.Draw(renderTexture, deltaTime);
 
             HitFlash(deltaTime);
         }

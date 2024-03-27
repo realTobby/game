@@ -55,7 +55,7 @@ namespace game.UI
             textComp.OutlineColor = new Color(textComp.OutlineColor.R, textComp.OutlineColor.G, textComp.OutlineColor.B, c.A);
         }
 
-        public override void Draw()
+        public override void Draw(RenderTexture renderTexture)
         {
             base.StartUIDraw();
 
@@ -75,7 +75,7 @@ namespace game.UI
             textComp.DisplayedString = displayText;
 
             // Draw the text
-            Game.Instance.GetRenderWindow().Draw(textComp);
+            renderTexture.Draw(textComp);
 
             base.EndUIDraw();
         }

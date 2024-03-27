@@ -48,9 +48,9 @@ namespace game.Scenes
             uiManager.Update();
         }
 
-        public override void Draw(float deltaTime)
+        public override void Draw(SFML.Graphics.RenderTexture renderTexture, float deltaTime)
         {
-            uiManager.Draw();
+            uiManager.Draw(renderTexture);
         }
 
         public override void UnloadContent()

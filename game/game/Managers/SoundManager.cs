@@ -104,6 +104,12 @@ namespace game.Managers
             LastChannel.Play();
         }
 
+        internal void PlayLevelup()
+        {
+            InitSound(SFX_LEVELUP, 16);
+            LastChannel.Pitch = (float)random.NextDouble() * 0.2f + 0.9f;
+            LastChannel.Play();
 
+        }
     }
 }
