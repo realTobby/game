@@ -6,13 +6,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace sfmlgame
+namespace sfmlgame.World
 {
-    public class Tile
+    public class WorldTile
     {
         public Sprite Sprite;
 
-        public Tile(Sprite texture, Vector2f position)
+        public WorldTile(Sprite texture, Vector2f position)
         {
             if (texture == null) return;
 

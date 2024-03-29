@@ -1,14 +1,15 @@
 ﻿using SFML.Graphics;
 using SFML.System;
+using sfmlgame.Assets;
 using System.Collections.Generic;
 
-namespace sfmlgame
+namespace sfmlgame.World
 {
     public class Chunk
     {
         public bool IsActive { get; private set; }
         public Vector2i Position { get; private set; } // Position in the chunk grid
-        private List<Tile> tiles = new List<Tile>(); // List of tiles in the chunk
+        private List<WorldTile> tiles = new List<WorldTile>(); // List of tiles in the chunk
         private int tileSize;
         private int chunkSize = 32; // Number of tiles per side in the chunk
 
@@ -16,7 +17,7 @@ namespace sfmlgame
         {
             this.tileSize = tileSize;
             Reset(position, null); // Null passed initially for texture, assuming tiles are set later
-            indexText = new Text($"({Position.X}, {Position.Y})", Assets.Instance.pixelFont1, 19);
+            indexText = new Text($"({Position.X}, {Position.Y})", GameAssets.Instance.pixelFont1, 19);
 
             debugOutline = new RectangleShape(new Vector2f(chunkSize * tileSize, chunkSize * tileSize));
         }
@@ -38,7 +39,7 @@ namespace sfmlgame
                 for (int y = 0; y < chunkSize; y++)
                 {
                     Vector2f tilePosition = new Vector2f(Position.X * chunkSize * tileSize + x * tileSize, Position.Y * chunkSize * tileSize + y * tileSize);
-                    tiles.Add(new Tile(tileTexture, tilePosition)); // Assuming Tile constructor is (Texture, Vector2f)
+                    tiles.Add(new WorldTile(tileTexture, tilePosition)); // Assuming Tile constructor is (Texture, Vector2f)
                 }
             }
         }
@@ -57,12 +58,12 @@ namespace sfmlgame
             if (IsActive)
             {
 
-                foreach(var tile in tiles)
+                foreach (var tile in tiles)
                 {
                     tile.Draw(target);
                 }
 
-              
+
             }
         }
 

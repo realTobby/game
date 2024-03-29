@@ -63,9 +63,6 @@
     <None Update="Assets\Objects\tree2.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Assets\playerPlaceholder.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Update="Assets\SFX\explosion.wav">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -82,9 +79,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Assets\Sprites\spritesheet.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="Assets\testTileTexture.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Assets\Tiles\grassyTile.png">

@@ -6,19 +6,20 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using sfmlgame.World;
 
-namespace sfmlgame
+namespace sfmlgame.Entities
 {
     public class Player
     {
-        private World world; // Reference to the World object
+        private WorldManager world; // Reference to the World object
 
         public Sprite Sprite;
         private float speed = 200f;
 
         public Vector2i CurrentChunkIndex { get; private set; }
 
-        public Player(Texture texture, Vector2f position, World world)
+        public Player(Texture texture, Vector2f position, WorldManager world)
         {
             this.world = world; // Store the World reference
             Sprite = new Sprite(texture) { Position = position };
@@ -45,12 +46,12 @@ namespace sfmlgame
             if (world == null) return;
 
             PreviousChunkIndex = CurrentChunkIndex;
-            CurrentChunkIndex = world.CalculateChunkIndex(this.Sprite.Position);
+            CurrentChunkIndex = world.CalculateChunkIndex(Sprite.Position);
 
             // Check if the player has moved to a new chunk
             if (CurrentChunkIndex != PreviousChunkIndex)
             {
-                world.ManageChunks(this.Sprite.Position);
+                world.ManageChunks(Sprite.Position);
             }
         }
     }

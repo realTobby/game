@@ -1,31 +1,38 @@
 ﻿using SFML.Graphics;
 using SFML.Window;
 using SFML.System;
-using System.Reflection.Metadata.Ecma335;
+using sfmlgame.Entities;
+using sfmlgame.Assets;
+using sfmlgame.World;
+using sfmlgame.Entities.Enemies;
 
 namespace sfmlgame
 {
-    
+
 
     public class Game
     {
+        private static readonly Lazy<Game> _instance = new Lazy<Game>(() => new Game());
+        public static Game Instance => _instance.Value;
+
+
         private RenderWindow _gameWindow;
         private RenderTexture renderTexture;
         private View camera;
 
-        private Player player;
-        private World world;
+        public Player PLAYER;
+        private WorldManager world;
 
         public Clock GameClock = new Clock();
 
-        public TextureLoader textureLoader;
-
         private Shader CRTShader;
 
-        public Game()
-        {
-            textureLoader = new TextureLoader();
+        public EntityManager EntityManager;
 
+        public WaveManager WaveManager;
+
+        private void LoadCRTShader()
+        {
             string shaderPath = "Assets/Shaders/CRT.frag";
             if (!File.Exists(shaderPath))
             {
@@ -34,11 +41,16 @@ namespace sfmlgame
 
             // If the file exists, try to load it
             CRTShader = new Shader(null, null, shaderPath);
+        }
 
+        public Game()
+        {
 
-            world = new World(16);
+            LoadCRTShader();
 
-            player = new Player(textureLoader.GetTexture("priestess_0", "Entities/priestess"), new Vector2f(0, 0), world);
+            world = new WorldManager(16);
+
+            PLAYER = new Player(GameAssets.Instance.TextureLoader.GetTexture("priestess_0", "Entities/priestess"), new Vector2f(0, 0), world);
 
             var mode = VideoMode.FullscreenModes[0];
             _gameWindow = new RenderWindow(mode, "Game", Styles.Fullscreen); // Set window to fullscreen
@@ -49,15 +61,61 @@ namespace sfmlgame
             renderTexture = new RenderTexture(_gameWindow.Size.X, _gameWindow.Size.Y);
             renderTexture.Clear(Color.Black);
 
-            AttachCamera(player);
+            AttachCamera(PLAYER);
 
             //world.GenerateAround(player.Sprite.Position, grasTile); // Now generate the world around the player
 
             CRTShader.SetUniform("resolution", new Vector2f(renderTexture.Size.X, renderTexture.Size.Y));
 
-            world.ManageChunks(player.Sprite.Position);
+            world.ManageChunks(PLAYER.Sprite.Position);
+
+            EntityManager = new EntityManager();
+
+            EntityManager.StartUpdatingEntities();
+
+            WaveManager = new WaveManager();
             
         }
+
+        private Clock waveTimer = new Clock();
+        private float waveCooldown = 10f;
+
+        private void UpdateEnemyWave()
+        {
+            if (waveTimer.ElapsedTime.AsSeconds() > waveCooldown)
+            {
+                waveTimer.Restart();
+                GenerateNewWave();
+                WaveManager.StartWave();
+                waveCooldown = 10f;
+            }
+        }
+
+        private void GenerateNewWave()
+        {
+            //UniversalLog.LogInfo("trying to generate new wave...");
+            if (EntityManager.Enemies.Where(x => x.IsActive).Count() < 50)
+            {
+                //UniversalLog.LogInfo("can create new wave!");
+                EnemyWave wave = new EnemyWave(1f, 25f);
+
+                Vector2f point = PLAYER.Sprite.Position;
+                float radius = 300f;
+
+                for (int i = 0; i < 10; i++)
+                {
+                    var radians = 2 * MathF.PI / 10 * i;
+                    var vertical = MathF.Sin(radians);
+                    var horizontal = MathF.Cos(radians);
+
+                    var spawnDir = new Vector2f(horizontal, vertical);
+                    var spawnPos = point + spawnDir * radius;
+                    wave.AddSpawnPosition(new Vector2f(spawnPos.X, spawnPos.Y));
+                }
+                WaveManager.AddWave(wave);
+            }
+        }
+
 
         private void StopGame(object? sender, EventArgs e)
         {
@@ -68,7 +126,7 @@ namespace sfmlgame
 
         public void Run()
         {
-            lastPlayerChunkIndex = world.CalculateChunkIndex(player.Sprite.Position);
+            lastPlayerChunkIndex = world.CalculateChunkIndex(PLAYER.Sprite.Position);
 
             while (_gameWindow.IsOpen)
             {
@@ -78,22 +136,24 @@ namespace sfmlgame
             }
         }
 
-
+        public float DELTATIME => GameClock.Restart().AsSeconds();
 
         private void Update()
         {
-            float deltaTime = GameClock.Restart().AsSeconds();
-            player.Update(deltaTime);
+            PLAYER.Update(DELTATIME);
 
-            Vector2i currentPlayerChunkIndex = world.CalculateChunkIndex(player.Sprite.Position);
+            Vector2i currentPlayerChunkIndex = world.CalculateChunkIndex(PLAYER.Sprite.Position);
             if (currentPlayerChunkIndex != lastPlayerChunkIndex)
             {
                 //world.Update(player.Sprite.Position, grasTile);
                 lastPlayerChunkIndex = currentPlayerChunkIndex;
             }
 
-            world.Update(player.Sprite.Position);
+            world.Update(PLAYER.Sprite.Position);
 
+            UpdateEnemyWave();
+
+            //EntityManager.UpdateEntities(PLAYER, DELTATIME); WE DO THIS IN THE BACKGROUND NOW
 
             UpdateCameraPosition();
         }
@@ -106,7 +166,16 @@ namespace sfmlgame
             // Ensure the RenderTexture uses the camera's view for rendering the scene
             renderTexture.SetView(camera);
             world.Draw(renderTexture);
-            renderTexture.Draw(player.Sprite);
+
+
+            EntityManager.DrawEntities(renderTexture, DELTATIME);
+
+
+            renderTexture.Draw(PLAYER.Sprite);
+
+            // draw ui
+
+
             renderTexture.Display(); // Finalize the scene on the RenderTexture
 
             _gameWindow.Clear();
@@ -132,9 +201,9 @@ namespace sfmlgame
 
         private void UpdateCameraPosition()
         {
-            if (camera != null && player != null)
+            if (camera != null && PLAYER != null)
             {
-                camera.Center = player.Sprite.Position;
+                camera.Center = PLAYER.Sprite.Position;
                 _gameWindow.SetView(camera);
             }
         }

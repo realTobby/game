@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace sfmlgame
+namespace sfmlgame.Assets
 {
     public class SpriteSheetLoader
     {

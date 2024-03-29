@@ -1,20 +1,21 @@
 ﻿using SFML.Graphics;
 using SFML.System;
+using sfmlgame.Assets;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace sfmlgame
+namespace sfmlgame.World
 {
-    public class World
+    public class WorldManager
     {
         private Dictionary<Vector2i, Chunk> activeChunks = new Dictionary<Vector2i, Chunk>();
         private Queue<Chunk> chunkPool = new Queue<Chunk>();
         private int chunkSize = 32; // Size of a chunk (pixels)
         private int tileSize = 16; // Size of a tile (pixels)
 
-        public World(int initialPoolSize)
+        public WorldManager(int initialPoolSize)
         {
             for (int i = 0; i < initialPoolSize; i++)
             {

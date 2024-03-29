@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace sfmlgame
+namespace sfmlgame.Assets
 {
     public enum TileType
     {
@@ -31,10 +31,18 @@ namespace sfmlgame
         private SpriteSheetLoader spriteLoader;
         private Dictionary<TileType, Sprite> sprites;
 
+        public Font normalFont = new Font("Assets/Fonts/jellyjam.otf");
+        public Font pixelFont1 = new Font("Assets/Fonts/m6x11.ttf");
+        public Font pixelFont2 = new Font("Assets/Fonts/Pixeled.ttf");
+
+        public TextureLoader TextureLoader;
+
         private GameAssets()
         {
             // Initialize the SpriteSheetLoader with the path to your sprite sheet
             spriteLoader = new SpriteSheetLoader("Assets/Sprites/spritesheet.png");
+
+            TextureLoader = new TextureLoader();
 
             // Initialize the dictionary
             sprites = new Dictionary<TileType, Sprite>();
