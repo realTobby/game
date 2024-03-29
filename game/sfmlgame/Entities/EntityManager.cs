@@ -6,6 +6,14 @@ using sfmlgame.Entities;
 
 namespace sfmlgame.Entities
 {
+
+    // REFACTOR NEEDED
+    // PERFORMANCE IS GONE WITH THIS
+    // ENTITIES NEED TO BE UPDATED WITH GAMESPEED
+    // SOMEWHERE IN THIS IS A HUGE BOTTLENECK
+    // ENEMIES DO NOT MOVE (or just move by mini-pixels, game is very very slow with enemies on the screen)
+
+
     public class EntityManager
     {
         private static readonly object _lock = new object();
@@ -108,23 +116,26 @@ namespace sfmlgame.Entities
                     {
                         enemy.Update(Game.Instance.PLAYER, Game.Instance.DELTATIME);
                     }
+
+                    
+
                 }
 
-                //Thread.Sleep(5);
+                Thread.Sleep(5);
             }
         }
 
-        public void UpdateEntities(Player player, float deltaTime)
-        {
-            lock(_lock)
-            {
-                foreach (Enemy enemy in Enemies.ToList())
-                {
-                    enemy.Update(player, deltaTime);
-                }
-            }
+        //public void UpdateEntities(Player player, float deltaTime)
+        //{
+        //    lock(_lock)
+        //    {
+        //        foreach (Enemy enemy in Enemies.ToList())
+        //        {
+        //            enemy.Update(player, deltaTime);
+        //        }
+        //    }
             
-        }
+        //}
         
         public void DrawEntities(SFML.Graphics.RenderTexture renderTexture, float deltaTime)
         {
