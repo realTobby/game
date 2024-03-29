@@ -30,6 +30,8 @@ namespace sfmlgame
 
         }
 
+        public Vector2i PreviousChunkIndex { get; private set; }
+
         public void Update(float deltaTime)
         {
             Vector2f movement = new Vector2f();
@@ -42,8 +44,14 @@ namespace sfmlgame
 
             if (world == null) return;
 
+            PreviousChunkIndex = CurrentChunkIndex;
             CurrentChunkIndex = world.CalculateChunkIndex(this.Sprite.Position);
 
+            // Check if the player has moved to a new chunk
+            if (CurrentChunkIndex != PreviousChunkIndex)
+            {
+                world.ManageChunks(this.Sprite.Position);
+            }
         }
     }
 }

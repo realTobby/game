@@ -22,10 +22,10 @@ namespace sfmlgame
             }
         }
 
-        public void Update(Vector2f playerPosition, Sprite tileTexture)
+        public void Update(Vector2f playerPosition)
         {
             // New method to manage chunks based on the player's position
-            ManageChunks(playerPosition, tileTexture);
+            //ManageChunks(playerPosition);
         }
 
         public void Draw(RenderTexture target)
@@ -36,15 +36,15 @@ namespace sfmlgame
             }
 
             // Optional: Draw debug information for each chunk
-            foreach (var chunk in activeChunks.Values)
-            {
-                chunk.DrawDebug(target);
-            }
+            //foreach (var chunk in activeChunks.Values)
+            //{
+            //    chunk.DrawDebug(target);
+            //}
         }
 
-        private void ManageChunks(Vector2f playerPosition, Sprite tileTexture)
+        public void ManageChunks(Vector2f playerPosition)
         {
-            
+            Sprite tileTexture = GameAssets.GetTile(TileType.Grass);
 
             // Determine the range of chunks that should be checked based on the player's position
             // This example checks a 3x3 area centered on the player's current chunk

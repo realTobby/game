@@ -22,17 +22,9 @@ namespace sfmlgame
 
         private Shader CRTShader;
 
-        private Sprite grasTile;
-
-        private SpriteSheetLoader spriteLoad;
-
         public Game()
         {
             textureLoader = new TextureLoader();
-
-            spriteLoad = new SpriteSheetLoader("Assets/Sprites/spritesheet.png");
-
-            grasTile = spriteLoad.GetSpriteFromSheet(0, 0);
 
             string shaderPath = "Assets/Shaders/CRT.frag";
             if (!File.Exists(shaderPath))
@@ -63,6 +55,7 @@ namespace sfmlgame
 
             CRTShader.SetUniform("resolution", new Vector2f(renderTexture.Size.X, renderTexture.Size.Y));
 
+            world.ManageChunks(player.Sprite.Position);
             
         }
 
@@ -99,7 +92,7 @@ namespace sfmlgame
                 lastPlayerChunkIndex = currentPlayerChunkIndex;
             }
 
-            world.Update(player.Sprite.Position, grasTile);
+            world.Update(player.Sprite.Position);
 
 
             UpdateCameraPosition();

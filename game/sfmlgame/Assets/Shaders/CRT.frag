@@ -1,6 +1,6 @@
 uniform sampler2D texture; // The texture to which the scene is rendered
 uniform vec2 resolution; // The resolution of the texture
-float bendAmount = 0.15f;
+float bendAmount = 0.2f;
 
 void main() {
     // Get the original texture coordinate
