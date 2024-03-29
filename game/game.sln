@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.33530.505
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "game", "game\game.csproj", "{F6267B57-199A-41A8-8457-58700CD0BA8D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "game", "game\game.csproj", "{F6267B57-199A-41A8-8457-58700CD0BA8D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "sfmlgame", "sfmlgame\sfmlgame.csproj", "{41EF14D8-4EC1-476D-A309-ED1137B09313}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{F6267B57-199A-41A8-8457-58700CD0BA8D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F6267B57-199A-41A8-8457-58700CD0BA8D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F6267B57-199A-41A8-8457-58700CD0BA8D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{41EF14D8-4EC1-476D-A309-ED1137B09313}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{41EF14D8-4EC1-476D-A309-ED1137B09313}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{41EF14D8-4EC1-476D-A309-ED1137B09313}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{41EF14D8-4EC1-476D-A309-ED1137B09313}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -117,6 +117,13 @@ namespace game.Scenes
 
         }
 
+        public Vector2i GetChunkPositionFromWorldPosition(Vector2f worldPosition)
+        {
+            return new Vector2i(
+                (int)Math.Floor(worldPosition.X / (_overworldManager.ChunkSize * 16)),
+                (int)Math.Floor(worldPosition.Y / (_overworldManager.ChunkSize * 16)));
+        }
+
         private void GenerateNewWave()
         {
             UniversalLog.LogInfo("trying to generate new wave...");
@@ -196,6 +203,8 @@ namespace game.Scenes
 
             _viewCamera.Update(player.Position, CRTShader);
             //gameManager._waveManager.Update(player, deltaTime);
+
+            UpdateChunksBasedOnPlayerPosition();
 
             _inputManager.Update();
 
@@ -352,6 +361,23 @@ namespace game.Scenes
             // unload resources
         }
 
+        private void UpdateChunksBasedOnPlayerPosition()
+        {
+            Vector2i currentChunk = GetChunkPositionFromWorldPosition(player.Position);
+
+            // Determine the range of chunks to load around the player
+            // This example loads the immediate surrounding chunks in all directions
+            for (int x = -1; x <= 1; x++)
+            {
+                for (int y = -1; y <= 1; y++)
+                {
+                    Vector2i chunkPos = new Vector2i(currentChunk.X + x, currentChunk.Y + y);
+                    _overworldManager.GetOrCreateChunk(chunkPos);
+                }
+            }
+
+            // Optionally, implement logic here to unload chunks that are far away from the player
+        }
 
     }
 }
