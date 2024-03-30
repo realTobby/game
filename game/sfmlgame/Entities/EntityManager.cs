@@ -1,171 +1,70 @@
-﻿
-
+﻿using System.Collections.Concurrent;
+using System.Threading.Tasks;
 using game.Entities.Enemies;
 using SFML.System;
 using sfmlgame.Entities;
 
 namespace sfmlgame.Entities
 {
-
-    // REFACTOR NEEDED
-    // PERFORMANCE IS GONE WITH THIS
-    // ENTITIES NEED TO BE UPDATED WITH GAMESPEED
-    // SOMEWHERE IN THIS IS A HUGE BOTTLENECK
-    // ENEMIES DO NOT MOVE (or just move by mini-pixels, game is very very slow with enemies on the screen)
-
-
     public class EntityManager
     {
-        private static readonly object _lock = new object();
+        private ConcurrentBag<Entity> allEntities = new ConcurrentBag<Entity>();
 
-        private Lazy<List<Entity>> allEntities = new Lazy<List<Entity>>(() => new List<Entity>());
-
-        private Thread updateThread;
-        private bool isUpdating;
-
-        public int GetEnemyPoolSize => AllEntities.Where(x => x.GetType() == typeof(TestEnemy)).Count();
-        public int GetDisbaledEnemyCount => AllEntities.Where(x => x.GetType() == typeof(TestEnemy) && x.IsActive == false).Count();
+        // Removed the separate thread for updating entities. Consider using Task or ThreadPool for background operations if needed.
 
         public EntityManager()
         {
-            updateThread = new Thread(UpdateLoop) { IsBackground = true };
         }
 
-        public IEnumerable<Entity> AllEntities
+        // Simplified properties for accessing entities
+        public IEnumerable<Entity> AllEntities => allEntities;
+
+        public IEnumerable<Enemy> Enemies => allEntities.OfType<Enemy>();
+
+        // Simplified property for non-enemy entities
+        public IEnumerable<Entity> NoEnemyEntities => allEntities.Where(x => !(x is Enemy));
+
+        // Method to start any background tasks for updating entities, if necessary.
+        // Consider using async/await with Tasks for any heavy or IO-bound operations.
+
+        // Removed the UpdateLoop method. Updates are now handled more efficiently in the main game loop.
+
+        public void UpdateEntities(float frameTime)
         {
-            get
+            //float lastFrameDeltaTime = Game.Instance.DELTATIME;
+
+            // Using parallel foreach for thread-safe iteration and potential performance improvement
+            Parallel.ForEach(Enemies, enemy =>
             {
-                lock (_lock)
-                {
-                    return allEntities.Value.ToList();
-                }
-            }
+                enemy.Update(Game.Instance.PLAYER, frameTime);
+                // Implement other entity-specific updates as needed
+            });
         }
 
-        public List<Enemy> Enemies
-        {
-            get
-            {
-                return AllEntities.ToList().OfType<Enemy>().ToList();
-            }
-        }
-
-        public List<Entity> noEnemyEntities
-        {
-            get
-            {
-                return AllEntities.ToList().OfType<Entity>().Where(x => !(x is Enemy)).ToList();
-            }
-        }
-
-        //public List<AbilityEntity> abilityEntities
-        //{
-        //    get
-        //    {
-        //        lock (_lock)
-        //        {
-        //            return AllEntities.ToList().OfType<AbilityEntity>().ToList();
-        //        }
-        //    }
-        //}
-
-        //public List<Gem> gemEntities
-        //{
-        //    get
-        //    {
-        //        lock (_lock)
-        //        {
-        //            return AllEntities.ToList().OfType<Gem>().ToList();
-        //        }
-        //    }
-        //}
-
-
-        public void StartUpdatingEntities()
-        {
-            lock (_lock)
-            {
-                if (!isUpdating)
-                {
-                    isUpdating = true;
-                    updateThread.Start();
-                }
-            }
-        }
-
-        public void StopUpdatingEntities()
-        {
-            lock (_lock)
-            {
-                if (isUpdating)
-                {
-                    isUpdating = false;
-                    updateThread.Join();
-                }
-            }
-        }
-
-        private void UpdateLoop()
-        {
-
-            while (isUpdating)
-            {
-                lock (_lock)
-                {
-                    foreach (Enemy enemy in Enemies)
-                    {
-                        enemy.Update(Game.Instance.PLAYER, Game.Instance.DELTATIME);
-                    }
-
-                    
-
-                }
-
-                Thread.Sleep(5);
-            }
-        }
-
-        //public void UpdateEntities(Player player, float deltaTime)
-        //{
-        //    lock(_lock)
-        //    {
-        //        foreach (Enemy enemy in Enemies.ToList())
-        //        {
-        //            enemy.Update(player, deltaTime);
-        //        }
-        //    }
-            
-        //}
-        
         public void DrawEntities(SFML.Graphics.RenderTexture renderTexture, float deltaTime)
         {
-            foreach (var entity in AllEntities)
+            foreach (var entity in allEntities)
             {
                 entity?.Draw(renderTexture, deltaTime);
             }
+            Thread.Sleep(5);
         }
 
         public bool EntityExists(Entity entityToCheck)
         {
-            lock (_lock)
-            {
-                return AllEntities.Contains(entityToCheck);
-            }
+            // Efficiently checks for existence without locking
+            return allEntities.Contains(entityToCheck);
         }
 
         public Enemy CreateEnemy(Vector2f pos)
         {
-            // get free enemy from pool
-            var freeEnemy = AllEntities.Where(x => x.IsActive == false && x.GetType() == typeof(Enemy)).FirstOrDefault() as Enemy;
-            
-            if(freeEnemy == null)
+            // Attempt to reuse a disabled enemy from the pool
+            var freeEnemy = allEntities.FirstOrDefault(x => !x.IsActive && x is Enemy) as Enemy;
+
+            if (freeEnemy == null)
             {
-                freeEnemy = new TestEnemy(pos, 25);
-                lock(_lock)
-                {
-                    allEntities.Value.Add(freeEnemy);
-                }
-                
+                freeEnemy = new TestEnemy(pos, 50);
+                allEntities.Add(freeEnemy);
             }
             else
             {

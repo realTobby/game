@@ -1,6 +1,7 @@
 ﻿
 using SFML.Graphics;
 using SFML.System;
+using sfmlgame;
 using sfmlgame.Entities;
 using System;
 using System.Collections.Generic;
@@ -154,6 +155,7 @@ namespace game.Entities.Enemies
         private void MoveTowardsPlayer(Player player, float deltaTime)
         {
             
+            
             Vector2f direction = player.Sprite.Position - Position;
             float magnitude = (float)Math.Sqrt(direction.X * direction.X + direction.Y * direction.Y);
 
@@ -169,6 +171,7 @@ namespace game.Entities.Enemies
 
                     Position += direction * speed * deltaTime;
 
+                    //Console.WriteLine($"Speed: {speed}, DeltaTime: {deltaTime}, Position Change: {direction * speed * deltaTime}");
 
                     SetPosition(Position);
                 }

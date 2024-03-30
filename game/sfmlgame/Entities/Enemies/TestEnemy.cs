@@ -65,7 +65,7 @@ namespace game.Entities.Enemies
         private void ShowDebugBoundaries(RenderTexture target)
         {
             if (debugDraw == null) return;
-            target.Draw(debugDraw);
+            //target.Draw(debugDraw);
         }
 
         public override void Draw(RenderTexture renderTexture, float deltaTime)

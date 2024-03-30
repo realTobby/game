@@ -71,8 +71,6 @@ namespace sfmlgame
 
             EntityManager = new EntityManager();
 
-            EntityManager.StartUpdatingEntities();
-
             WaveManager = new WaveManager();
             
         }
@@ -101,6 +99,8 @@ namespace sfmlgame
 
                 Vector2f point = PLAYER.Sprite.Position;
                 float radius = 300f;
+
+                // TEST: wave.AddSpawnPosition(new Vector2f(100, 100));
 
                 for (int i = 0; i < 10; i++)
                 {
@@ -140,7 +140,10 @@ namespace sfmlgame
 
         private void Update()
         {
-            PLAYER.Update(DELTATIME);
+            float frameTime = DELTATIME;
+
+
+            PLAYER.Update(frameTime);
 
             Vector2i currentPlayerChunkIndex = world.CalculateChunkIndex(PLAYER.Sprite.Position);
             if (currentPlayerChunkIndex != lastPlayerChunkIndex)
@@ -152,6 +155,8 @@ namespace sfmlgame
             world.Update(PLAYER.Sprite.Position);
 
             UpdateEnemyWave();
+
+            EntityManager.UpdateEntities(frameTime);
 
             //EntityManager.UpdateEntities(PLAYER, DELTATIME); WE DO THIS IN THE BACKGROUND NOW
 
