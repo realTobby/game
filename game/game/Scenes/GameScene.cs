@@ -293,7 +293,7 @@ namespace game.Scenes
 
         public Enemy FindNearestEnemy(Vector2f position, List<Enemy> enemies)
         {
-            Enemy nearestEnemy = null;
+            Enemy? nearestEnemy = null;
             float nearestDistance = float.MaxValue;
             int lowestHealth = int.MaxValue;
 
@@ -316,7 +316,7 @@ namespace game.Scenes
 
         public Enemy FindNearestEnemy(Vector2f position, List<Enemy> enemies, List<Enemy> avoidEnemy)
         {
-            Enemy nearestEnemy = null;
+            Enemy? nearestEnemy = null;
             float nearestDistance = float.MaxValue;
 
             // create a foreach-loop that iterates through the enemies list but skips the avoidEnemy

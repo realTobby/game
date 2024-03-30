@@ -3,6 +3,7 @@
 using SFML.Graphics;
 using SFML.System;
 using sfmlgame.Assets;
+using sfmlgame.Managers;
 
 
 namespace sfmlgame.Entities.Abilitites
@@ -24,6 +25,8 @@ namespace sfmlgame.Entities.Abilitites
             SetPosition(initialPosition);
 
             Damage = 1;
+
+            
         }
 
         public override void Draw(RenderTexture renderTexture, float deltaTime)
@@ -38,6 +41,7 @@ namespace sfmlgame.Entities.Abilitites
             target = enemyTarget;
             killTimer.Restart();
             IsActive = true;
+            SoundManager.Instance.PlayFireProjectile();
         }
 
         public override void Update(Player player, float deltaTime)
@@ -54,13 +58,12 @@ namespace sfmlgame.Entities.Abilitites
 
             if(target != null)
             {
-                var direction = target.Position - Position;
+                var direction = target.GetPosition() - GetPosition();
                 var distance = Math.Sqrt(direction.X * direction.X + direction.Y * direction.Y);
                 var normalizedDirection = new Vector2f((float)(direction.X / distance), (float)(direction.Y / distance));
-                Position += normalizedDirection * 4f;
-                SetPosition(Position);
+                SetPosition(GetPosition() + normalizedDirection * 4f);
 
-                base.SrtHitBoxDimensions(new FloatRect(Position.X, Position.Y, HitBoxDimensions.Width, HitBoxDimensions.Height));
+                //base.SrtHitBoxDimensions(new FloatRect(GetPosition().X, GetPosition().Y, HitBoxDimensions.Width, HitBoxDimensions.Height));
 
                 if (target == null) IsActive = false;
 
@@ -71,7 +74,11 @@ namespace sfmlgame.Entities.Abilitites
 
         public override void CollidedWith(Entity collision)
         {
-            IsActive = false;
+            if(collision.GetType() == typeof(Enemy))
+            {
+                IsActive = false;
+            }
+            
         }
     }
 }

@@ -69,6 +69,9 @@
     <None Update="Assets\SFX\hitHurt.wav">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Assets\SFX\laserShoot.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Assets\SFX\pickup.wav">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

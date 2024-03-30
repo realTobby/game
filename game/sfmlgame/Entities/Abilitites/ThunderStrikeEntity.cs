@@ -4,6 +4,7 @@ using SFML.System;
 using sfmlgame.Assets;
 using sfmlgame.Entities;
 using sfmlgame.Entities.Abilitites;
+using sfmlgame.Managers;
 
 
 namespace game.Entities.Abilitites
@@ -16,7 +17,7 @@ namespace game.Entities.Abilitites
 
         public ThunderStrikeEntity(Vector2f initialPosition) : base("ThunderStrike", initialPosition, GameAssets.Instance.TextureLoader.GetTexture("thunderStrike", "Entities/Abilities"), 1, 13, Time.FromSeconds(0.08f))
         {
-            Damage = 5;
+            Damage = 1;
         }
 
         public override void Update(Player player, float deltaTime)
@@ -25,7 +26,7 @@ namespace game.Entities.Abilitites
 
             base.Update(player, deltaTime);
 
-            base.SrtHitBoxDimensions(new FloatRect(Position.X, Position.Y, HitBoxDimensions.Width, HitBoxDimensions.Height));
+            //base.SrtHitBoxDimensions(new FloatRect(GetPosition().X, GetPosition().Y, HitBoxDimensions.Width, HitBoxDimensions.Height));
 
 
             if (base.animateSpriteComponent.currentFrame == HitFrame)
@@ -44,7 +45,7 @@ namespace game.Entities.Abilitites
 
         private void PlaySFX()
         {
-            //SoundManager.Instance.PlayExplosion(); FIX SOUNDS
+            SoundManager.Instance.PlayExplosion();
             
 
         }

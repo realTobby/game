@@ -10,6 +10,7 @@ using SFML.Graphics;
 using SFML.System;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Numerics;
 using System.Text;
@@ -17,6 +18,7 @@ using System.Threading.Tasks;
 
 namespace game.Entities.Enemies
 {
+ 
     public class Enemy : Entity
     {
         public float MinDistance { get; set; } = 25f;

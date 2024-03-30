@@ -9,10 +9,14 @@ namespace sfmlgame.Entities.Abilitites
     {
         public string AbilityName = string.Empty;
 
-        public bool CanCheckCollision = false;
-
         //TextureLoader.Instance.GetTexture("burning_loop_1", "Entities/Abilities"), 1, 8, Time.FromSeconds(0.1f), initialPosition
         public AbilityEntity(string name, Vector2f initialPosition, Texture entityTexture, int rowCount, int columnCount, Time frameDuration) : base(entityTexture, rowCount, columnCount, frameDuration, initialPosition)
+        {
+            IsActive = true;
+            AbilityName = name;
+        }
+
+        public AbilityEntity(string name, Vector2f initialPosition, Sprite sprite) : base(sprite, initialPosition)
         {
             IsActive = true;
             AbilityName = name;

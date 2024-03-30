@@ -12,7 +12,7 @@ namespace sfmlgame.Abilities
     {
         private Random rnd = new Random();
 
-        public Ability CreateRandomAbility(Player player)
+        public Ability? CreateRandomAbility(Player player)
         {
             // Get all Ability types
             var abilityTypes = Assembly.GetAssembly(typeof(Ability)).GetTypes()
@@ -22,7 +22,7 @@ namespace sfmlgame.Abilities
             var abilityType = abilityTypes.ElementAt(rnd.Next(abilityTypes.Count()));
 
             // Known constructor signatures
-            object[] constructorArgs = null;
+            object[]? constructorArgs = null;
             if (abilityType == typeof(FireballAbility))
             {
                 constructorArgs = new object[] { player, 1.25f, 25f, 5f };
@@ -48,7 +48,7 @@ namespace sfmlgame.Abilities
 
             if (constructorArgs != null)
             {
-                return (Ability)Activator.CreateInstance(abilityType, constructorArgs);
+                return Activator.CreateInstance(abilityType, constructorArgs) as Ability;
             }
 
             throw new InvalidOperationException("No suitable constructor found for the ability type.");

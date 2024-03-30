@@ -112,7 +112,7 @@ public class Player : Entity
 
     }
 
-    public void Draw(RenderTexture renderTexture, float deltaTime)
+    public override void Draw(RenderTexture renderTexture, float deltaTime)
     {
         Vector2f roundedPosition = new Vector2f((float)Math.Round(precisePosition.X), (float)Math.Round(precisePosition.Y));
         base.SetPosition(roundedPosition);
@@ -144,9 +144,4 @@ public class Player : Entity
         UniversalLog.LogInfo("hopefully we do not pool the Player object :)");
     }
 
-    public Vector2f Position
-    {
-        get { return precisePosition; }
-        set { precisePosition = value; }
-    }
 }

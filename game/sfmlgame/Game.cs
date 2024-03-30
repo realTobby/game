@@ -51,9 +51,9 @@ namespace sfmlgame
 
             LoadCRTShader();
 
-            world = new WorldManager(16);
+            world = new WorldManager(18);
 
-            PLAYER = new Player(GameAssets.Instance.TextureLoader.GetTexture("priestess_0", "Entities/priestess"), new Vector2f(0, 0), world);
+            PLAYER = new Player(GameAssets.Instance.TextureLoader.GetTexture("priestess_0", "Entities/priestess"), new Vector2f(16*16, 16*16), world);
 
             SoundManager = new SoundManager();
 

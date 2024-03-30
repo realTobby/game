@@ -3,6 +3,7 @@ using game.Entities.Enemies;
 using SFML.System;
 using sfmlgame.Entities;
 using sfmlgame.Entities.Abilitites;
+using sfmlgame.Managers;
 
 
 namespace sfmlgame.Abilities
@@ -25,21 +26,22 @@ namespace sfmlgame.Abilities
             if (nearestEnemy == null)
                 return;
 
-            FireballEntity fireballEntity = Game.Instance.EntityManager.CreateAbilityEntity(player.Sprite.Position, typeof(FireballEntity)) as FireballEntity;
+            FireballEntity? fireballEntity = Game.Instance.EntityManager.CreateAbilityEntity(player.Sprite.Position, typeof(FireballEntity)) as FireballEntity;
             if (fireballEntity == null) return;
 
+            SoundManager.Instance.PlayFireProjectile();
 
-
-            fireballEntity.SetTarget(nearestEnemy);
+            
             fireballEntity.SetPosition(player.Sprite.Position);
             //EntityManager.Instance.AddEntity(new FireballEntity(player.Position, nearestEnemy));
 
 
 
             abilityClock.Restart();
+            fireballEntity.SetTarget(nearestEnemy);
+            //fireballEntity.IsActive = true;
 
-            fireballEntity.IsActive = true;
-
+            
         }
 
         private Vector2f Normalize(Vector2f vector)

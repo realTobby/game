@@ -61,7 +61,7 @@ namespace sfmlgame.Assets
             // Add other sprites as needed
         }
 
-        public static Sprite GetTile(TileType type)
+        public Sprite GetTileSprite(TileType type)
         {
             if (Instance.sprites.TryGetValue(type, out Sprite sprite))
             {

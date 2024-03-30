@@ -20,7 +20,7 @@ namespace sfmlgame.Entities.Abilitites
         Random rnd = new Random();
 
         public OrbitalEntity(Player player, Vector2f initialPosition, float orbitSpeed, float orbitRadius)
-            : base("OrbitalEntity", initialPosition, GameAssets.Instance.TextureLoader.GetTexture("burning_loop_1", "Entities/Abilities"), 1, 8, Time.FromSeconds(0.1f))
+            : base("OrbitalEntity", initialPosition, new Sprite(GameAssets.Instance.GetTileSprite(TileType.Skull)))
         {
             this.orbitCenterPlayer = player;
             this.orbitSpeed = orbitSpeed;
@@ -30,14 +30,16 @@ namespace sfmlgame.Entities.Abilitites
             Vector2f direction = initialPosition - player.Sprite.Position;
             this.currentAngle = MathF.Atan2(direction.Y, direction.X);
 
-            SetPosition(initialPosition);
-            Damage = 2; // Set according to your game's needs
+           
+            Damage = 1; // Set according to your game's needs
 
             CanCheckCollision = true;
 
-            MaxHit = 5;
+            MaxHit = 1;
 
-            base.animateSpriteComponent = new AnimatedSprite(GameAssets.GetTile(TileType.Skull), initialPosition);
+            //base.animateSpriteComponent = new AnimatedSprite(GameAssets.GetTile(TileType.Skull), initialPosition);
+
+            SetPosition(initialPosition);
         }
 
         public void SetStats(float orbitSpeed, float orbitRadius)
@@ -50,46 +52,38 @@ namespace sfmlgame.Entities.Abilitites
 
         public override void Update(Player player, float deltaTime)
         {
-           // base.SetScale(Random.Shared.NextFloat(1f, 3f));
+            if (MaxHit <= 0)
+            {
+                IsActive = false;
+            }
+
+            // base.SetScale(Random.Shared.NextFloat(1f, 3f));
 
             currentAngle += orbitSpeed * deltaTime; // Update the angle to move along the orbit
 
             // Calculate new position
             Vector2f newPosition = new Vector2f(
-                orbitCenterPlayer.Sprite.Position.X + MathF.Cos(currentAngle) * orbitRadius,
-                orbitCenterPlayer.Sprite.Position.Y + MathF.Sin(currentAngle) * orbitRadius
+                player.Sprite.Position.X + MathF.Cos(currentAngle) * orbitRadius,
+                player.Sprite.Position.Y + MathF.Sin(currentAngle) * orbitRadius
             );
 
             SetPosition(newPosition);
 
-            base.SrtHitBoxDimensions(new FloatRect(Position.X, Position.Y, HitBoxDimensions.Width, HitBoxDimensions.Height));
+            //base.SrtHitBoxDimensions(new FloatRect(GetPosition().X, GetPosition().Y, HitBoxDimensions.Width, HitBoxDimensions.Height));
 
-            if(MaxHit <= 0)
-            {
-                IsActive = false;
-            }
+            
 
             base.Update(player, deltaTime);
         }
 
         public override void CollidedWith(Entity collision)
         {
-            // remove from MaxHit
-            MaxHit--;
-        }
-
-        private Enemy CheckCollisionWithEnemy()
-        {
-
-            foreach (Enemy enemy in Game.Instance.EntityManager.Enemies.ToList().Where(x => x.IsActive))
+            if (collision.GetType().IsSubclassOf(typeof(Enemy)))
             {
-                if (CheckCollision(enemy))
-                {
-                    return enemy;
-                }
+                UniversalLog.LogInfo("orbital entry");
+                MaxHit--;
             }
-
-            return null;
+            
         }
 
     }

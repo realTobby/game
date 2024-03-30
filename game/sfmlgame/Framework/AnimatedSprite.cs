@@ -75,7 +75,7 @@ namespace sfmlgame.Framework
         {
             sprites = new Sprite[1];
             sprites[0] = staticSprite;
-            HitBoxDimensions = sprites[0].GetGlobalBounds();
+            
             isFlipped = false;
             SetPosition(initialPos);
         }
@@ -108,6 +108,7 @@ namespace sfmlgame.Framework
                     OnAnimationFinish?.Invoke();
                 }
             }
+            //HitBoxDimensions = (new FloatRect(GetPosition().X, GetPosition().Y, sprites[0].GetGlobalBounds().Width, sprites[0].GetGlobalBounds().Height));
         }
 
         public void Draw(RenderTexture renderTexture, float deltaTime)
@@ -124,6 +125,11 @@ namespace sfmlgame.Framework
                 sprite.Position = position;
                 sprite.Origin = textureSize / 2f;
             }
+        }
+
+        public Vector2f GetPosition()
+        {
+            return sprites[currentFrame].Position;
         }
 
         public void FlipSprite(bool flipped)

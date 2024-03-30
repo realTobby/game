@@ -5,6 +5,7 @@ using game.Entities.Enemies;
 using SFML.System;
 using sfmlgame.Entities;
 using sfmlgame.Entities.Abilitites;
+using sfmlgame.Managers;
 
 namespace sfmlgame.Entities
 {
@@ -86,7 +87,7 @@ namespace sfmlgame.Entities
 
         public Enemy FindNearestEnemy(Vector2f pos)
         {
-            Enemy nearestEnemy = null;
+            Enemy? nearestEnemy = null;
             float nearestDistance = float.MaxValue;
             int lowestHealth = int.MaxValue;
 
@@ -94,7 +95,7 @@ namespace sfmlgame.Entities
             {
                 if (enemy.HP <= lowestHealth && enemy.HP > 0) // Check if enemy has lower health and is not defeated
                 {
-                    float distance = CalculateDistance(pos, enemy.Position);
+                    float distance = CalculateDistance(pos, enemy.GetPosition());
                     if (distance < nearestDistance)
                     {
                         nearestEnemy = enemy;
@@ -127,6 +128,7 @@ namespace sfmlgame.Entities
                 {
                     // Assuming FireballEntity has a constructor that takes Vector2f position
                     freeAbilityEntity = new FireballEntity(pos, null); // You might need to adjust this based on your constructors
+                    
                 }
 
                 if (abilityType == typeof(ThunderStrikeEntity))

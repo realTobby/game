@@ -43,6 +43,8 @@ namespace game.Entities.Enemies
             HP = MAXHP;
 
             SetPosition(initialPosition);
+
+            CanCheckCollision = true;
             //hpBar = new UI_ProgressBar(new Vector2f(initialPosition.X, initialPosition.Y), new UIBinding<int>(() => HP), new UIBinding<int>(() => MAXHP), new Vector2f(16,4), Color.Red, this);
             //GameScene.Instance._uiManager.AddComponent(hpBar);
 
@@ -56,6 +58,7 @@ namespace game.Entities.Enemies
 
             SetPosition(initialPosition);
 
+            CanCheckCollision = true;
             //hpBar = new UI_ProgressBar(new Vector2f(initialPosition.X, initialPosition.Y), new UIBinding<int>(() => HP), new UIBinding<int>(() => MAXHP), new Vector2f(16, 4), Color.Red, this);
             //GameScene.Instance._uiManager.AddComponent(hpBar);
         }
@@ -71,6 +74,8 @@ namespace game.Entities.Enemies
             IsActive = true;
             HP = MAXHP;
             SetPosition(position);
+
+            CanCheckCollision = true;
             //GameScene.Instance._uiManager.AddComponent(hpBar);
         }
 
@@ -80,6 +85,7 @@ namespace game.Entities.Enemies
 
             if(!CanBeDamaged) return false;
             CanBeDamaged = false;
+            CanCheckCollision = false;
             SoundManager.Instance.PlayHit();
 
             CallDamageNumber(dmg);
@@ -160,7 +166,7 @@ namespace game.Entities.Enemies
         {
             
             
-            Vector2f direction = player.Sprite.Position - Position;
+            Vector2f direction = player.Sprite.Position - GetPosition();
             float magnitude = (float)Math.Sqrt(direction.X * direction.X + direction.Y * direction.Y);
 
             if (magnitude != 0)
@@ -171,18 +177,14 @@ namespace game.Entities.Enemies
 
                 if (magnitude > MinDistance)
                 {
-                    var lastPos = Position;
-
-                    Position += direction * speed * deltaTime;
-
                     //Console.WriteLine($"Speed: {speed}, DeltaTime: {deltaTime}, Position Change: {direction * speed * deltaTime}");
 
-                    SetPosition(Position);
+                    SetPosition(GetPosition() + direction * speed * deltaTime);
                 }
             }
             else
             {
-                direction = new Vector2f(0, 0); // Or handle this case as appropriate for your game
+                // we chillin
             }
             //Console.WriteLine("Moving towards player..." + Position.ToString());
         }
@@ -192,11 +194,14 @@ namespace game.Entities.Enemies
             base.Update(player, deltaTime);
             MoveTowardsPlayer(player, deltaTime);
 
+            //base.SetHitBoxDimensions(new FloatRect(GetPosition().X, GetPosition().Y, GetBounds().Width, GetBounds().Height));
+
             if (CanBeDamaged == false)
             {
                 if (invisibleClock.ElapsedTime.AsSeconds() >= invisDuration)
                 {
                     CanBeDamaged = true;
+                    CanCheckCollision = true;
                     invisibleClock.Restart();
                 }
             }
@@ -217,10 +222,13 @@ namespace game.Entities.Enemies
             //Console.WriteLine(abilityEntities.Count() + " abilities could hurt me!");
             foreach (AbilityEntity ability in abilityEntities.Where(x => x.IsActive))
             {
+
+
                 if (ability.CanCheckCollision)
                 {
                     if (CheckCollision(ability))
                     {
+
                         ability.CollidedWith(this);
                         //Console.WriteLine("I got hit by " + ability.AbilityName);
                         TakeDamage(ability.Damage);
@@ -229,23 +237,5 @@ namespace game.Entities.Enemies
 
             }
         }
-
-        new public void SetScale(float scale)
-        {
-            base.animateSpriteComponent.SetScale(scale);
-        }
-
-        new public void SetPosition(Vector2f pos)
-        {
-            Position = pos;
-            base.animateSpriteComponent.SetPosition(pos);
-        }
-
-        public void SetHitBoxDimensions(FloatRect newHitBox)
-        {
-            base.animateSpriteComponent.HitBoxDimensions = newHitBox;
-        }
-
-
     }
 }

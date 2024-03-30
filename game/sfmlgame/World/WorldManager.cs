@@ -45,7 +45,7 @@ namespace sfmlgame.World
 
         public void ManageChunks(Vector2f playerPosition)
         {
-            Sprite tileTexture = GameAssets.GetTile(TileType.Grass);
+            Sprite tileTexture = GameAssets.Instance.GetTileSprite(TileType.Grass);
 
             // Determine the range of chunks that should be checked based on the player's position
             // This example checks a 3x3 area centered on the player's current chunk

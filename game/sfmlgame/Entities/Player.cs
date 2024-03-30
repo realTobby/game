@@ -33,9 +33,9 @@ namespace sfmlgame.Entities
             // Set origin point to the center of the sprite
             Sprite.Origin = center;
 
-            Abilities.Add(new FireballAbility(this, 0.5f));
-            Abilities.Add(new OrbitalAbility(this, 10f, 2f, 50f, 20));
-            Abilities.Add(new ThunderStrikeAbility(0.5f));
+            Abilities.Add(new OrbitalAbility(this, 10f, 3f, 50f, 20));
+
+
         }
 
         public Vector2i PreviousChunkIndex { get; private set; }

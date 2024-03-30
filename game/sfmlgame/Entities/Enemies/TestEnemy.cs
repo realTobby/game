@@ -20,10 +20,10 @@ namespace game.Entities.Enemies
 
         public TestEnemy(Vector2f initialPosition, float speed) : base(GameAssets.Instance.TextureLoader.GetTexture("TestEnemy", "Entities/Enemies"), 1, 9, Time.FromSeconds(0.1f), speed, initialPosition)
         {
-            HP = 1;
-            Damage = 5;
+            HP = 10;
+            Damage = 1;
 
-            base.MinDistance = 45f;
+            base.MinDistance = 50f;
 
             
 
@@ -41,7 +41,7 @@ namespace game.Entities.Enemies
 
             
 
-            base.animateSpriteComponent.HitBoxDimensions = new FloatRect(Position.X, Position.Y, 32, 32);
+            //base.animateSpriteComponent.HitBoxDimensions = new FloatRect(GetPosition().X, GetPosition().Y, 32, 32);
 
             
 
