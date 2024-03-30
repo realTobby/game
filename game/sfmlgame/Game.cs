@@ -5,6 +5,7 @@ using sfmlgame.Entities;
 using sfmlgame.Assets;
 using sfmlgame.World;
 using sfmlgame.Entities.Enemies;
+using sfmlgame.Managers;
 
 namespace sfmlgame
 {
@@ -31,6 +32,8 @@ namespace sfmlgame
 
         public WaveManager WaveManager;
 
+        public SoundManager SoundManager;
+
         private void LoadCRTShader()
         {
             string shaderPath = "Assets/Shaders/CRT.frag";
@@ -51,6 +54,8 @@ namespace sfmlgame
             world = new WorldManager(16);
 
             PLAYER = new Player(GameAssets.Instance.TextureLoader.GetTexture("priestess_0", "Entities/priestess"), new Vector2f(0, 0), world);
+
+            SoundManager = new SoundManager();
 
             var mode = VideoMode.FullscreenModes[0];
             _gameWindow = new RenderWindow(mode, "Game", Styles.Fullscreen); // Set window to fullscreen

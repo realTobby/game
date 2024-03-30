@@ -1,8 +1,10 @@
 ﻿using System.Collections.Concurrent;
 using System.Threading.Tasks;
+using game.Entities.Abilitites;
 using game.Entities.Enemies;
 using SFML.System;
 using sfmlgame.Entities;
+using sfmlgame.Entities.Abilitites;
 
 namespace sfmlgame.Entities
 {
@@ -20,6 +22,8 @@ namespace sfmlgame.Entities
         public IEnumerable<Entity> AllEntities => allEntities;
 
         public IEnumerable<Enemy> Enemies => allEntities.OfType<Enemy>();
+
+        public IEnumerable<AbilityEntity> AbilityEntities => allEntities.OfType<AbilityEntity>();
 
         // Simplified property for non-enemy entities
         public IEnumerable<Entity> NoEnemyEntities => allEntities.Where(x => !(x is Enemy));
@@ -39,6 +43,12 @@ namespace sfmlgame.Entities
                 enemy.Update(Game.Instance.PLAYER, frameTime);
                 // Implement other entity-specific updates as needed
             });
+
+            Parallel.ForEach(AbilityEntities, abilityEntity =>
+            {
+                abilityEntity.Update(Game.Instance.PLAYER, frameTime);
+                // Implement other entity-specific updates as needed
+            });
         }
 
         public void DrawEntities(SFML.Graphics.RenderTexture renderTexture, float deltaTime)
@@ -47,7 +57,7 @@ namespace sfmlgame.Entities
             {
                 entity?.Draw(renderTexture, deltaTime);
             }
-            Thread.Sleep(5);
+            //Thread.Sleep(5);
         }
 
         public bool EntityExists(Entity entityToCheck)
@@ -72,6 +82,81 @@ namespace sfmlgame.Entities
             }
 
             return freeEnemy;
+        }
+
+        public Enemy FindNearestEnemy(Vector2f pos)
+        {
+            Enemy nearestEnemy = null;
+            float nearestDistance = float.MaxValue;
+            int lowestHealth = int.MaxValue;
+
+            foreach (Enemy enemy in Enemies)
+            {
+                if (enemy.HP <= lowestHealth && enemy.HP > 0) // Check if enemy has lower health and is not defeated
+                {
+                    float distance = CalculateDistance(pos, enemy.Position);
+                    if (distance < nearestDistance)
+                    {
+                        nearestEnemy = enemy;
+                        nearestDistance = distance;
+                        lowestHealth = enemy.HP;
+                    }
+                }
+            }
+
+            return nearestEnemy;
+        }
+
+        private float CalculateDistance(Vector2f a, Vector2f b)
+        {
+            float dx = b.X - a.X;
+            float dy = b.Y - a.Y;
+            return MathF.Sqrt(dx * dx + dy * dy);
+        }
+
+
+        public AbilityEntity CreateAbilityEntity(Vector2f pos, Type abilityType)
+        {
+            // Check for an inactive AbilityEntity of the matching type
+            AbilityEntity freeAbilityEntity = AbilityEntities.FirstOrDefault(x => !x.IsActive && x.GetType() == abilityType);
+
+            if (freeAbilityEntity == null)
+            {
+                // If no inactive entities are found, create a new one based on the type
+                if (abilityType == typeof(FireballEntity))
+                {
+                    // Assuming FireballEntity has a constructor that takes Vector2f position
+                    freeAbilityEntity = new FireballEntity(pos, null); // You might need to adjust this based on your constructors
+                }
+
+                if (abilityType == typeof(ThunderStrikeEntity))
+                {
+                    freeAbilityEntity = new ThunderStrikeEntity(pos);
+                }
+
+                if (abilityType == typeof(OrbitalEntity))
+                {
+                    freeAbilityEntity = new OrbitalEntity(Game.Instance.PLAYER, pos, 0, 0);
+                    //freeAbilityEntity.IsActive = true;
+                }
+
+                if (freeAbilityEntity != null)
+                {
+                    allEntities.Add(freeAbilityEntity);
+                }
+
+            }
+            else
+            {
+                // If an inactive entity is found, reset it for reuse
+                freeAbilityEntity.ResetFromPool(pos);
+            }
+
+
+
+            // Activate the entity
+            //freeAbilityEntity.IsActive = true; NEVER RETURN AN ALREADY ACTIVE ENTITY, IF THE WRONG LOGIC CATCHES THEM, THEY ARE INSTANTLY INACTIVE LOL
+            return freeAbilityEntity;
         }
     }
 }

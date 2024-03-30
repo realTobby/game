@@ -231,12 +231,12 @@ namespace game.Entities.Enemies
             }
         }
 
-        public void SetScale(float scale)
+        new public void SetScale(float scale)
         {
             base.animateSpriteComponent.SetScale(scale);
         }
 
-        public void SetPosition(Vector2f pos)
+        new public void SetPosition(Vector2f pos)
         {
             Position = pos;
             base.animateSpriteComponent.SetPosition(pos);

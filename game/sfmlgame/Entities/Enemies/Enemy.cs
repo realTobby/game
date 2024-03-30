@@ -1,8 +1,11 @@
 ﻿
+using sfmglame.Helpers;
 using SFML.Graphics;
 using SFML.System;
 using sfmlgame;
 using sfmlgame.Entities;
+using sfmlgame.Entities.Abilitites;
+using sfmlgame.Managers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -59,6 +62,7 @@ namespace game.Entities.Enemies
 
         private void CallDamageNumber(int damage)
         {
+            UniversalLog.LogInfo("NewDamageNumberHere");
             //GameScene.Instance._uiManager.CreateDamageNumber(damage, Position, GameScene.Instance._viewCamera.view, 0.45f);
         }
 
@@ -76,37 +80,37 @@ namespace game.Entities.Enemies
 
             if(!CanBeDamaged) return false;
             CanBeDamaged = false;
-            //SoundManager.Instance.PlayHit();
+            SoundManager.Instance.PlayHit();
 
             CallDamageNumber(dmg);
 
             HP -= dmg;
 
-            return false;
+           
             //GameScene.Instance._viewCamera.ShakeCamera(3f, 0.115f);
 
             //GameScene.Instance.particleSystem.SpawnDamageParticles(Position, 3, 50, 1); // spawns 10 particles with a speed spread of 50 and a lifetime of 1 second
 
 
-            //if (HP <= 0)
-            //{
-            //    var bluegem = EntityManager.Instance.CreateGem(1, this.Position);
-            //    //EntityManager.Instance.AddEntity(bluegem);
+            if (HP <= 0)
+            {
+                //var bluegem = EntityManager.Instance.CreateGem(1, this.Position); CREATE LOOTMANAGER THAT CAN SPAWN GEMS FOR XP
+                //EntityManager.Instance.AddEntity(bluegem);
 
-            //    GameScene.Instance._uiManager.RemoveComponent(hpBar);
+                //GameScene.Instance._uiManager.RemoveComponent(hpBar);
 
-            //    IsActive = false;
-            //    //EntityManager.Instance.RemoveEntity(this);
+                IsActive = false;
+                //EntityManager.Instance.RemoveEntity(this);
 
-            //    //GameScene.Instance._uiManager.RemoveComponent(hpBar);
+                //GameScene.Instance._uiManager.RemoveComponent(hpBar);
 
-            //    return true;
-            //}
-            //else
-            //{
-            //    flashTimer = flashDuration;
-            //}
-            //return false;
+                return true;
+            }
+            else
+            {
+                flashTimer = flashDuration;
+            }
+            return false;
         }
 
         public override void Draw(RenderTexture renderTexture, float deltaTime)
@@ -185,16 +189,53 @@ namespace game.Entities.Enemies
 
         public override void Update(Player player, float deltaTime)
         {
-                base.Update(player, deltaTime);
-                MoveTowardsPlayer(player, deltaTime);
+            base.Update(player, deltaTime);
+            MoveTowardsPlayer(player, deltaTime);
+
+            if (CanBeDamaged == false)
+            {
+                if (invisibleClock.ElapsedTime.AsSeconds() >= invisDuration)
+                {
+                    CanBeDamaged = true;
+                    invisibleClock.Restart();
+                }
+            }
+            else
+            {
+                CheckCollisionWithAbilityEntities();
+            }
         }
 
-        public void SetScale(float scale)
+        public void AbilityCollision(AbilityEntity entity)
+        {
+            TakeDamage(entity.Damage);
+        }
+
+        private void CheckCollisionWithAbilityEntities()
+        {
+            var abilityEntities = Game.Instance.EntityManager.AbilityEntities;
+            //Console.WriteLine(abilityEntities.Count() + " abilities could hurt me!");
+            foreach (AbilityEntity ability in abilityEntities.Where(x => x.IsActive))
+            {
+                if (ability.CanCheckCollision)
+                {
+                    if (CheckCollision(ability))
+                    {
+                        ability.CollidedWith(this);
+                        //Console.WriteLine("I got hit by " + ability.AbilityName);
+                        TakeDamage(ability.Damage);
+                    }
+                }
+
+            }
+        }
+
+        new public void SetScale(float scale)
         {
             base.animateSpriteComponent.SetScale(scale);
         }
 
-        public void SetPosition(Vector2f pos)
+        new public void SetPosition(Vector2f pos)
         {
             Position = pos;
             base.animateSpriteComponent.SetPosition(pos);
@@ -204,6 +245,7 @@ namespace game.Entities.Enemies
         {
             base.animateSpriteComponent.HitBoxDimensions = newHitBox;
         }
+
 
     }
 }

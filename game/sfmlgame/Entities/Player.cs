@@ -7,6 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using sfmlgame.World;
+using sfmlgame.Abilities;
+using System.Numerics;
 
 namespace sfmlgame.Entities
 {
@@ -19,6 +21,8 @@ namespace sfmlgame.Entities
 
         public Vector2i CurrentChunkIndex { get; private set; }
 
+        public List<Ability> Abilities { get; private set; } = new List<Ability>();
+
         public Player(Texture texture, Vector2f position, WorldManager world)
         {
             this.world = world; // Store the World reference
@@ -29,6 +33,9 @@ namespace sfmlgame.Entities
             // Set origin point to the center of the sprite
             Sprite.Origin = center;
 
+            Abilities.Add(new FireballAbility(this, 0.5f));
+            Abilities.Add(new OrbitalAbility(this, 10f, 2f, 50f, 20));
+            Abilities.Add(new ThunderStrikeAbility(0.5f));
         }
 
         public Vector2i PreviousChunkIndex { get; private set; }
@@ -52,6 +59,23 @@ namespace sfmlgame.Entities
             if (CurrentChunkIndex != PreviousChunkIndex)
             {
                 world.ManageChunks(Sprite.Position);
+            }
+
+            UpdatePlayerAbilities(deltaTime);
+
+        }
+
+        private void UpdatePlayerAbilities(float deltaTime)
+        {
+            foreach (Ability ability in Abilities)
+            {
+                ability.Update();
+
+                if (ability.abilityClock.ElapsedTime.AsSeconds() >= ability.Cooldown)
+                {
+                    ability.Activate();
+                    ability.LastActivatedTime = ability.abilityClock.Restart().AsSeconds();
+                }
             }
         }
     }

@@ -65,6 +65,7 @@ namespace sfmlgame.World
 
 
             }
+            DrawDebug(target);
         }
 
         RectangleShape debugOutline;

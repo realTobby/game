@@ -24,6 +24,8 @@ namespace sfmlgame.Entities
 
         public bool IsMagnetized = false;
 
+        private RectangleShape debugDraw;
+
         private void MoveTowardsPlayer(Player player, float deltaTime)
         {
             Vector2f direction = player.Sprite.Position - Position;
@@ -32,6 +34,12 @@ namespace sfmlgame.Entities
             Position += direction * 300f * deltaTime;
             SetPosition(Position);
         }
+
+        public virtual void CollidedWith(Entity collision)
+        {
+
+        }
+
 
         public void SetPosition(Vector2f pos)
         {
@@ -50,6 +58,8 @@ namespace sfmlgame.Entities
 
             animateSpriteComponent = new AnimatedSprite(category, entityName, frameCount);
 
+            SetDebugDraw();
+
             IsActive = true;
         }
 
@@ -59,8 +69,27 @@ namespace sfmlgame.Entities
 
             animateSpriteComponent = new AnimatedSprite(texture, rows, columns, frameDuration, initialPosition);
 
+            SetDebugDraw();
+
             IsActive = true;
 
+            
+
+        }
+
+        private void SetDebugDraw()
+        {
+            var width = animateSpriteComponent.sprites[0].TextureRect.Width;
+            var height = animateSpriteComponent.sprites[0].TextureRect.Height;
+
+            debugDraw = new RectangleShape(new Vector2f(width / 2, height / 2))
+            {
+                Position = this.Position,
+                FillColor = Color.Transparent,
+                OutlineColor = Color.Red,
+                OutlineThickness = 1,
+                Origin = new Vector2f(0, 0)
+            };
         }
 
         public virtual void Update(Player player, float deltaTime)
@@ -69,6 +98,12 @@ namespace sfmlgame.Entities
 
             animateSpriteComponent.Update();
 
+            var width = animateSpriteComponent.sprites[0].TextureRect.Width;
+            var height = animateSpriteComponent.sprites[0].TextureRect.Height;
+            if (debugDraw != null)
+            {
+                debugDraw.Position = new Vector2f(Position.X - width / 4, Position.Y - height / 4);
+            }
 
             if (IsMagnetized)
             {
@@ -77,10 +112,19 @@ namespace sfmlgame.Entities
             
         }
 
+        private void ShowDebugBoundaries(RenderTexture target)
+        {
+            if (debugDraw == null) return;
+            target.Draw(debugDraw);
+        }
+
+
         public virtual void Draw(RenderTexture renderTexture, float deltaTime)
         {
             if (!IsActive) return;
             animateSpriteComponent.Draw(renderTexture, deltaTime);
+
+            ShowDebugBoundaries(renderTexture);
         }
 
         public FloatRect GetBounds()
@@ -91,6 +135,7 @@ namespace sfmlgame.Entities
         public bool CheckCollision(Entity other)
         {
             if (!IsActive) return false;
+            
             return GetBounds().Intersects(other.GetBounds());
         }
 
