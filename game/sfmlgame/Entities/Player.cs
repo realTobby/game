@@ -48,6 +48,11 @@ namespace sfmlgame.Entities
             if (Keyboard.IsKeyPressed(Keyboard.Key.A)) movement.X -= speed * deltaTime;
             if (Keyboard.IsKeyPressed(Keyboard.Key.D)) movement.X += speed * deltaTime;
 
+            if(Keyboard.IsKeyPressed(Keyboard.Key.G))
+            {
+                Game.Instance.Debug = !Game.Instance.Debug;
+            }
+
             Sprite.Position += movement;
 
             if (world == null) return;

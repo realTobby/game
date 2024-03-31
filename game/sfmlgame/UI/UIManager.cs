@@ -1,17 +1,12 @@
-﻿using game.Managers;
-using game.Scenes;
+﻿
 using SFML.Graphics;
 using SFML.System;
-using System.Collections.Generic;
-using System.Linq;
 
-namespace game.UI
+namespace sfmlgame.UI
 {
     public class UIManager
     {
         private List<UIComponent> _components;
-
-        public Font MainFont = new Font("Assets/Fonts/m6x11.ttf");
 
         public int GetDamagerNumberPoolSize => _components.Where(x => x.GetType() == typeof(UI_DamageNumber)).Count();
 
@@ -41,14 +36,14 @@ namespace game.UI
 
         }
 
-        public void CreateDamageNumber(int amount, Vector2f worldPos, View view, float duration)
+        public void CreateDamageNumber(int amount, Vector2f worldPos, float duration)
         {
             // find non-active object
             UI_DamageNumber freeDamageNumber = _components.Where(x => x.IsActive == false && x.GetType() == typeof(UI_DamageNumber)).FirstOrDefault() as UI_DamageNumber;
 
             if(freeDamageNumber == null)
             {
-                freeDamageNumber = new UI_DamageNumber(amount, worldPos, view, duration);
+                freeDamageNumber = new UI_DamageNumber(amount, worldPos, duration);
                 _components.Add(freeDamageNumber);
             }
             else
@@ -59,56 +54,26 @@ namespace game.UI
 
         }
 
-        public void Update()
+        public void Update(float deltaTime)
         {
             foreach (UIComponent component in _components.ToList())
             {
-                if(component != null) component.Update();
+                if(component != null) component.Update(deltaTime);
 
             }
         }
 
         public void Draw(RenderTexture renderTexture)
         {
-            foreach (UIComponent component in _components.ToList())
-            {
-                if(component != null) component.Draw(renderTexture);
+            
 
-            }
-        }
-
-        public void Draw(RenderTexture renderTexture, View view)
-        {
-            RenderWindow window = Game.Instance.GetRenderWindow();
-
-            // Store the original view
-            View originalView = window.GetView();
-
-            // Set the temporary view on the render window
-            window.SetView(view);
-
-            // Draw the UI components
             foreach (UIComponent component in _components.ToList())
             {
                 if(component != null) component.Draw(renderTexture);
 
             }
 
-            // Restore the original view
-            window.SetView(originalView);
         }
-
-        public Vector2f ConvertWorldToViewPosition(Vector2f worldPosition, View view)
-        {
-            // Calculate the position relative to the view
-            Vector2f viewCenter = view.Center;
-            Vector2f viewSize = view.Size;
-            Vector2f viewTopLeft = viewCenter - (viewSize / 2f);
-
-            return worldPosition - viewTopLeft;
-        }
-
-
 
     }
 }

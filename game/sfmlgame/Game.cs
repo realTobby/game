@@ -6,6 +6,7 @@ using sfmlgame.Assets;
 using sfmlgame.World;
 using sfmlgame.Entities.Enemies;
 using sfmlgame.Managers;
+using sfmlgame.UI;
 
 namespace sfmlgame
 {
@@ -18,8 +19,11 @@ namespace sfmlgame
 
 
         private RenderWindow _gameWindow;
-        private RenderTexture renderTexture;
-        private View camera;
+        private RenderTexture gameRenderTexture;
+        private RenderTexture uiRenderTexture;
+        public View CAMERA;
+
+        public UIManager UIManager;
 
         public Player PLAYER;
         private WorldManager world;
@@ -33,6 +37,8 @@ namespace sfmlgame
         public WaveManager WaveManager;
 
         public SoundManager SoundManager;
+
+        public bool Debug = false;
 
         private void LoadCRTShader()
         {
@@ -63,14 +69,23 @@ namespace sfmlgame
             _gameWindow.SetVerticalSyncEnabled(true);
             _gameWindow.Closed += StopGame;
 
-            renderTexture = new RenderTexture(_gameWindow.Size.X, _gameWindow.Size.Y);
-            renderTexture.Clear(Color.Black);
+            gameRenderTexture = new RenderTexture(_gameWindow.Size.X, _gameWindow.Size.Y);
+            gameRenderTexture.Clear(Color.Black);
+
+            uiRenderTexture = new RenderTexture(_gameWindow.Size.X, _gameWindow.Size.Y);
+            uiRenderTexture.Clear(Color.Transparent);
+
+            UIManager = new UIManager();
+
+            UIBinding<string> fpsBinding = new UIBinding<string>(() => GetFPS());
+            UI_Text fpsCounter = new UI_Text("FPS: ", 36, new Vector2f(10, _gameWindow.Size.Y-50), fpsBinding);
+            UIManager.AddComponent(fpsCounter);
 
             AttachCamera(PLAYER);
 
             //world.GenerateAround(player.Sprite.Position, grasTile); // Now generate the world around the player
 
-            CRTShader.SetUniform("resolution", new Vector2f(renderTexture.Size.X, renderTexture.Size.Y));
+            CRTShader.SetUniform("resolution", new Vector2f(gameRenderTexture.Size.X, gameRenderTexture.Size.Y));
 
             world.ManageChunks(PLAYER.Sprite.Position);
 
@@ -78,6 +93,17 @@ namespace sfmlgame
 
             WaveManager = new WaveManager();
             
+        }
+
+        private Clock fpsClock = new Clock(); // A clock to keep track of time between frames
+        private int frameCount = 0; // A counter for the frames
+        private float lastTime = 0; // The last time FPS was calculated
+
+        private int LastCalculatedFPS = 0;
+
+        private string GetFPS()
+        {
+            return LastCalculatedFPS.ToString();
         }
 
         private Clock waveTimer = new Clock();
@@ -147,6 +173,20 @@ namespace sfmlgame
         {
             float frameTime = DELTATIME;
 
+            frameCount++;
+            float currentTime = fpsClock.ElapsedTime.AsSeconds();
+            float deltaTime = currentTime - lastTime;
+
+            // Calculate FPS every second
+            if (deltaTime >= 1.0f)
+            {
+                int fps = frameCount;
+                frameCount = 0;
+                lastTime += deltaTime;
+                LastCalculatedFPS = fps;
+            }
+
+            UIManager.Update(frameTime);
 
             PLAYER.Update(frameTime);
 
@@ -172,32 +212,32 @@ namespace sfmlgame
         private void Draw()
         {
             // First, clear the RenderTexture and draw the game world and player onto it
-            renderTexture.Clear(Color.Black);
+            gameRenderTexture.Clear(Color.Black);
+            uiRenderTexture.Clear(Color.Transparent);
             // Ensure the RenderTexture uses the camera's view for rendering the scene
-            renderTexture.SetView(camera);
-            world.Draw(renderTexture);
-
-
-            EntityManager.DrawEntities(renderTexture, DELTATIME);
-
-
-            renderTexture.Draw(PLAYER.Sprite);
+            gameRenderTexture.SetView(CAMERA);
+            world.Draw(gameRenderTexture);
+            EntityManager.DrawEntities(gameRenderTexture, DELTATIME);
+            gameRenderTexture.Draw(PLAYER.Sprite);
 
             // draw ui
 
-
-            renderTexture.Display(); // Finalize the scene on the RenderTexture
-
+            UIManager.Draw(uiRenderTexture);
+            
+            gameRenderTexture.Display(); // Finalize the scene on the RenderTexture
+            uiRenderTexture.Display();
             _gameWindow.Clear();
 
             // Before drawing the scene with the shader, reset to the default view
             _gameWindow.SetView(_gameWindow.DefaultView);
 
             // Create a sprite that uses the RenderTexture's texture (the rendered scene)
-            Sprite renderSprite = new Sprite(renderTexture.Texture);
+            Sprite gameRenderSprite = new Sprite(gameRenderTexture.Texture);
+            Sprite uiRenderSprite = new Sprite(uiRenderTexture.Texture);
 
             // Apply the shader while drawing this sprite, which represents the entire scene
-            _gameWindow.Draw(renderSprite, new RenderStates(CRTShader));
+            _gameWindow.Draw(gameRenderSprite, new RenderStates(CRTShader));
+            _gameWindow.Draw(uiRenderSprite, new RenderStates(CRTShader));
 
             _gameWindow.Display();
         }
@@ -206,16 +246,28 @@ namespace sfmlgame
         public void AttachCamera(Player entity)
         {
             // Create a new view centered around the entity's position with the desired size
-            camera = new View(entity.Sprite.Position, new Vector2f(640, 480)); // Window size as view size 640x480
+            CAMERA = new View(entity.Sprite.Position, new Vector2f(640, 480)); // Window size as view size 640x480
         }
 
         private void UpdateCameraPosition()
         {
-            if (camera != null && PLAYER != null)
+            if (CAMERA != null && PLAYER != null)
             {
-                camera.Center = PLAYER.Sprite.Position;
-                _gameWindow.SetView(camera);
+                CAMERA.Center = PLAYER.Sprite.Position;
+                _gameWindow.SetView(CAMERA);
             }
+        }
+
+        public Vector2f ConvertWorldToViewPosition(Vector2f worldPosition)
+        {
+            // Calculate the offset from the world position to the camera center
+            Vector2f offsetFromCenter = worldPosition - CAMERA.Center;
+
+            Vector2f screenPosition = new Vector2f(
+                offsetFromCenter.X,
+                offsetFromCenter.Y);
+
+            return screenPosition;
         }
     }
 }

@@ -130,8 +130,12 @@ namespace sfmlgame.Entities
 
         private void ShowDebugBoundaries(RenderTexture target)
         {
-            if (debugDraw == null) return;
-            target.Draw(debugDraw);
+            if(Game.Instance.Debug)
+            {
+                if (debugDraw == null) return;
+                target.Draw(debugDraw);
+            }
+            
         }
 
 

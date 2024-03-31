@@ -66,7 +66,8 @@ namespace game.Entities.Enemies
         private void CallDamageNumber(int damage)
         {
             UniversalLog.LogInfo("NewDamageNumberHere");
-            //GameScene.Instance._uiManager.CreateDamageNumber(damage, Position, GameScene.Instance._viewCamera.view, 0.45f);
+            Game.Instance.UIManager.CreateDamageNumber(damage, GetPosition(), 0.5f);
+           // GameScene.Instance._uiManager.CreateDamageNumber(damage, Position, GameScene.Instance._viewCamera.view, 0.45f);
         }
 
         public override void ResetFromPool(Vector2f position)
