@@ -40,6 +40,12 @@ namespace sfmlgame.UI
             textComp.Position = pos;
         }
 
+        public override void SetPosition(Vector2f pos)
+        {
+            Position = pos;
+            textComp.Position = pos;
+        }
+
         public void SetBold(bool isBold)
         {
             textComp.Style = Text.Styles.Regular;

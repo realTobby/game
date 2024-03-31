@@ -16,8 +16,11 @@ namespace sfmlgame.UI
 
         Random rnd = new Random();
 
+        private Vector2f worldPosition;
+
         public UI_DamageNumber(int damageAmount, Vector2f worldPosition, float duration = 2.0f) : base(worldPosition)
         {
+            this.worldPosition = worldPosition;
             //UniversalLog.LogInfo("newDamagerNumber");
             this.uiPosition = Game.Instance.ConvertWorldToViewPosition(worldPosition);
             this.Position = this.uiPosition; // Ensure the base position is also updated
@@ -31,6 +34,8 @@ namespace sfmlgame.UI
             damageText.SetColor(new Color(0, 0, 0, 255)); // Start fully opaque
             damageText.SetBold(true);
             damageText.SetSize(35);
+            damageText.Position = this.uiPosition;
+            damageText.SetPosition(this.uiPosition);
 
             if(rnd.Next(0,100) == 0)
             {
@@ -40,40 +45,40 @@ namespace sfmlgame.UI
             //GameScene.Instance._uiManager.AddComponent(this);
         }
 
-        public void ResetFromPool(Vector2f pos)
+        public void ResetFromPool(Vector2f worldPos)
         {
-            SetPosition(Game.Instance.ConvertWorldToViewPosition(pos));
-            damageText.Position = uiPosition;
+            this.worldPosition = worldPos; // Store the original world position
+            this.uiPosition = Game.Instance.ConvertWorldToViewPosition(worldPos); // Convert and store the initial screen position
+            SetPosition(this.uiPosition); // You might not need this line if uiPosition is solely used for rendering
             elapsedTime = 0;
         }
 
         public override void Update(float deltaTime)
         {
-            if (!base.IsActive) return;
+            if (!IsActive) return;
 
             elapsedTime += deltaTime;
 
-            this.uiPosition.Y -= riseSpeed * deltaTime; // Example update
+            // Apply the "rising" effect directly to the worldPosition.
+            // This simulates the damage number rising in the game world, not the screen or UI.
+            worldPosition.Y -= riseSpeed * deltaTime;
 
-            // IMPORTANT: Convert again in case the world position changes or if you want the damage number to "follow" a moving target
-            this.uiPosition = Game.Instance.ConvertWorldToViewPosition(Position);
+            this.uiPosition = Game.Instance.ConvertWorldToViewPosition(worldPosition);
 
-            damageText.SetPosition(this.uiPosition); // Update the UI_Text's position
+            damageText.SetPosition(uiPosition);
 
-            // Fade out the damage number over time
-            byte alpha = (byte)(255 - (elapsedTime / duration) * 255);
-            damageText.SetColor(new Color(0, 0, 0, alpha));
-
+            // The fade logic remains unchanged.
+            // No need to convert to screen position here; it will be handled during rendering.
             if (elapsedTime >= duration)
             {
-                Game.Instance.UIManager.RemoveComponent(this);
+                IsActive = false; // Consider pooling or hiding for efficiency
             }
         }
 
         public override void Draw(RenderTexture renderTexture)
         {
-            if (!base.IsActive) return;
-
+            if (!IsActive) return;
+            // Render the damage text. The conversion ensures it appears at the correct screen position.
             damageText.Draw(renderTexture);
         }
 

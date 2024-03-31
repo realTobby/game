@@ -111,6 +111,8 @@ namespace game.Entities.Enemies
 
                 //GameScene.Instance._uiManager.RemoveComponent(hpBar);
 
+                Game.Instance.PLAYER.NewRandomAbility();
+
                 return true;
             }
             else

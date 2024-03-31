@@ -35,7 +35,7 @@ namespace sfmlgame.Entities.Abilitites
 
             CanCheckCollision = true;
 
-            MaxHit = 1;
+            MaxHit = 5;
 
             //base.animateSpriteComponent = new AnimatedSprite(GameAssets.GetTile(TileType.Skull), initialPosition);
 
@@ -46,7 +46,7 @@ namespace sfmlgame.Entities.Abilitites
         {
             this.orbitSpeed = orbitSpeed;
             this.orbitRadius = orbitRadius;
-            MaxHit = 1;
+            MaxHit = 5;
             CanCheckCollision = true;
         }
 

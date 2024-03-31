@@ -77,9 +77,8 @@ namespace sfmlgame
 
             UIManager = new UIManager();
 
-            UIBinding<string> fpsBinding = new UIBinding<string>(() => GetFPS());
-            UI_Text fpsCounter = new UI_Text("FPS: ", 36, new Vector2f(10, _gameWindow.Size.Y-50), fpsBinding);
-            UIManager.AddComponent(fpsCounter);
+           
+            
 
             AttachCamera(PLAYER);
 
@@ -158,6 +157,16 @@ namespace sfmlgame
         public void Run()
         {
             lastPlayerChunkIndex = world.CalculateChunkIndex(PLAYER.Sprite.Position);
+
+            //UI_DamageNumber test = new UI_DamageNumber(-1, new Vector2f(0, 0), 1000);
+            //UIManager.AddComponent(test);
+            UIBinding<string> fpsBinding = new UIBinding<string>(() => GetFPS());
+            UI_Text fpsCounter = new UI_Text("FPS: ", 36, new Vector2f(10, _gameWindow.Size.Y - 50), fpsBinding);
+            UIManager.AddComponent(fpsCounter);
+
+            UIBinding<string> soundChannelsBinding = new UIBinding<string>(() => SoundManager.Instance.GetActiveChannels().ToString());
+            UI_Text soundChannels = new UI_Text("Sound Channels: ", 36, new Vector2f(10, _gameWindow.Size.Y - 100), soundChannelsBinding);
+            UIManager.AddComponent(soundChannels);
 
             while (_gameWindow.IsOpen)
             {
@@ -260,14 +269,9 @@ namespace sfmlgame
 
         public Vector2f ConvertWorldToViewPosition(Vector2f worldPosition)
         {
-            // Calculate the offset from the world position to the camera center
-            Vector2f offsetFromCenter = worldPosition - CAMERA.Center;
-
-            Vector2f screenPosition = new Vector2f(
-                offsetFromCenter.X,
-                offsetFromCenter.Y);
-
-            return screenPosition;
+            var realPos = _gameWindow.MapCoordsToPixel(worldPosition, CAMERA);
+            // This uses the game window and the current view (CAMERA) to convert world coordinates to screen coordinates.
+            return new Vector2f(realPos.X, realPos.Y);
         }
     }
 }

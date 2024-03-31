@@ -18,7 +18,7 @@ namespace sfmlgame.UI
             }
         }
 
-        public void SetPosition(Vector2f pos)
+        public virtual void SetPosition(Vector2f pos)
         {
             Position = pos;
         }
