@@ -14,7 +14,7 @@ namespace sfmlgame.Abilities
         public override void Activate()
         {
             // get a random position in a radius arround the player
-            Vector2f playerPosition = Game.Instance.PLAYER.Sprite.Position;
+            Vector2f playerPosition = Game.Instance.PLAYER.GetPosition();
 
             // get a random position in a radius arround the player
             Random random = new Random();

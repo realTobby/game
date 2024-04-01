@@ -12,6 +12,21 @@ namespace sfmlgame.UI
         private UIBinding<string> textBinding;
         private string defaultText = string.Empty;
 
+        public UI_Text(Vector2f parentOrigin, string text, int size, Vector2f pos, UIBinding<string> textBinding) : base(pos)
+        {
+            textComp = new Text(text, GameAssets.Instance.pixelFont1, (uint)size);
+            this.textBinding = textBinding;
+            defaultText = text;
+
+            textComp.Color = Color.Black;
+
+            textComp.OutlineColor = Color.White;
+            textComp.OutlineThickness = 3f;
+
+            textComp.Position = pos;
+            textComp.Origin = parentOrigin / 2;
+        }
+
         public UI_Text(string text, int size, Vector2f pos, UIBinding<string> textBinding) : base(pos)
         {
             textComp = new Text(text, GameAssets.Instance.pixelFont1, (uint)size);
@@ -25,6 +40,8 @@ namespace sfmlgame.UI
 
             textComp.Position = pos;
         }
+
+        
 
         public UI_Text(string text, int size, Vector2f pos) : base(pos)
         {

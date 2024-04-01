@@ -27,18 +27,18 @@ namespace sfmlgame.Entities.Abilitites
             this.orbitRadius = orbitRadius;
 
             // Calculate initial angle based on the initial position
-            Vector2f direction = initialPosition - player.Sprite.Position;
+            Vector2f direction = initialPosition - player.GetPosition();
             this.currentAngle = MathF.Atan2(direction.Y, direction.X);
 
            
             Damage = 1; // Set according to your game's needs
 
-            CanCheckCollision = true;
+            
 
             MaxHit = 5;
 
             //base.animateSpriteComponent = new AnimatedSprite(GameAssets.GetTile(TileType.Skull), initialPosition);
-
+            CanCheckCollision = true;
             SetPosition(initialPosition);
         }
 
@@ -63,8 +63,8 @@ namespace sfmlgame.Entities.Abilitites
 
             // Calculate new position
             Vector2f newPosition = new Vector2f(
-                player.Sprite.Position.X + MathF.Cos(currentAngle) * orbitRadius,
-                player.Sprite.Position.Y + MathF.Sin(currentAngle) * orbitRadius
+                player.GetPosition().X + MathF.Cos(currentAngle) * orbitRadius,
+                player.GetPosition().Y + MathF.Sin(currentAngle) * orbitRadius
             );
 
             SetPosition(newPosition);

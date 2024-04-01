@@ -42,8 +42,8 @@ namespace sfmlgame.Abilities
                 {
                     float angle = angleIncrement * i * (MathF.PI / 180);
                     Vector2f spawnPosition = new Vector2f(
-                        player.Sprite.Position.X + MathF.Cos(angle) * circleRadius,
-                        player.Sprite.Position.Y + MathF.Sin(angle) * circleRadius
+                        player.GetPosition().X + MathF.Cos(angle) * circleRadius,
+                        player.GetPosition().Y + MathF.Sin(angle) * circleRadius
                     );
 
                     var orbitalEntity = Game.Instance.EntityManager.CreateAbilityEntity(spawnPosition, typeof(OrbitalEntity)) as OrbitalEntity;

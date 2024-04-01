@@ -39,9 +39,24 @@ namespace sfmlgame.World
                 for (int y = 0; y < chunkSize; y++)
                 {
                     Vector2f tilePosition = new Vector2f(Position.X * chunkSize * tileSize + x * tileSize, Position.Y * chunkSize * tileSize + y * tileSize);
-                    tiles.Add(new WorldTile(tileTexture, tilePosition)); // Assuming Tile constructor is (Texture, Vector2f)
+
+                    var newTile = new WorldTile(tileTexture, tilePosition); // Assuming Tile constructor is (Texture, Vector2f)
+
+                    if (x == chunkSize/2 && y == chunkSize/2)
+                    {
+                        newTile.Object = new WorldTile(GameAssets.Instance.GetTileSprite(TileType.Station), tilePosition);
+                        newTile.Object.Sprite.Position = tilePosition;
+
+
+                    }
+
+                    tiles.Add(newTile);
+
                 }
             }
+
+
+
         }
 
         // Updates the chunk, if there's any dynamic content or logic to process

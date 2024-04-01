@@ -21,6 +21,9 @@ namespace sfmlgame
         private RenderWindow _gameWindow;
         private RenderTexture gameRenderTexture;
         private RenderTexture uiRenderTexture;
+
+
+
         public View CAMERA;
 
         public UIManager UIManager;
@@ -36,9 +39,11 @@ namespace sfmlgame
 
         public WaveManager WaveManager;
 
-        public SoundManager SoundManager;
+        public UI_PowerupMenu MainPowerUpMenu;
 
         public bool Debug = false;
+
+        public bool GamePaused = false;
 
         private void LoadCRTShader()
         {
@@ -59,9 +64,7 @@ namespace sfmlgame
 
             world = new WorldManager(18);
 
-            PLAYER = new Player(GameAssets.Instance.TextureLoader.GetTexture("priestess_0", "Entities/priestess"), new Vector2f(16*16, 16*16), world);
-
-            SoundManager = new SoundManager();
+            
 
             var mode = VideoMode.FullscreenModes[0];
             _gameWindow = new RenderWindow(mode, "Game", Styles.Fullscreen); // Set window to fullscreen
@@ -77,20 +80,17 @@ namespace sfmlgame
 
             UIManager = new UIManager();
 
-           
             
 
-            AttachCamera(PLAYER);
+            
+
+            
 
             //world.GenerateAround(player.Sprite.Position, grasTile); // Now generate the world around the player
 
             CRTShader.SetUniform("resolution", new Vector2f(gameRenderTexture.Size.X, gameRenderTexture.Size.Y));
 
-            world.ManageChunks(PLAYER.Sprite.Position);
-
-            EntityManager = new EntityManager();
-
-            WaveManager = new WaveManager();
+            
             
         }
 
@@ -127,7 +127,7 @@ namespace sfmlgame
                 //UniversalLog.LogInfo("can create new wave!");
                 EnemyWave wave = new EnemyWave(1f, 25f);
 
-                Vector2f point = PLAYER.Sprite.Position;
+                Vector2f point = PLAYER.GetPosition();
                 float radius = 300f;
 
                 // TEST: wave.AddSpawnPosition(new Vector2f(100, 100));
@@ -156,8 +156,7 @@ namespace sfmlgame
 
         public void Run()
         {
-            lastPlayerChunkIndex = world.CalculateChunkIndex(PLAYER.Sprite.Position);
-
+           
             //UI_DamageNumber test = new UI_DamageNumber(-1, new Vector2f(0, 0), 1000);
             //UIManager.AddComponent(test);
             UIBinding<string> fpsBinding = new UIBinding<string>(() => GetFPS());
@@ -168,9 +167,29 @@ namespace sfmlgame
             UI_Text soundChannels = new UI_Text("Sound Channels: ", 36, new Vector2f(10, _gameWindow.Size.Y - 100), soundChannelsBinding);
             UIManager.AddComponent(soundChannels);
 
+            UIBinding<string> entityCountBinding = new UIBinding<string>(() => EntityManager.AllEntities.Count().ToString());
+            UI_Text entityCountText = new UI_Text("Entity Count: ", 36, new Vector2f(10, _gameWindow.Size.Y - 150), entityCountBinding);
+            UIManager.AddComponent(entityCountText);
+
+            PLAYER = new Player(GameAssets.Instance.TextureLoader.GetTexture("priestess_0", "Entities/priestess"), new Vector2f(16 * 16, 16 * 16), world);
+            lastPlayerChunkIndex = world.CalculateChunkIndex(PLAYER.GetPosition());
+            AttachCamera(PLAYER);
+
+            MainPowerUpMenu = new UI_PowerupMenu((Vector2f)_gameWindow.Size/2);
+            UIManager.AddComponent(MainPowerUpMenu);
+
+            world.ManageChunks(PLAYER.GetPosition());
+
+            EntityManager = new EntityManager();
+
+            WaveManager = new WaveManager();
+
+            PLAYER.LevelUp(1);
+
             while (_gameWindow.IsOpen)
             {
                 _gameWindow.DispatchEvents();
+                
                 Update();
                 Draw();
             }
@@ -197,16 +216,21 @@ namespace sfmlgame
 
             UIManager.Update(frameTime);
 
+            if(GamePaused)
+            {
+                return;
+            }
+
             PLAYER.Update(frameTime);
 
-            Vector2i currentPlayerChunkIndex = world.CalculateChunkIndex(PLAYER.Sprite.Position);
+            Vector2i currentPlayerChunkIndex = world.CalculateChunkIndex(PLAYER.GetPosition());
             if (currentPlayerChunkIndex != lastPlayerChunkIndex)
             {
                 //world.Update(player.Sprite.Position, grasTile);
                 lastPlayerChunkIndex = currentPlayerChunkIndex;
             }
 
-            world.Update(PLAYER.Sprite.Position);
+            world.Update(PLAYER.GetPosition());
 
             UpdateEnemyWave();
 
@@ -220,14 +244,31 @@ namespace sfmlgame
 
         private void Draw()
         {
+            float frameTime = DELTATIME;
+
+            frameCount++;
+            float currentTime = fpsClock.ElapsedTime.AsSeconds();
+            float deltaTime = currentTime - lastTime;
+
+            // Calculate FPS every second
+            if (deltaTime >= 1.0f)
+            {
+                int fps = frameCount;
+                frameCount = 0;
+                lastTime += deltaTime;
+                LastCalculatedFPS = fps;
+            }
+
             // First, clear the RenderTexture and draw the game world and player onto it
             gameRenderTexture.Clear(Color.Black);
             uiRenderTexture.Clear(Color.Transparent);
             // Ensure the RenderTexture uses the camera's view for rendering the scene
             gameRenderTexture.SetView(CAMERA);
             world.Draw(gameRenderTexture);
-            EntityManager.DrawEntities(gameRenderTexture, DELTATIME);
-            gameRenderTexture.Draw(PLAYER.Sprite);
+            EntityManager.DrawEntities(gameRenderTexture, frameTime);
+
+
+            PLAYER.Draw(gameRenderTexture, frameTime);
 
             // draw ui
 
@@ -255,14 +296,14 @@ namespace sfmlgame
         public void AttachCamera(Player entity)
         {
             // Create a new view centered around the entity's position with the desired size
-            CAMERA = new View(entity.Sprite.Position, new Vector2f(640, 480)); // Window size as view size 640x480
+            CAMERA = new View(entity.GetPosition(), new Vector2f(640, 480)); // Window size as view size 640x480
         }
 
         private void UpdateCameraPosition()
         {
             if (CAMERA != null && PLAYER != null)
             {
-                CAMERA.Center = PLAYER.Sprite.Position;
+                CAMERA.Center = PLAYER.GetPosition();
                 _gameWindow.SetView(CAMERA);
             }
         }

@@ -5,6 +5,7 @@ using game.Entities.Enemies;
 using SFML.System;
 using sfmlgame.Entities;
 using sfmlgame.Entities.Abilitites;
+using sfmlgame.Entities.Pickups;
 using sfmlgame.Managers;
 
 namespace sfmlgame.Entities
@@ -159,6 +160,27 @@ namespace sfmlgame.Entities
             // Activate the entity
             //freeAbilityEntity.IsActive = true; NEVER RETURN AN ALREADY ACTIVE ENTITY, IF THE WRONG LOGIC CATCHES THEM, THEY ARE INSTANTLY INACTIVE LOL
             return freeAbilityEntity;
+        }
+
+        public Gem CreateGem(float XP, Vector2f pos)
+        {
+            Gem freeGem = NoEnemyEntities.FirstOrDefault(x => !x.IsActive && x.GetType() == typeof(Gem)) as Gem;
+
+            if (freeGem == null)
+            {
+                freeGem = new Gem(pos);
+                allEntities.Add(freeGem);
+
+            }
+
+            freeGem.ResetFromPool(pos);
+
+            return freeGem;
+        }
+
+        public void AddMaxGemEntity(MaxiGem maxiGem)
+        {
+            allEntities.Add(maxiGem);
         }
     }
 }

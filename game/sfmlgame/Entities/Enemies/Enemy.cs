@@ -5,6 +5,7 @@ using SFML.System;
 using sfmlgame;
 using sfmlgame.Entities;
 using sfmlgame.Entities.Abilitites;
+using sfmlgame.Entities.Pickups;
 using sfmlgame.Managers;
 using System;
 using System.Collections.Generic;
@@ -65,7 +66,7 @@ namespace game.Entities.Enemies
 
         private void CallDamageNumber(int damage)
         {
-            UniversalLog.LogInfo("NewDamageNumberHere");
+            //UniversalLog.LogInfo("NewDamageNumberHere");
             Game.Instance.UIManager.CreateDamageNumber(damage, GetPosition(), 0.5f);
            // GameScene.Instance._uiManager.CreateDamageNumber(damage, Position, GameScene.Instance._viewCamera.view, 0.45f);
         }
@@ -101,9 +102,8 @@ namespace game.Entities.Enemies
 
             if (HP <= 0)
             {
-                //var bluegem = EntityManager.Instance.CreateGem(1, this.Position); CREATE LOOTMANAGER THAT CAN SPAWN GEMS FOR XP
-                //EntityManager.Instance.AddEntity(bluegem);
-
+                var bluegem = Game.Instance.EntityManager.CreateGem(2, GetPosition());
+                bluegem.IsActive = true;
                 //GameScene.Instance._uiManager.RemoveComponent(hpBar);
 
                 IsActive = false;
@@ -111,7 +111,7 @@ namespace game.Entities.Enemies
 
                 //GameScene.Instance._uiManager.RemoveComponent(hpBar);
 
-                Game.Instance.PLAYER.NewRandomAbility();
+                //Game.Instance.PLAYER.NewRandomAbility();
 
                 return true;
             }
@@ -169,7 +169,7 @@ namespace game.Entities.Enemies
         {
             
             
-            Vector2f direction = player.Sprite.Position - GetPosition();
+            Vector2f direction = player.GetPosition() - GetPosition();
             float magnitude = (float)Math.Sqrt(direction.X * direction.X + direction.Y * direction.Y);
 
             if (magnitude != 0)

@@ -19,23 +19,27 @@ namespace sfmlgame.UI
         private Color hoverColor = Color.Yellow;
         private Color clickedColor = Color.Green;
 
-        
 
+        private RenderTexture lastRenderTarget;
 
         public UI_Button(Vector2f pos, string buttonText, int textSize, int width, int height, Sprite buttonSprite) : base(pos)
         {
-            _text = new UI_Text(buttonText, 16, pos);
+            _buttonSprite = buttonSprite;
+            _buttonSprite.Position = pos;
+            _buttonSprite.Color = normalColor;
+            _buttonSprite.Origin = new Vector2f(width / 2, height / 2);
+
+            _text = new sfmlgame.UI.UI_Text(_buttonSprite.Origin, buttonText, textSize, new Vector2f(pos.X + _buttonSprite.Texture.Size.X/2, pos.Y+ _buttonSprite.Texture.Size.Y/ 2), null);
             _textSize = textSize;
             _width = width;
             _height = height;
             _buttonText = buttonText;
-            _buttonSprite = buttonSprite;
-            _buttonSprite.Position = pos;
-            _buttonSprite.Color = normalColor;
+            
         }
 
         public override void Draw(RenderTexture renderTexture)
         {
+            lastRenderTarget = renderTexture;
 
             renderTexture.Draw(_buttonSprite);
 
@@ -45,34 +49,39 @@ namespace sfmlgame.UI
 
         public override void Update(float deltaTime)
         {
-            //var mousePos = Mouse.GetPosition();
+            var mousePos = Mouse.GetPosition();
 
-            //// Adjust mouse position based on the view offset
-            //mousePos.X += (int)Game.Instance.GetRenderWindow().GetView().Center.X - (int)Game.Instance.GetRenderWindow().Size.X / 2;
-            //mousePos.Y += (int)Game.Instance.GetRenderWindow().GetView().Center.Y - (int)Game.Instance.GetRenderWindow().Size.Y / 2;
+            if(lastRenderTarget != null)
+            {
+                // Adjust mouse position based on the view offset
+                mousePos.X += (int)lastRenderTarget.GetView().Center.X - (int)lastRenderTarget.GetView().Size.X / 2;
+                mousePos.Y += (int)lastRenderTarget.GetView().Center.Y - (int)lastRenderTarget.GetView().Size.Y / 2;
 
-            //FloatRect buttonBounds = _buttonSprite.GetGlobalBounds();
+                FloatRect buttonBounds = _buttonSprite.GetGlobalBounds();
 
-            //// Check if mouse is over the button
-            //if (buttonBounds.Contains(mousePos.X, mousePos.Y))
-            //{
-            //    // Mouse is over the button
-            //    _buttonSprite.Color = hoverColor;
+                // Check if mouse is over the button
+                if (buttonBounds.Contains(mousePos.X, mousePos.Y))
+                {
+                    // Mouse is over the button
+                    _buttonSprite.Color = hoverColor;
 
-            //    // Check if button is clicked
-            //    if (Mouse.IsButtonPressed(Mouse.Button.Left))
-            //    {
-            //        _buttonSprite.Color = clickedColor;
-            //        // Button click action here
-            //        ClickAction?.Invoke();
-            //    }
-            //}
-            //else
-            //{
-            //    _buttonSprite.Color = normalColor;
-            //}
+                    // Check if button is clicked
+                    if (Mouse.IsButtonPressed(Mouse.Button.Left))
+                    {
+                        _buttonSprite.Color = clickedColor;
+                        // Button click action here
+                        ClickAction?.Invoke();
+                    }
+                }
+                else
+                {
+                    _buttonSprite.Color = normalColor;
+                }
+            }
 
-            //_text.Update();
+            //_text.SetPosition(new Vector2f(pos.X + _buttonSprite.Texture.Size.X / 2, pos.Y + _buttonSprite.Texture.Size.Y / 2));
+
+            _text.Update(deltaTime);
         }
 
     }

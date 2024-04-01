@@ -9,36 +9,88 @@ using System.Threading.Tasks;
 using sfmlgame.World;
 using sfmlgame.Abilities;
 using System.Numerics;
+using sfmlgame.Managers;
+using sfmlgame.Entities.Pickups;
+using sfmlgame.UI;
 
 namespace sfmlgame.Entities
 {
-    public class Player
+    public class Player : Entity
     {
         private WorldManager world; // Reference to the World object
 
-        public Sprite Sprite;
-        private float speed = 200f;
+        //public Sprite Sprite;
+        private float speed = 75f;
 
         public Vector2i CurrentChunkIndex { get; private set; }
 
         public List<Ability> Abilities { get; private set; } = new List<Ability>();
 
-        public Player(Texture texture, Vector2f position, WorldManager world)
+        public int XP = 0;
+        public int NeededXP = 4;
+
+        public int Level = 1;
+
+        AbilityFactory abilityFactory;
+
+        public Player(Texture texture, Vector2f position, WorldManager world) : base("Entities/priestess","priestess", 5, position)
         {
             this.world = world; // Store the World reference
-            Sprite = new Sprite(texture) { Position = position };
 
-            // Calculate the center of the texture
-            Vector2f center = new Vector2f(texture.Size.X / 2f, texture.Size.Y / 2f);
-            // Set origin point to the center of the sprite
-            Sprite.Origin = center;
+            abilityFactory = new AbilityFactory();
 
-            // Abilities.Add(new OrbitalAbility(this, 3f, 5f, 50f, 25));
+            
 
-            Abilities.Add(new FireballAbility(this, 3f));
+            CanCheckCollision = true;
         }
 
+        
 
+        public void LevelUp(int levels)
+        {
+            
+
+            Level += levels;
+
+            Game.Instance.MainPowerUpMenu.OpenWindow();
+            
+            var newAbility = abilityFactory.CreateRandomAbility(this);
+
+            Abilities.Add(newAbility);
+
+            SoundManager.Instance.PlayLevelUp();
+        }
+
+        private void CheckCollisionWithPickups()
+        {
+            foreach (Gem gem in Game.Instance.EntityManager.AllEntities.OfType<Gem>().ToList().Where(x => x.IsActive))
+            {
+                if (base.CheckCollision(gem))
+                {
+                    int xpAmount = gem.Pickup();
+
+                    while (xpAmount > 0)
+                    {
+
+                        if (XP + xpAmount >= NeededXP)
+                        {
+                            xpAmount -= (NeededXP - XP);
+                            XP = 0;
+                            LevelUp(1);
+
+                            //powerupMenu.OpenWindow();
+                        }
+                        else
+                        {
+                            XP += xpAmount;
+                            xpAmount = 0;
+                            
+                        }
+                    }
+                    
+                }
+            }
+        }
 
         public Vector2i PreviousChunkIndex { get; private set; }
 
@@ -55,20 +107,31 @@ namespace sfmlgame.Entities
                 Game.Instance.Debug = !Game.Instance.Debug;
             }
 
-            Sprite.Position += movement;
+            SetPosition(GetPosition() + movement);
 
             if (world == null) return;
 
             PreviousChunkIndex = CurrentChunkIndex;
-            CurrentChunkIndex = world.CalculateChunkIndex(Sprite.Position);
+            CurrentChunkIndex = world.CalculateChunkIndex(GetPosition());
 
             // Check if the player has moved to a new chunk
             if (CurrentChunkIndex != PreviousChunkIndex)
             {
-                world.ManageChunks(Sprite.Position);
+                world.ManageChunks(GetPosition());
             }
 
             UpdatePlayerAbilities(deltaTime);
+
+            CheckCollisionWithPickups();
+
+            //CheckXP();
+
+        }
+
+        public override void Draw(RenderTexture renderTexture, float deltaTime)
+        {
+            base.Draw(renderTexture, deltaTime);
+
 
         }
 
@@ -92,6 +155,12 @@ namespace sfmlgame.Entities
             var newAbility = af.CreateRandomAbility(this);
             if(newAbility != null)
                 Abilities.Add(newAbility);
+        }
+
+        public override void ResetFromPool(Vector2f position)
+        {
+            // this hopefully never happens, thank you :) -Player
+            throw new NotImplementedException();
         }
     }
 }

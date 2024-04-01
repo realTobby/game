@@ -10,7 +10,8 @@ namespace sfmlgame.Assets
     public enum TileType
     {
         Grass,
-        Skull
+        Skull,
+        Station
         // Add other tile types as needed
     }
 
@@ -58,6 +59,7 @@ namespace sfmlgame.Assets
             // The coordinates will depend on your sprite sheet's layout
             sprites[TileType.Grass] = spriteLoader.GetSpriteFromSheet(0, 0);
             sprites[TileType.Skull] = spriteLoader.GetSpriteFromSheet(12, 34);
+            sprites[TileType.Station] = spriteLoader.GetSpriteFromSheet(5, 24);
             // Add other sprites as needed
         }
 

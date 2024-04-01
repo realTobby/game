@@ -22,17 +22,17 @@ namespace sfmlgame.Abilities
 
         public override void Activate()
         {
-            Enemy nearestEnemy = Game.Instance.EntityManager.FindNearestEnemy(player.Sprite.Position);
+            Enemy nearestEnemy = Game.Instance.EntityManager.FindNearestEnemy(player.GetPosition());
             if (nearestEnemy == null)
                 return;
 
-            FireballEntity? fireballEntity = Game.Instance.EntityManager.CreateAbilityEntity(player.Sprite.Position, typeof(FireballEntity)) as FireballEntity;
+            FireballEntity? fireballEntity = Game.Instance.EntityManager.CreateAbilityEntity(player.GetPosition(), typeof(FireballEntity)) as FireballEntity;
             if (fireballEntity == null) return;
 
             SoundManager.Instance.PlayFireProjectile();
 
             
-            fireballEntity.SetPosition(player.Sprite.Position);
+            fireballEntity.SetPosition(player.GetPosition());
             //EntityManager.Instance.AddEntity(new FireballEntity(player.Position, nearestEnemy));
 
 

@@ -28,7 +28,7 @@ namespace sfmlgame.Entities
 
         private void MoveTowardsPlayer(Player player, float deltaTime)
         {
-            Vector2f direction = player.Sprite.Position - GetPosition();
+            Vector2f direction = player.GetPosition() - GetPosition();
             float magnitude = (float)Math.Sqrt(direction.X * direction.X + direction.Y * direction.Y);
             direction = direction / magnitude; // Normalize the direction vector
             SetPosition(animateSpriteComponent.GetPosition() + direction * 300f * deltaTime);
@@ -79,7 +79,6 @@ namespace sfmlgame.Entities
 
         public Entity(Sprite sprite, Vector2f initialPosition)
         {
-
             animateSpriteComponent = new AnimatedSprite(sprite, initialPosition);
 
             animateSpriteComponent.SetPosition(initialPosition);
@@ -117,7 +116,7 @@ namespace sfmlgame.Entities
                 debugDraw.Position = new Vector2f(animateSpriteComponent.sprites[0].GetGlobalBounds().Left, animateSpriteComponent.sprites[0].GetGlobalBounds().Top);
                 debugDraw.Size = new Vector2f(animateSpriteComponent.sprites[0].GetGlobalBounds().Width, animateSpriteComponent.sprites[0].GetGlobalBounds().Height);
 
-                //debugDraw.Position = new Vector2f(GetPosition().X - width / 4, GetPosition().Y - height / 4);
+                //debugDraw.Position = new Vector2f(GetPosition().X  - width / 4, GetPosition().Y - height / 4);
             }
 
             if (IsMagnetized)
@@ -128,6 +127,7 @@ namespace sfmlgame.Entities
             SetHitBoxDimensions(new FloatRect(GetPosition().X - animateSpriteComponent.sprites[0].GetGlobalBounds().Width/2, GetPosition().Y - animateSpriteComponent.sprites[0].GetGlobalBounds().Height / 2, animateSpriteComponent.sprites[0].GetGlobalBounds().Width, animateSpriteComponent.sprites[0].GetGlobalBounds().Height));
         }
 
+
         private void ShowDebugBoundaries(RenderTexture target)
         {
             if(Game.Instance.Debug)
@@ -137,7 +137,6 @@ namespace sfmlgame.Entities
             }
             
         }
-
 
         public virtual void Draw(RenderTexture renderTexture, float deltaTime)
         {

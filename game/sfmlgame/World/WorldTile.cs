@@ -12,6 +12,8 @@ namespace sfmlgame.World
     {
         public Sprite Sprite;
 
+        public WorldTile Object;
+
         public WorldTile(Sprite texture, Vector2f position)
         {
             if (texture == null) return;
@@ -25,6 +27,11 @@ namespace sfmlgame.World
         public void Draw(RenderTexture target)
         {
             target.Draw(Sprite);
+
+            if(Object != null)
+            {
+                Object.Draw(target);
+            }
         }
     }
 }
