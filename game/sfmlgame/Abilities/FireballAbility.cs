@@ -1,6 +1,7 @@
 ﻿
 using game.Entities.Enemies;
 using SFML.System;
+using sfmlgame.Assets;
 using sfmlgame.Entities;
 using sfmlgame.Entities.Abilitites;
 using sfmlgame.Managers;
@@ -17,6 +18,8 @@ namespace sfmlgame.Abilities
             : base("Fireball", 1, cooldown)
         {
             this.player = player;
+
+            this.Icon = new SFML.Graphics.Sprite(GameAssets.Instance.TextureLoader.GetTexture("fireballIcon", "UI/Abilities"));
 
         }
 

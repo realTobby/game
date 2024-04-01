@@ -1,4 +1,5 @@
 ﻿using game.Entities;
+using SFML.Graphics;
 using SFML.System;
 using System;
 using System.Collections.Generic;
@@ -16,6 +17,8 @@ namespace sfmlgame.Abilities
         public float LastActivatedTime { get; set; }
 
         public Clock abilityClock = new Clock();
+
+        public Sprite Icon;
 
         public Ability(string name, int damage, float cooldown)
         {

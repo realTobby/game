@@ -11,7 +11,10 @@ namespace sfmlgame.Assets
     {
         Grass,
         Skull,
-        Station
+        Station,
+        TreeObject,
+        WaterTile,
+        Rock
         // Add other tile types as needed
     }
 
@@ -60,6 +63,10 @@ namespace sfmlgame.Assets
             sprites[TileType.Grass] = spriteLoader.GetSpriteFromSheet(0, 0);
             sprites[TileType.Skull] = spriteLoader.GetSpriteFromSheet(12, 34);
             sprites[TileType.Station] = spriteLoader.GetSpriteFromSheet(5, 24);
+
+            sprites[TileType.WaterTile] = spriteLoader.GetSpriteFromSheet(1, 0);
+            sprites[TileType.TreeObject] = spriteLoader.GetSpriteFromSheet(2, 0);
+            sprites[TileType.Rock] = spriteLoader.GetSpriteFromSheet(3, 0);
             // Add other sprites as needed
         }
 

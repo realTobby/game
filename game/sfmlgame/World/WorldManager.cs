@@ -1,4 +1,5 @@
-﻿using SFML.Graphics;
+﻿using sfmglame.Helpers;
+using SFML.Graphics;
 using SFML.System;
 using sfmlgame.Assets;
 using System;
@@ -10,6 +11,8 @@ namespace sfmlgame.World
 {
     public class WorldManager
     {
+        public static PerlinNoise perlin = new PerlinNoise(187133610);
+
         private Dictionary<Vector2i, Chunk> activeChunks = new Dictionary<Vector2i, Chunk>();
         private Queue<Chunk> chunkPool = new Queue<Chunk>();
         private int chunkSize = 32; // Size of a chunk (pixels)

@@ -34,30 +34,109 @@ namespace sfmlgame.World
             Position = newPosition;
             tiles.Clear();
 
+            double scale = 0.1; // Adjust for more or less frequent terrain changes
+            double z = 0; // Keep constant if you want a 2D noise
+
             for (int x = 0; x < chunkSize; x++)
             {
                 for (int y = 0; y < chunkSize; y++)
                 {
+                    double noiseValue = WorldManager.perlin.Noise((Position.X * chunkSize + x) * scale, (Position.Y * chunkSize + y) * scale, z);
+                    TileType type = DetermineTileTypeBasedOnNoise(noiseValue);
                     Vector2f tilePosition = new Vector2f(Position.X * chunkSize * tileSize + x * tileSize, Position.Y * chunkSize * tileSize + y * tileSize);
 
-                    var newTile = new WorldTile(tileTexture, tilePosition); // Assuming Tile constructor is (Texture, Vector2f)
-
-                    if (x == chunkSize/2 && y == chunkSize/2)
-                    {
-                        newTile.Object = new WorldTile(GameAssets.Instance.GetTileSprite(TileType.Station), tilePosition);
-                        newTile.Object.Sprite.Position = tilePosition;
-
-
-                    }
-
+                    // Get the corresponding sprite for the determined tile type
+                    Sprite sprite = GameAssets.Instance.GetTileSprite(type);
+                    var newTile = new WorldTile(sprite, tilePosition);
                     tiles.Add(newTile);
-
                 }
             }
 
+            AddWaterBodies();
 
 
         }
+
+        public const int MaxWaterSeedsPerChunk = 2;
+
+        public void AddWaterBodies()
+        {
+            double scale = 0.1; // Increased scale for more granularity
+            double threshold = 0.3; // Adjusted threshold
+            int maxRadius = 5; // Reduced radius size
+            Random rnd = new Random();
+            HashSet<Vector2i> waterSeeds = new HashSet<Vector2i>(); // To ensure we don't create overlapping seeds
+
+            for (int x = 0; x < chunkSize; x++)
+            {
+                for (int y = 0; y < chunkSize; y++)
+                {
+                    // Convert chunk indices to world position
+                    int worldX = Position.X * chunkSize + x;
+                    int worldY = Position.Y * chunkSize + y;
+
+                    // Use world position for noise calculation
+                    double noiseValue = WorldManager.perlin.Noise(worldX * scale, worldY * scale, 0);
+                    if (noiseValue > threshold && waterSeeds.Count < MaxWaterSeedsPerChunk) // Limit the number of seeds
+                    {
+                        // This tile is a seed for a water body
+                        int radius = rnd.Next(2, maxRadius); // Reduced range for variability
+                        for (int dx = -radius; dx <= radius; dx++)
+                        {
+                            for (int dy = -radius; dy <= radius; dy++)
+                            {
+                                // Calculate the position of the neighbor tile
+                                int neighborX = worldX + dx;
+                                int neighborY = worldY + dy;
+                                // Check if the neighbor is within the radius
+                                if (Math.Sqrt(dx * dx + dy * dy) <= radius)
+                                {
+                                    // Convert neighbor world position back to chunk indices
+                                    int targetX = neighborX - (Position.X * chunkSize);
+                                    int targetY = neighborY - (Position.Y * chunkSize);
+                                    if (targetX >= 0 && targetX < chunkSize && targetY >= 0 && targetY < chunkSize)
+                                    {
+                                        SetTileTypeAtPosition(targetX, targetY, TileType.WaterTile);
+                                    }
+                                }
+                            }
+                        }
+                        // Add the seed to the set
+                        waterSeeds.Add(new Vector2i(worldX, worldY));
+                    }
+                }
+            }
+        }
+
+
+
+
+        private void SetTileTypeAtPosition(int targetX, int targetY, TileType waterTile)
+        {
+            // Get the corresponding sprite for the determined tile type
+            Sprite waterTileSprite = GameAssets.Instance.GetTileSprite(waterTile);
+
+            var tileToChange = tiles.Where(x => x.Sprite.Position.X == targetX && x.Sprite.Position.Y == targetY).FirstOrDefault();
+
+            tiles.Remove(tileToChange);
+
+            if(tileToChange != null)
+            {
+                tiles.Add(new WorldTile(waterTileSprite, new Vector2f(targetX, targetY)));
+            }
+        }
+
+        private TileType DetermineTileTypeBasedOnNoise(double noiseValue)
+        {
+            // Adjust the ranges to make grass more common and water less common.
+            // The noiseValue will mostly fall into the range for grass, with smaller ranges for water (to simulate ponds or lakes)
+            if (noiseValue < 0.3) return TileType.Grass; // Most of the terrain is grass
+            else if (noiseValue < 0.5) return TileType.Grass; // More grass
+            else if (noiseValue < 0.55) return TileType.Rock; // Introduce some rocks
+                                                              // You can continue with other terrains, ensuring grass remains predominant
+            else return TileType.TreeObject; // Default to other types of terrain for higher noise values
+        }
+
 
         // Updates the chunk, if there's any dynamic content or logic to process
         public void Update(float deltaTime)

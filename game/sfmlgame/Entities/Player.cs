@@ -54,9 +54,9 @@ namespace sfmlgame.Entities
 
             Game.Instance.MainPowerUpMenu.OpenWindow();
             
-            var newAbility = abilityFactory.CreateRandomAbility(this);
+            //var newAbility = abilityFactory.CreateRandomAbility(this);
 
-            Abilities.Add(newAbility);
+            //Abilities.Add(newAbility);
 
             SoundManager.Instance.PlayLevelUp();
         }
@@ -147,14 +147,6 @@ namespace sfmlgame.Entities
                     ability.LastActivatedTime = ability.abilityClock.Restart().AsSeconds();
                 }
             }
-        }
-
-        public void NewRandomAbility()
-        {
-            AbilityFactory af = new AbilityFactory();
-            var newAbility = af.CreateRandomAbility(this);
-            if(newAbility != null)
-                Abilities.Add(newAbility);
         }
 
         public override void ResetFromPool(Vector2f position)

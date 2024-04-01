@@ -1,6 +1,7 @@
 ﻿using game.Entities.Abilitites;
 
 using SFML.System;
+using sfmlgame.Assets;
 
 
 namespace sfmlgame.Abilities
@@ -9,6 +10,7 @@ namespace sfmlgame.Abilities
     {
         public ThunderStrikeAbility(float cooldown) : base("´ThunderStrike", 1, cooldown)
         {
+            this.Icon = new SFML.Graphics.Sprite(GameAssets.Instance.TextureLoader.GetTexture("thunderIcon", "UI/Abilities"));
         }
 
         public override void Activate()

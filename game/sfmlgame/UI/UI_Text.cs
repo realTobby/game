@@ -2,13 +2,14 @@
 using SFML.Graphics;
 using SFML.System;
 using sfmlgame.Assets;
+using System.Drawing;
 
 
 namespace sfmlgame.UI
 {
     public class UI_Text : UIComponent
     {
-        internal Text textComp;
+        internal SFML.Graphics.Text textComp;
         private UIBinding<string> textBinding;
         private string defaultText = string.Empty;
 
@@ -18,9 +19,9 @@ namespace sfmlgame.UI
             this.textBinding = textBinding;
             defaultText = text;
 
-            textComp.Color = Color.Black;
+            textComp.Color = SFML.Graphics.Color.Black;
 
-            textComp.OutlineColor = Color.White;
+            textComp.OutlineColor = SFML.Graphics.Color.White;
             textComp.OutlineThickness = 3f;
 
             textComp.Position = pos;
@@ -33,9 +34,9 @@ namespace sfmlgame.UI
             this.textBinding = textBinding;
             defaultText = text;
 
-            textComp.Color = Color.Black;
+            textComp.Color = SFML.Graphics.Color.Black;
 
-            textComp.OutlineColor = Color.White;
+            textComp.OutlineColor = SFML.Graphics.Color.White;
             textComp.OutlineThickness = 3f;
 
             textComp.Position = pos;
@@ -49,9 +50,24 @@ namespace sfmlgame.UI
             this.textBinding = null;
             defaultText = text;
 
-            textComp.Color = Color.Black;
+            textComp.Color = SFML.Graphics.Color.Black;
 
-            textComp.OutlineColor = Color.White;
+            textComp.OutlineColor = SFML.Graphics.Color.White;
+            textComp.OutlineThickness = 1.25f;
+
+            textComp.Position = pos;
+        }
+
+        public void SetText(string newText, uint size)
+        {
+            var pos = textComp.Position;
+
+            textComp = new SFML.Graphics.Text(newText, GameAssets.Instance.pixelFont1, size);
+            this.textBinding = null;
+
+            textComp.Color = SFML.Graphics.Color.Black;
+
+            textComp.OutlineColor = SFML.Graphics.Color.White;
             textComp.OutlineThickness = 1.25f;
 
             textComp.Position = pos;
@@ -76,11 +92,11 @@ namespace sfmlgame.UI
             textComp.CharacterSize = size;
         }
 
-        public void SetColor(Color c)
+        public void SetColor(SFML.Graphics.Color c)
         {
             textComp.Color = c;
             textComp.FillColor = c;
-            textComp.OutlineColor = new Color(textComp.OutlineColor.R, textComp.OutlineColor.G, textComp.OutlineColor.B, c.A);
+            textComp.OutlineColor = new SFML.Graphics.Color(textComp.OutlineColor.R, textComp.OutlineColor.G, textComp.OutlineColor.B, c.A);
         }
 
         public override void Draw(RenderTexture renderTexture)

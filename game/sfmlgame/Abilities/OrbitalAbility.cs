@@ -1,6 +1,7 @@
 ﻿
 using sfmglame.Helpers;
 using SFML.System;
+using sfmlgame.Assets;
 using sfmlgame.Entities;
 using sfmlgame.Entities.Abilitites;
 
@@ -27,6 +28,7 @@ namespace sfmlgame.Abilities
 
             orbitals = new List<OrbitalEntity>();
 
+            this.Icon = new SFML.Graphics.Sprite(GameAssets.Instance.TextureLoader.GetTexture("orbitIcon", "UI/Abilities"));
         }
 
         public override void Activate()
