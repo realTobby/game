@@ -18,9 +18,15 @@ namespace sfmlgame.UI
 
         private UI_Text abilityName;
 
+        private RectangleShape iconBorder = new RectangleShape();
+
         public UI_PowerUpButton(Vector2f pos, string buttonText, int textSize, int width, int height, Sprite buttonSprite) : base(pos, buttonText, textSize, width, height, buttonSprite)
         {
 
+            iconBorder = new RectangleShape(new Vector2f(150, 150));
+            iconBorder.FillColor = Color.Transparent;
+            iconBorder.OutlineColor = Color.Black;
+            iconBorder.OutlineThickness = 2;
 
         }
 
@@ -36,8 +42,8 @@ namespace sfmlgame.UI
             
             renderTexture.Draw(uiAbilityIcon);
 
-            
 
+            renderTexture.Draw(iconBorder);
         }
 
         public void Reset(Ability availableAbility)
@@ -50,6 +56,8 @@ namespace sfmlgame.UI
             uiAbilityIcon = availableAbility.Icon;
 
             uiAbilityIcon.Position = new Vector2f(Position.X, Position.Y);
+
+            iconBorder.Position = uiAbilityIcon.Position;
 
             base._text.SetText(AbilityUpgrade.Name, 36);
 

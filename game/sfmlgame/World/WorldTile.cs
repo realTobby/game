@@ -1,5 +1,6 @@
 ﻿using SFML.Graphics;
 using SFML.System;
+using sfmlgame.Assets;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,8 +15,12 @@ namespace sfmlgame.World
 
         public WorldTile Object;
 
-        public WorldTile(Sprite texture, Vector2f position)
+        public TileType Type;
+
+        public WorldTile(Sprite texture, Vector2f position, TileType type)
         {
+            Type = type;
+
             if (texture == null) return;
 
             Sprite = new Sprite(texture)

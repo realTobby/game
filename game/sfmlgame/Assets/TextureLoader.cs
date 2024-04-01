@@ -22,10 +22,14 @@ namespace sfmlgame.Assets
         public Texture GetTexture(string textureName, string category)
         {
             string key = $"{category}/{textureName}";
-            if (!TextureCache.ContainsKey(key))
+
+            if(TextureCache.ContainsKey(key))
             {
-                TextureCache.Add(key, new Texture($"Assets/{category}/{textureName}.png"));
+                return TextureCache[key];
             }
+
+            TextureCache.Add(key, new Texture($"Assets/{category}/{textureName}.png"));
+
             return TextureCache[key];
         }
 
