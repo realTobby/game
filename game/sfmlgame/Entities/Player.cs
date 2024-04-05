@@ -132,6 +132,8 @@ namespace sfmlgame.Entities
 
         public void Update(float deltaTime)
         {
+            
+
             Vector2f movement = new Vector2f();
             if (Keyboard.IsKeyPressed(Keyboard.Key.W)) movement.Y -= speed * deltaTime;
             if (Keyboard.IsKeyPressed(Keyboard.Key.S)) movement.Y += speed * deltaTime;
@@ -162,13 +164,13 @@ namespace sfmlgame.Entities
 
             //CheckXP();
 
+            base.Update(this, deltaTime);
+
         }
 
         public override void Draw(RenderTexture renderTexture, float deltaTime)
         {
             base.Draw(renderTexture, deltaTime);
-
-
         }
 
         private void UpdatePlayerAbilities(float deltaTime)

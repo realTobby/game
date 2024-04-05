@@ -24,6 +24,8 @@ namespace sfmlgame.Entities.Abilitites
 
         public override void ResetFromPool(Vector2f position)
         {
+            IsActive = true;
+            
             CanCheckCollision = true;
             SetPosition(position);
             //IsActive = true;

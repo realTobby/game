@@ -3,8 +3,10 @@ using System.Threading.Tasks;
 using game.Entities.Abilitites;
 using game.Entities.Enemies;
 using sfmglame.Helpers;
+using SFML.Graphics;
 using SFML.System;
 using sfmlgame.Abilities;
+using sfmlgame.Assets;
 using sfmlgame.Entities;
 using sfmlgame.Entities.Abilitites;
 using sfmlgame.Entities.Pickups;
@@ -124,6 +126,26 @@ namespace sfmlgame.Entities
             return MathF.Sqrt(dx * dx + dy * dy);
         }
 
+        public BombEntity CreateBombEntity(Vector2f spawnPos, Vector2f targetPos)
+        {
+            BombEntity freeBombEntity = AbilityEntities.FirstOrDefault(x => !x.IsActive && x.GetType() == typeof(BombEntity)) as BombEntity;
+
+            if (freeBombEntity == null)
+            {
+                freeBombEntity = new BombEntity("BOMB", spawnPos, targetPos);
+
+                allEntities.Add(freeBombEntity);
+               // Game.Instance.PLAYER.SetPosition(targetPos);
+            }
+            else
+            {
+                freeBombEntity.ResetFromPool(spawnPos);
+            }
+
+            
+
+            return freeBombEntity;
+        }
 
         public AbilityEntity CreateAbilityEntity(Vector2f pos, Type abilityType)
         {
@@ -150,6 +172,8 @@ namespace sfmlgame.Entities
                     freeAbilityEntity = new OrbitalEntity(Game.Instance.PLAYER, pos, 0, 0);
                     //freeAbilityEntity.IsActive = true;
                 }
+
+                
 
                 if (freeAbilityEntity != null)
                 {

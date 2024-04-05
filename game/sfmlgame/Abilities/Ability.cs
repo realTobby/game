@@ -31,7 +31,10 @@ namespace sfmlgame.Abilities
 
         public abstract void Activate();
 
-        public abstract void Update();
+        public virtual void Update()
+        {
+
+        }
 
     }
 }

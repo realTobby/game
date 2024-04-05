@@ -18,6 +18,9 @@
     <None Update="Assets\BGM\Venus.wav">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Assets\Entities\Abilities\bomb.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Assets\Entities\Abilities\burning_loop_1.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

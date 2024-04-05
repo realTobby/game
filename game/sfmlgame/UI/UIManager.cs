@@ -1,4 +1,5 @@
 ﻿
+using sfmglame.Helpers;
 using SFML.Graphics;
 using SFML.System;
 
@@ -38,19 +39,26 @@ namespace sfmlgame.UI
 
         public void CreateDamageNumber(int amount, Vector2f worldPos, float duration)
         {
-            // find non-active object
-            UI_DamageNumber freeDamageNumber = _components.Where(x => x.IsActive == false && x.GetType() == typeof(UI_DamageNumber)).FirstOrDefault() as UI_DamageNumber;
+            try
+            {
+                // find non-active object
+                UI_DamageNumber freeDamageNumber = _components.Where(x => x.IsActive == false && x.GetType() == typeof(UI_DamageNumber)).FirstOrDefault() as UI_DamageNumber;
 
-            if(freeDamageNumber == null)
+                if (freeDamageNumber == null)
+                {
+                    freeDamageNumber = new UI_DamageNumber(amount, worldPos, duration);
+                    _components.Add(freeDamageNumber);
+                }
+                else
+                {
+                    freeDamageNumber.ResetFromPool(worldPos);
+                    freeDamageNumber.IsActive = true;
+                }
+            }catch(Exception ex)
             {
-                freeDamageNumber = new UI_DamageNumber(amount, worldPos, duration);
-                _components.Add(freeDamageNumber);
+                UniversalLog.LogInfo("couldnt care less.");
             }
-            else
-            {
-                freeDamageNumber.ResetFromPool(worldPos);
-                freeDamageNumber.IsActive = true;
-            }
+            
 
         }
 

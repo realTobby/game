@@ -355,5 +355,12 @@ namespace sfmlgame
             // This uses the game window and the current view (CAMERA) to convert world coordinates to screen coordinates.
             return new Vector2f(realPos.X, realPos.Y);
         }
+
+        public Vector2f ConvertViewToWorldPosition(Vector2i viewPosition)
+        {
+            var realPos = _gameWindow.MapPixelToCoords(viewPosition);
+            // This uses the game window and the current view (CAMERA) to convert world coordinates to screen coordinates.
+            return new Vector2f(realPos.X, realPos.Y);
+        }
     }
 }

@@ -34,6 +34,9 @@ namespace sfmlgame.Abilities
             else if (abilityType == typeof(ThunderStrikeAbility))
             {
                 constructorArgs = new object[] { 5f }; // Assuming default cooldown
+            }else if(abilityType == typeof(BombAbility))
+            {
+                constructorArgs = new object[] { 1, 4f };
             }
 
 
@@ -45,6 +48,7 @@ namespace sfmlgame.Abilities
                     constructorArgs = new object[] { player, 1.25f };
                 }
             }
+
 
             if (constructorArgs != null)
             {

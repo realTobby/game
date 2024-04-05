@@ -160,6 +160,8 @@ namespace sfmlgame.Entities
 
         public bool CheckCollision(Entity other)
         {
+            if (other.CanCheckCollision == false) return false;
+
             if (!IsActive) return false;
 
             bool collided = animateSpriteComponent.sprites[0].GetGlobalBounds().Intersects(other.animateSpriteComponent.sprites[0].GetGlobalBounds());
