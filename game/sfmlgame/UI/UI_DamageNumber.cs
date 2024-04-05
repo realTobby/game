@@ -50,6 +50,7 @@ namespace sfmlgame.UI
             this.worldPosition = worldPos; // Store the original world position
             this.uiPosition = Game.Instance.ConvertWorldToViewPosition(worldPos); // Convert and store the initial screen position
             SetPosition(this.uiPosition); // You might not need this line if uiPosition is solely used for rendering
+            damageText.SetPosition(this.uiPosition);
             elapsedTime = 0;
         }
 

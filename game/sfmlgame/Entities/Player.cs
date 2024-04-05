@@ -63,36 +63,72 @@ namespace sfmlgame.Entities
 
         private void CheckCollisionWithPickups()
         {
-            foreach (Gem gem in Game.Instance.EntityManager.AllEntities.OfType<Gem>().ToList().Where(x => x.IsActive))
+            foreach (Pickup pickup in Game.Instance.EntityManager.AllEntities.OfType<Pickup>().Where(x => x.IsActive))
             {
-                if (base.CheckCollision(gem))
+                float distance = Vector2fDistance(this.GetPosition(), pickup.GetPosition());
+
+                if (distance <= pickupRadius)
                 {
-                    int xpAmount = gem.Pickup();
-
-                    while (xpAmount > 0)
+                    if (base.CheckCollision(pickup))
                     {
-
-                        if (XP + xpAmount >= NeededXP)
+                        switch (pickup)
                         {
-                            xpAmount -= (NeededXP - XP);
-                            XP = 0;
-                            LevelUp(1);
-
-                            //powerupMenu.OpenWindow();
-                        }
-                        else
-                        {
-                            XP += xpAmount;
-                            xpAmount = 0;
-                            
+                            case Gem gem:
+                                HandleGemPickup(gem);
+                                break;
+                            case Magnet magnet:
+                                HandleMagnetPickup(magnet);
+                                break;
+                            // Add cases for other Pickup types as necessary
+                            default:
+                                pickup.PickItUpInt(); // Fallback for pickups without specific handling
+                                break;
                         }
                     }
-                    
                 }
             }
         }
 
+        private void HandleGemPickup(Gem gem)
+        {
+            int xpAmount = gem.PickItUpInt(); // Or any specific logic for Gems
+            ProcessXP(xpAmount);
+        }
+
+        private void HandleMagnetPickup(Magnet magnet)
+        {
+            magnet.PickItUp(); // Or any specific logic for Magnets
+                               // Perhaps Magnets don't give XP but have another effect
+        }
+
+        private void ProcessXP(int xpAmount)
+        {
+            while (xpAmount > 0)
+            {
+                if (XP + xpAmount >= NeededXP)
+                {
+                    xpAmount -= (NeededXP - XP);
+                    XP = 0;
+                    LevelUp(1);
+                }
+                else
+                {
+                    XP += xpAmount;
+                    xpAmount = 0;
+                }
+            }
+        }
+
+
+        private float Vector2fDistance(Vector2f point1, Vector2f point2)
+        {
+            return (float)Math.Sqrt(Math.Pow(point2.X - point1.X, 2) + Math.Pow(point2.Y - point1.Y, 2));
+        }
+
         public Vector2i PreviousChunkIndex { get; private set; }
+
+        private float pickupRadius = 100f; // 100 pixels as an example, adjust based on your game's scale
+
 
         public void Update(float deltaTime)
         {
@@ -107,7 +143,7 @@ namespace sfmlgame.Entities
                 Game.Instance.Debug = !Game.Instance.Debug;
             }
 
-            SetPosition(GetPosition() + movement);
+            base.SetPosition(GetPosition() + movement);
 
             if (world == null) return;
 
@@ -137,7 +173,8 @@ namespace sfmlgame.Entities
 
         private void UpdatePlayerAbilities(float deltaTime)
         {
-            foreach (Ability ability in Abilities)
+            // Filter out abilities that are not FireballAbility and execute their logic
+            foreach (var ability in Abilities)
             {
                 ability.Update();
 
@@ -147,6 +184,7 @@ namespace sfmlgame.Entities
                     ability.LastActivatedTime = ability.abilityClock.Restart().AsSeconds();
                 }
             }
+
         }
 
         public override void ResetFromPool(Vector2f position)

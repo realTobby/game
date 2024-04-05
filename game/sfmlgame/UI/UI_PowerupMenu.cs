@@ -32,9 +32,9 @@ namespace sfmlgame.UI
             closeButton = new UI_Button(closeButtonPos, "Close", 46, 45, 25, new SFML.Graphics.Sprite(TextureLoader.Instance.GetTexture("button", "UI")));
             closeButton.ClickAction += CloseButton_ClickAction;
 
-            leftOption = new UI_PowerUpButton(new Vector2f(725, 600), string.Empty, 0, 250, 500, new SFML.Graphics.Sprite(TextureLoader.Instance.GetTexture("powrupButton", "UI")));
+            leftOption = new UI_PowerUpButton(new Vector2f(position.X-250, 600), string.Empty, 0, 250, 500, new SFML.Graphics.Sprite(TextureLoader.Instance.GetTexture("powrupButton", "UI")));
 
-            rightOption = new UI_PowerUpButton(new Vector2f(1150, 600), string.Empty, 0, 250, 500, new SFML.Graphics.Sprite(TextureLoader.Instance.GetTexture("powrupButton", "UI")));
+            rightOption = new UI_PowerUpButton(new Vector2f(position.X+250, 600), string.Empty, 0, 250, 500, new SFML.Graphics.Sprite(TextureLoader.Instance.GetTexture("powrupButton", "UI")));
 
 
             

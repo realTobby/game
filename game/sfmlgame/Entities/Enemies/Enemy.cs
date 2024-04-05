@@ -76,9 +76,19 @@ namespace game.Entities.Enemies
             IsActive = true;
             HP = MAXHP;
             SetPosition(position);
-
             CanCheckCollision = true;
-            //GameScene.Instance._uiManager.AddComponent(hpBar);
+
+            // Reset sprite colors to normal
+            if (base.animateSpriteComponent.NormalColors != null)
+            {
+                for (int i = 0; i < base.animateSpriteComponent.sprites.Count(); i++)
+                {
+                    base.animateSpriteComponent.sprites[i].Color = base.animateSpriteComponent.NormalColors[i];
+                }
+            }
+
+            // Reset other components as needed, for example:
+            // hpBar.Reset(); // If you have a method to reset the progress bar
         }
 
         public bool TakeDamage(int dmg)
@@ -102,16 +112,21 @@ namespace game.Entities.Enemies
 
             if (HP <= 0)
             {
-                var bluegem = Game.Instance.EntityManager.CreateGem(2, GetPosition());
-                bluegem.IsActive = true;
-                //GameScene.Instance._uiManager.RemoveComponent(hpBar);
+                var rndCall = Random.Shared.Next(0, 100);
+
+                if(rndCall < 98)
+                {
+                    var bluegem = Game.Instance.EntityManager.CreateGem(2, GetPosition());
+                    bluegem.IsActive = true;
+                }
+                else
+                {
+                    var magnet = Game.Instance.EntityManager.CreateMagnet(GetPosition());
+                    magnet.IsActive = true;
+                }
+
 
                 IsActive = false;
-                //EntityManager.Instance.RemoveEntity(this);
-
-                //GameScene.Instance._uiManager.RemoveComponent(hpBar);
-
-                //Game.Instance.PLAYER.NewRandomAbility();
 
                 return true;
             }

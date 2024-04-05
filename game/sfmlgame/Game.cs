@@ -22,7 +22,10 @@ namespace sfmlgame
         private RenderTexture gameRenderTexture;
         private RenderTexture uiRenderTexture;
 
-
+        public RenderWindow GetWindow()
+        {
+            return _gameWindow;
+        }
 
         public View CAMERA;
 
@@ -67,9 +70,11 @@ namespace sfmlgame
             
 
             var mode = VideoMode.FullscreenModes[0];
-            _gameWindow = new RenderWindow(mode, "Game", Styles.Fullscreen); // Set window to fullscreen
+            // [Vector2u] X(867) Y(1001)
+            _gameWindow = new RenderWindow(mode, "Game"); // Set window to fullscreen
             _gameWindow.SetFramerateLimit(60);
-            _gameWindow.SetVerticalSyncEnabled(true);
+            _gameWindow.SetVerticalSyncEnabled(false);
+
             _gameWindow.Closed += StopGame;
 
             gameRenderTexture = new RenderTexture(_gameWindow.Size.X, _gameWindow.Size.Y);
@@ -90,9 +95,20 @@ namespace sfmlgame
 
             CRTShader.SetUniform("resolution", new Vector2f(gameRenderTexture.Size.X, gameRenderTexture.Size.Y));
 
-            
-            
+            _gameWindow.SetMouseCursorVisible(false);
+
+            Texture cursorTexture = GameAssets.Instance.TextureLoader.GetTexture("handIcon", "Sprites");
+            cursorSprite = new Sprite(cursorTexture);
+
+            Texture cursorTextureClicked = GameAssets.Instance.TextureLoader.GetTexture("handIconClicked", "Sprites");
+            clickedCursorSprite = new Sprite(cursorTextureClicked);
+
         }
+
+        Sprite cursorSprite;
+
+        Sprite clickedCursorSprite;
+
 
         private Clock fpsClock = new Clock(); // A clock to keep track of time between frames
         private int frameCount = 0; // A counter for the frames
@@ -216,7 +232,15 @@ namespace sfmlgame
 
             UIManager.Update(frameTime);
 
-            if(GamePaused)
+            Vector2i mousePosition = Mouse.GetPosition(_gameWindow); // Get the mouse position relative to the window
+            cursorSprite.Position = new Vector2f(mousePosition.X, mousePosition.Y);
+
+            clickedCursorSprite.Position = new Vector2f(mousePosition.X, mousePosition.Y);
+
+            // change sprite to clicked if click
+
+
+            if (GamePaused)
             {
                 return;
             }
@@ -273,7 +297,16 @@ namespace sfmlgame
             // draw ui
 
             UIManager.Draw(uiRenderTexture);
-            
+
+            if(Mouse.IsButtonPressed(Mouse.Button.Left))
+            {
+                uiRenderTexture.Draw(clickedCursorSprite);
+            }
+            else
+            {
+                uiRenderTexture.Draw(cursorSprite);
+            }
+
             gameRenderTexture.Display(); // Finalize the scene on the RenderTexture
             uiRenderTexture.Display();
             _gameWindow.Clear();

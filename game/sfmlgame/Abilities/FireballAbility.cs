@@ -1,5 +1,4 @@
-﻿
-using game.Entities.Enemies;
+﻿using game.Entities.Enemies;
 using SFML.System;
 using sfmlgame.Assets;
 using sfmlgame.Entities;
@@ -23,8 +22,11 @@ namespace sfmlgame.Abilities
 
         }
 
+        public int LastFireballCount = 1;
+
         public override void Activate()
         {
+
             Enemy nearestEnemy = Game.Instance.EntityManager.FindNearestEnemy(player.GetPosition());
             if (nearestEnemy == null)
                 return;
@@ -34,17 +36,19 @@ namespace sfmlgame.Abilities
 
             SoundManager.Instance.PlayFireProjectile();
 
-            
+
             fireballEntity.SetPosition(player.GetPosition());
             //EntityManager.Instance.AddEntity(new FireballEntity(player.Position, nearestEnemy));
+
+            fireballEntity.SetTarget(nearestEnemy);
 
 
 
             abilityClock.Restart();
-            fireballEntity.SetTarget(nearestEnemy);
+
             //fireballEntity.IsActive = true;
 
-            
+
         }
 
         private Vector2f Normalize(Vector2f vector)

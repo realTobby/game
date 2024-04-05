@@ -25,7 +25,7 @@ namespace sfmlgame.Abilities
             object[]? constructorArgs = null;
             if (abilityType == typeof(FireballAbility))
             {
-                constructorArgs = new object[] { player, 1.25f };
+                constructorArgs = new object[] { player, 1.25f};
             }
             else if (abilityType == typeof(OrbitalAbility))
             {

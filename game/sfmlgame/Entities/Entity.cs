@@ -1,4 +1,5 @@
 ﻿
+using sfmglame.Helpers;
 using SFML.Graphics;
 using SFML.System;
 using sfmlgame.Framework;
@@ -39,6 +40,10 @@ namespace sfmlgame.Entities
 
         }
 
+        public void SetRotation(float rotation)
+        {
+            animateSpriteComponent.SetRotation(rotation);
+        }
 
         public void SetPosition(Vector2f pos)
         {
@@ -121,6 +126,7 @@ namespace sfmlgame.Entities
 
             if (IsMagnetized)
             {
+                UniversalLog.LogInfo("actually moving towards player!");
                 MoveTowardsPlayer(player, deltaTime);
             }
 

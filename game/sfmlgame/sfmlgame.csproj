@@ -81,6 +81,15 @@
     <None Update="Assets\Shaders\CRT.frag">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Assets\Sprites\handIcon.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\Sprites\handIconClicked.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\Entities\Pickups\magnet.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Assets\Sprites\spritesheet.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

@@ -2,7 +2,9 @@
 using System.Threading.Tasks;
 using game.Entities.Abilitites;
 using game.Entities.Enemies;
+using sfmglame.Helpers;
 using SFML.System;
+using sfmlgame.Abilities;
 using sfmlgame.Entities;
 using sfmlgame.Entities.Abilitites;
 using sfmlgame.Entities.Pickups;
@@ -38,6 +40,12 @@ namespace sfmlgame.Entities
         public void UpdateEntities(float frameTime)
         {
             //float lastFrameDeltaTime = Game.Instance.DELTATIME;
+
+            Parallel.ForEach(NoEnemyEntities.Where(a => (a is Pickup)), pickupEntity =>
+            {
+                pickupEntity.Update(Game.Instance.PLAYER, frameTime);
+                // Implement other entity-specific updates as needed
+            });
 
             // Using parallel foreach for thread-safe iteration and potential performance improvement
             Parallel.ForEach(Enemies, enemy =>
@@ -181,6 +189,31 @@ namespace sfmlgame.Entities
         public void AddMaxGemEntity(MaxiGem maxiGem)
         {
             allEntities.Add(maxiGem);
+        }
+
+        public Magnet CreateMagnet(Vector2f position)
+        {
+            Magnet freeMagnet = NoEnemyEntities.FirstOrDefault(x => !x.IsActive && x.GetType() == typeof(Magnet)) as Magnet;
+
+            if (freeMagnet == null)
+            {
+                freeMagnet = new Magnet(position);
+                allEntities.Add(freeMagnet);
+
+            }
+
+            freeMagnet.ResetFromPool(position);
+
+            return freeMagnet;
+        }
+
+        public void MagnetizeAllGems()
+        {
+            UniversalLog.LogInfo("magnetizing");
+            foreach(var gem in NoEnemyEntities.Where(x => x.IsActive && x.GetType() == typeof(Gem)))
+            {
+                gem.IsMagnetized = true;
+            }
         }
     }
 }

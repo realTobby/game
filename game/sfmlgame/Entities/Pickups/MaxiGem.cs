@@ -19,14 +19,11 @@ namespace sfmlgame.Entities.Pickups
 
         }
 
-        public override int Pickup()
+        public override void PickItUp()
         {
             SoundManager.Instance.PlayGemPickup();
 
             IsActive = false;
-            //EntityManager.Instance.RemoveEntity(this);
-
-            return XPGAIN;
         }
 
         public override void Update(Player player, float deltaTime)

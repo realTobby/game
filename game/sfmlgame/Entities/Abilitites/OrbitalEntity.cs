@@ -1,11 +1,10 @@
-﻿
-using game.Entities.Enemies;
+﻿using game.Entities.Enemies;
 using sfmglame.Helpers;
 using SFML.Graphics;
 using SFML.System;
 using sfmlgame.Assets;
 using sfmlgame.Framework;
-using static SFML.Window.Joystick;
+using System;
 
 namespace sfmlgame.Entities.Abilitites
 {
@@ -13,8 +12,13 @@ namespace sfmlgame.Entities.Abilitites
     {
         private Player orbitCenterPlayer;
         private float orbitSpeed;
-        private float orbitRadius;
+        private float baseOrbitRadius; // The base radius of the orbit
+        private float orbitRadius; // The actual orbit radius that will change
         private float currentAngle;
+
+        // New variables for sine-wave pattern
+        private float radiusAmplitude = 20f; // The maximum change in orbit radius
+        private float radiusFrequency = 2f; // How fast the orbit radius changes
 
         public int MaxHit = 1;
         Random rnd = new Random();
@@ -24,20 +28,14 @@ namespace sfmlgame.Entities.Abilitites
         {
             this.orbitCenterPlayer = player;
             this.orbitSpeed = orbitSpeed;
+            this.baseOrbitRadius = orbitRadius;
             this.orbitRadius = orbitRadius;
 
-            // Calculate initial angle based on the initial position
             Vector2f direction = initialPosition - player.GetPosition();
             this.currentAngle = MathF.Atan2(direction.Y, direction.X);
 
-           
             Damage = 1; // Set according to your game's needs
-
-            
-
             MaxHit = 5;
-
-            //base.animateSpriteComponent = new AnimatedSprite(GameAssets.GetTile(TileType.Skull), initialPosition);
             CanCheckCollision = true;
             SetPosition(initialPosition);
         }
@@ -45,6 +43,7 @@ namespace sfmlgame.Entities.Abilitites
         public void SetStats(float orbitSpeed, float orbitRadius)
         {
             this.orbitSpeed = orbitSpeed;
+            this.baseOrbitRadius = orbitRadius;
             this.orbitRadius = orbitRadius;
             MaxHit = 5;
             CanCheckCollision = true;
@@ -57,24 +56,30 @@ namespace sfmlgame.Entities.Abilitites
                 IsActive = false;
             }
 
-            // base.SetScale(Random.Shared.NextFloat(1f, 3f));
-
             currentAngle += orbitSpeed * deltaTime; // Update the angle to move along the orbit
+
+            // Modulate the orbit radius in a sine-wave pattern
+            float sineValue = MathF.Sin(Environment.TickCount * radiusFrequency * 0.001f);
+            orbitRadius = baseOrbitRadius + (sineValue * radiusAmplitude);
 
             // Calculate new position
             Vector2f newPosition = new Vector2f(
                 player.GetPosition().X + MathF.Cos(currentAngle) * orbitRadius,
                 player.GetPosition().Y + MathF.Sin(currentAngle) * orbitRadius
             );
+           base. SetPosition(newPosition);
 
-            SetPosition(newPosition);
+            // Oscillate the scale based on the sine value
+            float scale = 1 + MathF.Abs(sineValue); // Oscillates the scale value between 1 and 2
+            base.SetScale(scale); // Adjust the scale of the entity
 
-            //base.SrtHitBoxDimensions(new FloatRect(GetPosition().X, GetPosition().Y, HitBoxDimensions.Width, HitBoxDimensions.Height));
-
-            
+            // Rotate the entity around itself at the same speed as the orbit speed
+            float rotationAngle = currentAngle * (180 / MathF.PI) * 2; // Convert radians to degrees
+            base.SetRotation(rotationAngle); // Assuming SetRotation takes the rotation angle in degrees
 
             base.Update(player, deltaTime);
         }
+
 
         public override void CollidedWith(Entity collision)
         {
@@ -83,8 +88,6 @@ namespace sfmlgame.Entities.Abilitites
                 UniversalLog.LogInfo("orbital entry");
                 MaxHit--;
             }
-            
         }
-
     }
 }

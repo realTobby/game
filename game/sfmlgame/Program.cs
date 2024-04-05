@@ -12,6 +12,13 @@ class Program
 
         Game game = Game.Instance;
         game.Run();
+
+
+        var windowSize = game.GetWindow().Size;
+        Console.WriteLine("Final Window Size: ");
+        Console.WriteLine(windowSize.ToString());
+
+        Console.ReadLine();
     }
 }
 

@@ -12,9 +12,10 @@ namespace sfmlgame.Assets
         Grass,
         Skull,
         Station,
-        TreeObject,
+        Tree1,
         WaterTile,
-        Rock
+        Rock,
+        Tree2
         // Add other tile types as needed
     }
 
@@ -65,8 +66,9 @@ namespace sfmlgame.Assets
             sprites[TileType.Station] = spriteLoader.GetSpriteFromSheet(5, 24);
 
             sprites[TileType.WaterTile] = spriteLoader.GetSpriteFromSheet(1, 0);
-            sprites[TileType.TreeObject] = spriteLoader.GetSpriteFromSheet(2, 0);
+            sprites[TileType.Tree1] = spriteLoader.GetSpriteFromSheet(2, 0);
             sprites[TileType.Rock] = spriteLoader.GetSpriteFromSheet(3, 0);
+            sprites[TileType.Tree2] = spriteLoader.GetSpriteFromSheet(4, 0);
             // Add other sprites as needed
         }
 
@@ -80,6 +82,14 @@ namespace sfmlgame.Assets
             {
                 throw new ArgumentException("TileType not found in sprite dictionary.");
             }
+        }
+
+        public TileType GetRandomTreeSprite()
+        {
+            Random rand = new Random();
+            // Decide randomly between Tree1 and Tree2
+            TileType selectedType = rand.Next(2) == 0 ? TileType.Tree1 : TileType.Tree2;
+            return selectedType;
         }
     }
 }

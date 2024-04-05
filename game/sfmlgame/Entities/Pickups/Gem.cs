@@ -7,20 +7,14 @@ using sfmlgame.Managers;
 
 namespace sfmlgame.Entities.Pickups
 {
-    public class Gem : Entity
+    public class Gem : Pickup
     {
         public int XPGAIN = 1;
 
 
         public Gem(Vector2f initialPosition) : base(GameAssets.Instance.TextureLoader.GetTexture("gem_blue", "Entities/Pickups"), 1, 4, Time.FromSeconds(0.2f), initialPosition)
         {
-            base.animateSpriteComponent.SetScale(.7f);
             
-            
-
-            CanCheckCollision = true;
-
-            SetPosition(initialPosition);
         }
 
         public Gem(Vector2f initialPosition, Texture gem) : base(gem, 1, 4, Time.FromSeconds(0.2f), initialPosition)
@@ -36,11 +30,19 @@ namespace sfmlgame.Entities.Pickups
         }
 
 
-        public virtual int Pickup()
+        public override void PickItUp()
         {
             SoundManager.Instance.PlayGemPickup();
             IsActive = false;
             //EntityManager.Instance.RemoveEntity(this);
+        }
+
+        public override int PickItUpInt()
+        {
+
+
+            PickItUp();
+
             return XPGAIN;
         }
 

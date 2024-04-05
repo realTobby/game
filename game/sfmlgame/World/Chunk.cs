@@ -42,16 +42,30 @@ namespace sfmlgame.World
             {
                 for (int y = 0; y < chunkSize; y++)
                 {
+                    Vector2f tilePosition = new Vector2f(Position.X * chunkSize * tileSize + x * tileSize, Position.Y * chunkSize * tileSize + y * tileSize);
+                    // create base new tile grass for the ground
+                    WorldTile baseTile = new WorldTile(new Sprite(GameAssets.Instance.GetTileSprite(TileType.Grass)), tilePosition, TileType.Grass);
 
                     double noiseValue = WorldManager.perlin.Noise((Position.X * chunkSize + x) * scale, (Position.Y * chunkSize + y) * scale, z);
                     TileType type = DetermineTileTypeBasedOnNoise(noiseValue);
-                    Vector2f tilePosition = new Vector2f(Position.X * chunkSize * tileSize + x * tileSize, Position.Y * chunkSize * tileSize + y * tileSize);
+                    
+                    if(type == TileType.Rock)
+                    {
+                        AttachObject(baseTile, TileType.Rock);
+                        tiles.Add(baseTile);
+                        continue;
+                    }
+                    else
+                    {
+                        // Get the corresponding sprite for the determined tile type
+                        Sprite sprite = GameAssets.Instance.GetTileSprite(type);
+                        var newTile = new WorldTile(sprite, tilePosition, type);
+                        newTile = AttachObject(newTile, type);
+                        tiles.Add(newTile);
+                    }
 
-                    // Get the corresponding sprite for the determined tile type
-                    Sprite sprite = GameAssets.Instance.GetTileSprite(type);
-                    var newTile = new WorldTile(sprite, tilePosition, type);
-                    newTile = AttachObject(newTile, type);
-                    tiles.Add(newTile);
+
+                    
 
                     //if (type == TileType.TreeObject)
                     //{
@@ -107,7 +121,7 @@ namespace sfmlgame.World
             }
         }
 
-        public const int MaxTreeSeedsPerChunk = 50; // Lower the maximum number of tree seeds per chunk
+        public const int MaxTreeSeedsPerChunk = 150; // Lower the maximum number of tree seeds per chunk
 
         public void AddTreeBodies()
         {
@@ -145,7 +159,19 @@ namespace sfmlgame.World
                                     int targetY = y + dy;
                                     if (targetX >= 0 && targetX < chunkSize && targetY >= 0 && targetY < chunkSize)
                                     {
-                                        SetTileTypeAtPosition(targetX, targetY, TileType.TreeObject);
+                                        var worldPos = new Vector2f(Position.X * chunkSize * tileSize + targetX * tileSize,
+                                                   Position.Y * chunkSize * tileSize + targetY * tileSize);
+
+                                        if (GetTileType(worldPos) == TileType.Grass)
+                                        {
+                                            // pick a random tree
+
+                                            TileType randomTreeType = GameAssets.Instance.GetRandomTreeSprite();
+
+
+                                            SetTileTypeAtPosition(targetX, targetY, randomTreeType);
+                                        }
+                                        
                                     }
                                 }
                             }
@@ -154,11 +180,16 @@ namespace sfmlgame.World
                     else
                     {
                         // Single tree
-                        SetTileTypeAtPosition(x, y, TileType.TreeObject);
+                        SetTileTypeAtPosition(x, y, TileType.Tree1);
                     }
                     treeSeeds.Add(new Vector2i(worldX, worldY));
                 }
             }
+        }
+
+        private TileType GetTileType(Vector2f worldPos)
+        {
+            return tiles.Where(tile => tile.Sprite.Position == worldPos).FirstOrDefault().Type;
         }
 
         private void SetTileTypeAtPosition(int targetX, int targetY, TileType tileType)
@@ -179,18 +210,27 @@ namespace sfmlgame.World
                 tiles.Add(baseTile);
             }
 
-            if (tileType == TileType.TreeObject)
+            if(baseTile.Type == TileType.Grass)
             {
-                baseTile = AttachObject(baseTile, TileType.TreeObject);
-            }
+                if (tileType == TileType.Tree1)
+                {
+                    baseTile = AttachObject(baseTile, TileType.Tree1);
+                }
 
-            if (tileType == TileType.Rock)
-            {
-                baseTile = AttachObject(baseTile, TileType.Rock);
+                if (tileType == TileType.Tree2)
+                {
+                    baseTile = AttachObject(baseTile, TileType.Tree2);
+                }
+
+
+                if (tileType == TileType.Rock)
+                {
+                    baseTile = AttachObject(baseTile, TileType.Rock);
+                }
             }
 
             // If we're setting a water tile, replace the base tile entirely
-            else if (tileType == TileType.WaterTile)
+            if (tileType == TileType.WaterTile)
             {
                 tiles.Remove(baseTile);
                 Sprite waterSprite = GameAssets.Instance.GetTileSprite(TileType.WaterTile);
@@ -202,7 +242,7 @@ namespace sfmlgame.World
         private WorldTile AttachObject(WorldTile tile, TileType type)
         {
             Sprite objectSprite = GameAssets.Instance.GetTileSprite(type);
-            tile.Object = new WorldTile(objectSprite, tile.Sprite.Position, TileType.TreeObject);
+            tile.Object = new WorldTile(objectSprite, tile.Sprite.Position, TileType.Tree1);
             return tile;
         }
 
