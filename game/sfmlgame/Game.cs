@@ -241,7 +241,7 @@ namespace sfmlgame
 
             // change sprite to clicked if click
 
-            CRTShader.SetUniform("crtSpeed", crtTime); // This will be a continuously increasing value
+            //CRTShader.SetUniform("crtSpeed", crtTime); // This will be a continuously increasing value
 
             if (GamePaused)
             {
