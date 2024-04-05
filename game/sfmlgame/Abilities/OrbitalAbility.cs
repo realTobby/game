@@ -35,8 +35,8 @@ namespace sfmlgame.Abilities
         {
             if(!IsCurrentlyActive)
             {
-                UniversalLog.LogInfo("activating OrbitaAbility");
-                UniversalLog.LogInfo("OrbitalAbilityEntityCount: " + orbitals.Count.ToString());
+                //UniversalLog.LogInfo("activating OrbitaAbility");
+                //UniversalLog.LogInfo("OrbitalAbilityEntityCount: " + orbitals.Count.ToString());
                 entityCount = 10;
 
                 float angleIncrement = 360f / entityCount; // Divide the circle into equal parts based on entity count
@@ -64,7 +64,7 @@ namespace sfmlgame.Abilities
 
                 IsCurrentlyActive = true;
                 abilityClock.Restart();
-                UniversalLog.LogInfo("OrbitalAbilityActivated-OrbitalAbilityEntityCount: " + orbitals.Count.ToString());
+                //UniversalLog.LogInfo("OrbitalAbilityActivated-OrbitalAbilityEntityCount: " + orbitals.Count.ToString());
             }
 
             

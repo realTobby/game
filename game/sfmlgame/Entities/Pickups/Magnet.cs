@@ -24,7 +24,7 @@ namespace sfmlgame.Entities.Pickups
 
         public override void PickItUp()
         {
-            UniversalLog.LogInfo("Magnet was picked up!");
+            //UniversalLog.LogInfo("Magnet was picked up!");
             // magnetize all gems
             Game.Instance.EntityManager.MagnetizeAllGems();
 

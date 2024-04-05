@@ -126,7 +126,7 @@ namespace sfmlgame.Entities
 
             if (IsMagnetized)
             {
-                UniversalLog.LogInfo("actually moving towards player!");
+                //UniversalLog.LogInfo("actually moving towards player!");
                 MoveTowardsPlayer(player, deltaTime);
             }
 

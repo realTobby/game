@@ -209,7 +209,7 @@ namespace sfmlgame.Entities
 
         public void MagnetizeAllGems()
         {
-            UniversalLog.LogInfo("magnetizing");
+            //UniversalLog.LogInfo("magnetizing");
             foreach(var gem in NoEnemyEntities.Where(x => x.IsActive && x.GetType() == typeof(Gem)))
             {
                 gem.IsMagnetized = true;

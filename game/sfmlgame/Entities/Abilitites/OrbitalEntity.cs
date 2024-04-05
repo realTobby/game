@@ -85,7 +85,7 @@ namespace sfmlgame.Entities.Abilitites
         {
             if (collision.GetType().IsSubclassOf(typeof(Enemy)))
             {
-                UniversalLog.LogInfo("orbital entry");
+                //UniversalLog.LogInfo("orbital entry");
                 MaxHit--;
             }
         }

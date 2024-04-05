@@ -19,16 +19,29 @@ namespace sfmlgame.Assets
             if (_instance == null) _instance = this;
         }
 
+        private static readonly object _lock = new object();
+
         public Texture GetTexture(string textureName, string category)
         {
+
             string key = $"{category}/{textureName}";
 
-            if(TextureCache.ContainsKey(key))
+            lock (_lock)
             {
-                return TextureCache[key];
+                if (TextureCache.ContainsKey(key))
+                {
+                    return TextureCache[key];
+                }
+
+                if (!TextureCache.ContainsKey(key))
+                {
+                    TextureCache.Add(key, new Texture($"Assets/{category}/{textureName}.png"));
+                }
             }
 
-            TextureCache.Add(key, new Texture($"Assets/{category}/{textureName}.png"));
+           
+
+            
 
             return TextureCache[key];
         }

@@ -48,7 +48,7 @@ namespace sfmlgame.UI
 
         public void Reset(Ability availableAbility)
         {
-            UniversalLog.LogInfo("New Option reset");
+            //UniversalLog.LogInfo("New Option reset");
             //Game.Instance.UIManager.AddComponent(this);
 
             AbilityUpgrade = availableAbility;

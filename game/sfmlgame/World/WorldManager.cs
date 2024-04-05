@@ -54,7 +54,7 @@ namespace sfmlgame.World
             // This example checks a 3x3 area centered on the player's current chunk
             Vector2i playerChunkIndex = CalculateChunkIndex(playerPosition);
 
-            Console.WriteLine($"Attempting to activate chunk at: {playerChunkIndex}");
+            //Console.WriteLine($"Attempting to activate chunk at: {playerChunkIndex}");
 
             HashSet<Vector2i> requiredChunks = new HashSet<Vector2i>();
 
@@ -94,7 +94,7 @@ namespace sfmlgame.World
             chunk.Reset(index, tileTexture);
             activeChunks.Add(index, chunk);
             chunk.SetActive(true);
-            Console.WriteLine($"Successfully activated chunk at: {index}");
+            //Console.WriteLine($"Successfully activated chunk at: {index}");
         }
 
         private void DeactivateChunk(Vector2i index)

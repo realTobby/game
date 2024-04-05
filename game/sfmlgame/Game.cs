@@ -17,6 +17,7 @@ namespace sfmlgame
         private static readonly Lazy<Game> _instance = new Lazy<Game>(() => new Game());
         public static Game Instance => _instance.Value;
 
+        private Clock shaderClock = new Clock();
 
         private RenderWindow _gameWindow;
         private RenderTexture gameRenderTexture;
@@ -71,7 +72,7 @@ namespace sfmlgame
 
             var mode = VideoMode.FullscreenModes[0];
             // [Vector2u] X(867) Y(1001)
-            _gameWindow = new RenderWindow(mode, "Game"); // Set window to fullscreen
+            _gameWindow = new RenderWindow(mode, "Game", Styles.Fullscreen); // Set window to fullscreen
             _gameWindow.SetFramerateLimit(60);
             _gameWindow.SetVerticalSyncEnabled(false);
 
@@ -85,15 +86,16 @@ namespace sfmlgame
 
             UIManager = new UIManager();
 
-            
 
-            
 
-            
+            shaderClock.Restart();
+
+
 
             //world.GenerateAround(player.Sprite.Position, grasTile); // Now generate the world around the player
 
             CRTShader.SetUniform("resolution", new Vector2f(gameRenderTexture.Size.X, gameRenderTexture.Size.Y));
+            CRTShader.SetUniform("overallBrightness", 0.9f);
 
             _gameWindow.SetMouseCursorVisible(false);
 
@@ -216,7 +218,7 @@ namespace sfmlgame
         private void Update()
         {
             float frameTime = DELTATIME;
-
+            float crtTime = shaderClock.ElapsedTime.AsSeconds();
             frameCount++;
             float currentTime = fpsClock.ElapsedTime.AsSeconds();
             float deltaTime = currentTime - lastTime;
@@ -239,6 +241,7 @@ namespace sfmlgame
 
             // change sprite to clicked if click
 
+            CRTShader.SetUniform("crtSpeed", crtTime); // This will be a continuously increasing value
 
             if (GamePaused)
             {
@@ -263,6 +266,11 @@ namespace sfmlgame
             //EntityManager.UpdateEntities(PLAYER, DELTATIME); WE DO THIS IN THE BACKGROUND NOW
 
             UpdateCameraPosition();
+
+            
+
+            
+
         }
 
 
