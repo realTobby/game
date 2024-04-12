@@ -52,6 +52,8 @@ namespace sfmlgame.Entities
 
             Level += levels;
 
+            NeededXP = NeededXP + 5;
+
             Game.Instance.MainPowerUpMenu.OpenWindow();
             
             //var newAbility = abilityFactory.CreateRandomAbility(this);

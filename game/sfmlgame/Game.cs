@@ -74,7 +74,7 @@ namespace sfmlgame
             // [Vector2u] X(867) Y(1001)
             _gameWindow = new RenderWindow(mode, "Game", Styles.Fullscreen); // Set window to fullscreen
             _gameWindow.SetFramerateLimit(60);
-            _gameWindow.SetVerticalSyncEnabled(false);
+            _gameWindow.SetVerticalSyncEnabled(true);
 
             _gameWindow.Closed += StopGame;
 
