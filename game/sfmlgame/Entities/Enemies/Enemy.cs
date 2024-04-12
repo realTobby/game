@@ -1,7 +1,10 @@
 ﻿
+using sfmglame.Helpers;
 using SFML.Graphics;
 using SFML.System;
+using sfmlgame.Assets;
 using sfmlgame.Entities.Abilitites;
+using sfmlgame.Entities.Particles;
 using sfmlgame.Managers;
 using sfmlgame.UI;
 
@@ -38,7 +41,7 @@ namespace sfmlgame.Entities.Enemies
             //hpBar = new UI_ProgressBar(new Vector2f(initialPosition.X, initialPosition.Y), new UIBinding<int>(() => HP), new UIBinding<int>(() => MAXHP), new Vector2f(16,4), Color.Red, this);
             //GameScene.Instance._uiManager.AddComponent(hpBar);
 
-            NormalNormalColor = base.animateSpriteComponent.NormalColors.First();
+            NormalNormalColor = base.animateSpriteComponent.NormalColors.FirstOrDefault();
 
         }
 
@@ -52,7 +55,7 @@ namespace sfmlgame.Entities.Enemies
 
             //GameScene.Instance._uiManager.AddComponent(hpBar);
 
-            NormalNormalColor = base.animateSpriteComponent.NormalColors.First();
+            NormalNormalColor = base.animateSpriteComponent.NormalColors.FirstOrDefault();
         }
 
         public void SetHP(int maxHP)
@@ -90,48 +93,38 @@ namespace sfmlgame.Entities.Enemies
             //hpBar.Reset(); // If you have a method to reset the progress bar
         }
 
+        private void GenerateDamageParticles(Vector2f position)
+        {
+            int numParticles = 3; // Number of particles to generate
+            for (int i = 0; i < numParticles; i++)
+            {
+                
+
+                Game.Instance.EntityManager.CreateDamageParticle(position);
+            }
+        }
+
         public bool TakeDamage(int dmg)
         {
-            //UniversalLog.LogInfo("Entity took damage " + dmg);
-
-            if(!CanBeDamaged) return false;
+            if (!CanBeDamaged) return false;
             CanBeDamaged = false;
             CanCheckCollision = false;
             SoundManager.Instance.PlayHit();
-
+            Game.Instance.ShakeCamera(0.05f);
             CallDamageNumber(dmg);
-
+            GenerateDamageParticles(GetPosition());
             HP -= dmg;
-
-           
-            //GameScene.Instance._viewCamera.ShakeCamera(3f, 0.115f);
-
-            //GameScene.Instance.particleSystem.SpawnDamageParticles(Position, 3, 50, 1); // spawns 10 particles with a speed spread of 50 and a lifetime of 1 second
-
 
             if (HP <= 0)
             {
-                var rndCall = Random.Shared.Next(0, 100);
-
-                if(rndCall < 98)
-                {
-                    var bluegem = Game.Instance.EntityManager.CreateGem(2, GetPosition());
-                    bluegem.IsActive = true;
-                }
-                else
-                {
-                    var magnet = Game.Instance.EntityManager.CreateMagnet(GetPosition());
-                    magnet.IsActive = true;
-                }
-
-
-                IsActive = false;
-
+                IsActive = false; // Assuming additional logic for spawning items or cleanup is done elsewhere
+                flashTimer = 0; // Reset flash timer on defeat
                 return true;
             }
             else
             {
-                flashTimer = flashDuration;
+                flashTimer = flashDuration; // Reset flash timer on taking damage
+
             }
             return false;
         }
@@ -155,18 +148,19 @@ namespace sfmlgame.Entities.Enemies
                 flashTimer -= deltaTime;
                 if (flashTimer <= 0f)
                 {
-                    if (base.animateSpriteComponent.NormalColors == null) return;
-
-                    for (int i = 0; i < base.animateSpriteComponent.sprites.Count(); i++)
+                    // Ensure all sprites are reset to the normal color
+                    foreach (var item in base.animateSpriteComponent.sprites.ToList())
                     {
-                        base.animateSpriteComponent.sprites[i].Color = base.animateSpriteComponent.NormalColors[i];
+                        item.Color = NormalNormalColor;
                     }
+                    CanCheckCollision = true;
                 }
                 else
                 {
+                    // Change color to black during the flash effect
                     foreach (var item in base.animateSpriteComponent.sprites.ToList())
                     {
-                        item.Color = new Color(0, 0, 0, 255);
+                        item.Color = new Color(0, 0, 0, 255); // RGBA for black
                     }
                 }
             }

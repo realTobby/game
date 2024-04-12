@@ -1,8 +1,11 @@
 ﻿using System.Collections.Concurrent;
+using sfmglame.Helpers;
 using SFML.System;
+using sfmlgame.Assets;
 using sfmlgame.Entities.Abilities;
 using sfmlgame.Entities.Abilitites;
 using sfmlgame.Entities.Enemies;
+using sfmlgame.Entities.Particles;
 using sfmlgame.Entities.Pickups;
 
 namespace sfmlgame.Entities
@@ -18,14 +21,16 @@ namespace sfmlgame.Entities
         }
 
         // Simplified properties for accessing entities
-        public IEnumerable<Entity> AllEntities => allEntities;
+        public IEnumerable<Entity> AllEntities => allEntities.Where(x => !(x is DamageParticle));
 
         public IEnumerable<Enemy> Enemies => allEntities.OfType<Enemy>();
+
+        public IEnumerable<DamageParticle> Particles => allEntities.OfType<DamageParticle>();
 
         public IEnumerable<AbilityEntity> AbilityEntities => allEntities.OfType<AbilityEntity>();
 
         // Simplified property for non-enemy entities
-        public IEnumerable<Entity> NoEnemyEntities => allEntities.Where(x => !(x is Enemy));
+        public IEnumerable<Entity> NoEnemyEntities => allEntities.Where(x => !(x is Enemy) && !(x is DamageParticle));
 
         // Method to start any background tasks for updating entities, if necessary.
         // Consider using async/await with Tasks for any heavy or IO-bound operations.
@@ -54,14 +59,42 @@ namespace sfmlgame.Entities
                 abilityEntity.Update(Game.Instance.PLAYER, frameTime);
                 // Implement other entity-specific updates as needed
             });
+
+            Parallel.ForEach(Particles, particle =>
+            {
+                particle.Update(Game.Instance.PLAYER, frameTime);
+                // Implement other entity-specific updates as needed
+            });
         }
+
+        //public void AddEntity(Entity entity)
+        //{
+        //    allEntities.Add(entity);
+        //}
 
         public void DrawEntities(SFML.Graphics.RenderTexture renderTexture, float deltaTime)
         {
-            foreach (var entity in allEntities)
+
+            foreach (var enemy in Enemies)
+            {
+                enemy?.Draw(renderTexture, deltaTime);
+            }
+
+            foreach (var entity in NoEnemyEntities)
             {
                 entity?.Draw(renderTexture, deltaTime);
             }
+
+            Parallel.ForEach(NoEnemyEntities.Where(a => (a is Pickup)), pickupEntity =>
+            {
+                pickupEntity.Draw(renderTexture, deltaTime);
+            });
+
+            foreach (var particle in Particles)
+            {
+                particle?.Draw(renderTexture, deltaTime);
+            }
+
             //Thread.Sleep(5);
         }
 
@@ -89,6 +122,28 @@ namespace sfmlgame.Entities
             freeEnemy.SetHP(HP);
 
             return freeEnemy;
+        }
+
+        public DamageParticle CreateDamageParticle(Vector2f pos)
+        {
+            var freeParticle = Particles.FirstOrDefault(x => !x.IsActive && x is DamageParticle) as DamageParticle;
+
+            Vector2f particleVelocity = new Vector2f(Random.Shared.NextFloat(-1f, 1f), Random.Shared.NextFloat(-1f, 1f));
+            particleVelocity = (particleVelocity) * Random.Shared.NextFloat(-500, 500f); // Random speed
+
+            if (freeParticle == null)
+            {
+                freeParticle = new DamageParticle(GameAssets.Instance.TextureLoader.GetTexture("damageParticle", "Entities/Particles"), pos, particleVelocity);
+                allEntities.Add(freeParticle);
+            }
+            else
+            {
+                freeParticle.ResetFromPool(pos);
+                freeParticle.IsActive = true;
+            }
+
+            return freeParticle;
+
         }
 
         public Enemy FindNearestEnemy(Vector2f pos)

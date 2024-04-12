@@ -49,6 +49,10 @@ namespace sfmlgame
 
         public bool GamePaused = false;
 
+        private float shakeDuration = 0f;
+        private float shakeIntensity = 2f;
+        private Vector2f originalCameraPosition;
+
         private void LoadCRTShader()
         {
             string shaderPath = "Assets/Shaders/CRT.frag";
@@ -215,6 +219,12 @@ namespace sfmlgame
 
         public float DELTATIME => GameClock.Restart().AsSeconds();
 
+        public void ShakeCamera(float duration)
+        {
+            originalCameraPosition = CAMERA.Center;
+            shakeDuration = duration;
+        }
+
         private void Update()
         {
             float frameTime = DELTATIME;
@@ -265,7 +275,7 @@ namespace sfmlgame
 
             //EntityManager.UpdateEntities(PLAYER, DELTATIME); WE DO THIS IN THE BACKGROUND NOW
 
-            UpdateCameraPosition();
+            UpdateCameraPosition(frameTime);
 
             
 
@@ -340,11 +350,31 @@ namespace sfmlgame
             CAMERA = new View(entity.GetPosition(), new Vector2f(640, 480)); // Window size as view size 640x480
         }
 
-        private void UpdateCameraPosition()
+        private void UpdateCameraPosition(float deltaTime)
         {
             if (CAMERA != null && PLAYER != null)
             {
-                CAMERA.Center = PLAYER.GetPosition();
+                // Update the original camera position to follow the player.
+                // This ensures that the camera follows the player's current position before applying the shake offset.
+                originalCameraPosition = PLAYER.GetPosition();
+
+                if (shakeDuration > 0)
+                {
+                    // Generate random offsets within the shake intensity range.
+                    float offsetX = (float)(Random.Shared.NextDouble() * 2 - 1) * shakeIntensity;
+                    float offsetY = (float)(Random.Shared.NextDouble() * 2 - 1) * shakeIntensity;
+                    // Apply the shake by offsetting the original camera position (which follows the player).
+                    CAMERA.Center = new Vector2f(originalCameraPosition.X + offsetX, originalCameraPosition.Y + offsetY);
+
+                    shakeDuration -= deltaTime; // Decrease the shake duration.
+                }
+                else
+                {
+                    // If not shaking, simply follow the player.
+                    CAMERA.Center = originalCameraPosition;
+                }
+
+                // Apply the updated camera position to the game window.
                 _gameWindow.SetView(CAMERA);
             }
         }

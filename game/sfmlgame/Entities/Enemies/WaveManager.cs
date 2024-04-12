@@ -4,7 +4,9 @@ namespace sfmlgame.Entities.Enemies
     public class WaveManager
     {
         private List<EnemyWave> enemyWaves = new List<EnemyWave>();
-        
+
+        public int EnemyHP = 5;
+
         public void AddWave(EnemyWave wave)
         {
             enemyWaves.Add(wave);
@@ -16,9 +18,11 @@ namespace sfmlgame.Entities.Enemies
             {
                 var toSpawnWaves = enemyWaves.Where(x => x.IsSpawned == false);
 
+                EnemyHP += 5;
+
                 foreach (var item in toSpawnWaves.ToList())
                 {
-                    item.SpawnEnemies();
+                    item.SpawnEnemies(EnemyHP);
                 }
             }
             enemyWaves.Clear();

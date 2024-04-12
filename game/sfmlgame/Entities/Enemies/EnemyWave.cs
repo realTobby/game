@@ -4,7 +4,7 @@ namespace sfmlgame.Entities.Enemies
 {
     public class EnemyWave
     {
-        public int EnemyHP = 5;
+        
 
         private List<Vector2f> spawnPositions = new List<Vector2f>();
         private float spawnInterval;
@@ -23,9 +23,9 @@ namespace sfmlgame.Entities.Enemies
             spawnPositions.Add(position);
         }
 
-        public void SpawnEnemies()
+        public void SpawnEnemies(int EnemyHP)
         {
-            EnemyHP+=5;
+            
 
             foreach (Vector2f position in spawnPositions)
             {
