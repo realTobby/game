@@ -1,7 +1,5 @@
-﻿
-using game.Entities.Enemies;
-using sfmlgame.Abilities;
-
+﻿using sfmlgame.Abilities;
+using sfmlgame.Entities.Enemies;
 using System.Reflection;
 
 

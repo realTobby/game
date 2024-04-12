@@ -13,5 +13,16 @@ namespace sfmglame.Helpers
         {
             return (float)random.NextDouble() * (maxValue - minValue) + minValue;
         }
+
+        public static bool NextBool(this Random random)
+        {
+            var randomVal = random.Next(0, 100);
+            if(randomVal < 50)
+            {
+                return true;
+            }
+            return false;
+        }
+
     }
 }

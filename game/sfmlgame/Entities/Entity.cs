@@ -40,6 +40,11 @@ namespace sfmlgame.Entities
 
         }
 
+        public float GetRotation()
+        {
+            return animateSpriteComponent.GetRotation();
+        }
+
         public void SetRotation(float rotation)
         {
             animateSpriteComponent.SetRotation(rotation);
@@ -53,6 +58,11 @@ namespace sfmlgame.Entities
         public Vector2f GetPosition()
         {
             return animateSpriteComponent.GetPosition();
+        }
+
+        public float GetScale()
+        {
+            return animateSpriteComponent.GetScale();
         }
 
         public void SetScale(float scale)

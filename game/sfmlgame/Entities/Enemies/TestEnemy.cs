@@ -2,15 +2,8 @@
 using SFML.Graphics;
 using SFML.System;
 using sfmlgame.Assets;
-using sfmlgame.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace game.Entities.Enemies
+namespace sfmlgame.Entities.Enemies
 {
     public class TestEnemy : Enemy
     {

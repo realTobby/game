@@ -80,12 +80,22 @@ namespace sfmlgame.Framework
             SetPosition(initialPos);
         }
 
+        public float GetRotation()
+        {
+            return sprites[0].Rotation;
+        }
+
         public void SetRotation(float rotation)
         {
             for (int i = 0; i < sprites.Length; i++)
             {
                 sprites[i].Rotation = rotation;
             }
+        }
+
+        public float GetScale()
+        {
+            return sprites[0].Scale.X;
         }
 
         public void SetScale(float scale)

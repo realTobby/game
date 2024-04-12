@@ -1,16 +1,11 @@
-﻿using game.Entities;
-using game.Entities.Enemies;
-using SFML.System;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using SFML.System;
 
 namespace sfmlgame.Entities.Enemies
 {
     public class EnemyWave
     {
+        public int EnemyHP = 1;
+
         private List<Vector2f> spawnPositions = new List<Vector2f>();
         private float spawnInterval;
         private float enemySpeed;
@@ -30,9 +25,11 @@ namespace sfmlgame.Entities.Enemies
 
         public void SpawnEnemies()
         {
+            EnemyHP++;
+
             foreach (Vector2f position in spawnPositions)
             {
-                var enemy = Game.Instance.EntityManager.CreateEnemy(position);
+                var enemy = Game.Instance.EntityManager.CreateEnemy(position, EnemyHP);
 
                 enemy.ResetFromPool(position);
                 enemy.IsActive = true;

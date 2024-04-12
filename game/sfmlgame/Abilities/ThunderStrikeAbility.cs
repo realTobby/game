@@ -1,8 +1,6 @@
-﻿using game.Entities.Abilitites;
-
-using SFML.System;
+﻿using SFML.System;
 using sfmlgame.Assets;
-
+using sfmlgame.Entities.Abilitites;
 
 namespace sfmlgame.Abilities
 {

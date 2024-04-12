@@ -1,8 +1,8 @@
-﻿using game.Entities.Enemies;
-using sfmglame.Helpers;
+﻿using sfmglame.Helpers;
 using SFML.Graphics;
 using SFML.System;
 using sfmlgame.Assets;
+using sfmlgame.Entities.Enemies;
 using System;
 using System.Collections.Generic;
 using System.Linq;

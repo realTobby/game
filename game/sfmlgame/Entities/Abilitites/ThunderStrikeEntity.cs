@@ -1,13 +1,11 @@
 ﻿
-using SFML.Graphics;
+
 using SFML.System;
 using sfmlgame.Assets;
-using sfmlgame.Entities;
-using sfmlgame.Entities.Abilitites;
 using sfmlgame.Managers;
 
 
-namespace game.Entities.Abilitites
+namespace sfmlgame.Entities.Abilitites
 {
     public class ThunderStrikeEntity : AbilityEntity
     {

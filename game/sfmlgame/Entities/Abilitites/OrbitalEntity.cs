@@ -1,10 +1,7 @@
-﻿using game.Entities.Enemies;
-using sfmglame.Helpers;
-using SFML.Graphics;
+﻿using SFML.Graphics;
 using SFML.System;
 using sfmlgame.Assets;
-using sfmlgame.Framework;
-using System;
+using sfmlgame.Entities.Enemies;
 
 namespace sfmlgame.Entities.Abilitites
 {

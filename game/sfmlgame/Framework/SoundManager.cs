@@ -22,6 +22,7 @@ namespace sfmlgame.Managers
         private const string SFX_LEVELUP = "powerUp.wav";
         private const string SFX_HIT = "hitHurt.wav";
         private const string SFX_PROJECTILE = "laserShoot.wav";
+        private const string SFX_SLICE = "slice.wav";
 
 
         private Sound sound = new Sound();
@@ -120,5 +121,13 @@ namespace sfmlgame.Managers
             LastChannel.Pitch = (float)random.NextDouble() * 0.2f + 0.9f;
             LastChannel.Play();
         }
+
+        public void PlaySliceEffect()
+        {
+            InitSound(SFX_SLICE, 10);
+            LastChannel.Pitch = (float)random.NextDouble() * 0.2f + 0.9f;
+            LastChannel.Play();
+        }
+
     }
 }

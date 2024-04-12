@@ -1,8 +1,8 @@
-﻿using game.Entities.Enemies;
-using SFML.System;
+﻿using SFML.System;
 using sfmlgame.Assets;
 using sfmlgame.Entities;
 using sfmlgame.Entities.Abilitites;
+using sfmlgame.Entities.Enemies;
 using sfmlgame.Managers;
 
 

@@ -1,16 +1,9 @@
 ﻿using System.Collections.Concurrent;
-using System.Threading.Tasks;
-using game.Entities.Abilitites;
-using game.Entities.Enemies;
-using sfmglame.Helpers;
-using SFML.Graphics;
 using SFML.System;
-using sfmlgame.Abilities;
-using sfmlgame.Assets;
-using sfmlgame.Entities;
+using sfmlgame.Entities.Abilities;
 using sfmlgame.Entities.Abilitites;
+using sfmlgame.Entities.Enemies;
 using sfmlgame.Entities.Pickups;
-using sfmlgame.Managers;
 
 namespace sfmlgame.Entities
 {
@@ -78,7 +71,7 @@ namespace sfmlgame.Entities
             return allEntities.Contains(entityToCheck);
         }
 
-        public Enemy CreateEnemy(Vector2f pos)
+        public Enemy CreateEnemy(Vector2f pos, int HP)
         {
             // Attempt to reuse a disabled enemy from the pool
             var freeEnemy = allEntities.FirstOrDefault(x => !x.IsActive && x is Enemy) as Enemy;
@@ -92,6 +85,8 @@ namespace sfmlgame.Entities
             {
                 freeEnemy.ResetFromPool(pos);
             }
+
+            freeEnemy.SetHP(HP);
 
             return freeEnemy;
         }
@@ -174,6 +169,10 @@ namespace sfmlgame.Entities
                 }
 
                 
+                if(abilityType == typeof(ScytheEntity))
+                {
+                    freeAbilityEntity = new ScytheEntity(Game.Instance.PLAYER.GetPosition(), null);
+                }
 
                 if (freeAbilityEntity != null)
                 {

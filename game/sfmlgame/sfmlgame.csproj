@@ -24,6 +24,9 @@
     <None Update="Assets\Entities\Abilities\burning_loop_1.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Assets\Entities\Abilities\scythe.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Assets\Entities\Abilities\thunderStrike.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -79,6 +82,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Assets\SFX\powerUp.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\SFX\slice.wav">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Assets\Shaders\CRT.frag">

@@ -34,10 +34,14 @@ namespace sfmlgame.Abilities
             else if (abilityType == typeof(ThunderStrikeAbility))
             {
                 constructorArgs = new object[] { 5f }; // Assuming default cooldown
-            }else if(abilityType == typeof(BombAbility))
+            //}else if(abilityType == typeof(BombAbility))
+            //{
+            //    constructorArgs = new object[] { 1, 4f };
+            }else if(abilityType == typeof(ScytheAbility))
             {
-                constructorArgs = new object[] { 1, 4f };
+                constructorArgs = new object[] { player, 2f };
             }
+
 
 
             if(abilityType == typeof(OrbitalAbility))

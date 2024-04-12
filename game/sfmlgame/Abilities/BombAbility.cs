@@ -13,34 +13,34 @@ using System.Threading.Tasks;
 
 namespace sfmlgame.Abilities
 {
-    public class BombAbility : Ability
-    {
+    //public class BombAbility : Ability
+    //{
 
-        public BombAbility(int damage, float cooldown) : base("Bomb", damage, cooldown)
-        {
-            this.Icon = new SFML.Graphics.Sprite(GameAssets.Instance.TextureLoader.GetTexture("bomb", "Entities/Abilities"));
-        }
+    //    public BombAbility(int damage, float cooldown) : base("Bomb", damage, cooldown)
+    //    {
+    //        this.Icon = new SFML.Graphics.Sprite(GameAssets.Instance.TextureLoader.GetTexture("bomb", "Entities/Abilities"));
+    //    }
 
-        public override void Activate()
-        {
-            // spawn bomb outside of screen
-            // make the bomb drop from the top of the screen towards the position of the mouse at the time it was activated
-            var mousePos = Mouse.GetPosition();
+    //    public override void Activate()
+    //    {
+    //        // spawn bomb outside of screen
+    //        // make the bomb drop from the top of the screen towards the position of the mouse at the time it was activated
+    //        var mousePos = Mouse.GetPosition();
 
-            UniversalLog.LogInfo("Mouse Position: " + mousePos.ToString());
+    //        UniversalLog.LogInfo("Mouse Position: " + mousePos.ToString());
 
-            // convert to worldPos
-            var targetWorldPos = Game.Instance.ConvertViewToWorldPosition(mousePos);
+    //        // convert to worldPos
+    //        var targetWorldPos = Game.Instance.ConvertViewToWorldPosition(mousePos);
 
-            UniversalLog.LogInfo("Target Strike Position: " + targetWorldPos.ToString());
+    //        UniversalLog.LogInfo("Target Strike Position: " + targetWorldPos.ToString());
 
-            var spawnPos = new Vector2f(targetWorldPos.X, targetWorldPos.Y - 500f);
+    //        var spawnPos = new Vector2f(targetWorldPos.X, targetWorldPos.Y - 500f);
 
-            UniversalLog.LogInfo("Spawn Position Position: " + spawnPos.ToString());
+    //        UniversalLog.LogInfo("Spawn Position Position: " + spawnPos.ToString());
 
-            Game.Instance.EntityManager.CreateBombEntity(spawnPos, targetWorldPos);
+    //        Game.Instance.EntityManager.CreateBombEntity(spawnPos, targetWorldPos);
 
-        }
+    //    }
 
-    }
+    //}
 }

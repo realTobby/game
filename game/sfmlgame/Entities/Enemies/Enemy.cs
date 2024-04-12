@@ -1,20 +1,11 @@
 ﻿
-using sfmglame.Helpers;
 using SFML.Graphics;
 using SFML.System;
-using sfmlgame;
-using sfmlgame.Entities;
 using sfmlgame.Entities.Abilitites;
-using sfmlgame.Entities.Pickups;
 using sfmlgame.Managers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
+using sfmlgame.UI;
 
-namespace game.Entities.Enemies
+namespace sfmlgame.Entities.Enemies
 {
     public class Enemy : Entity
     {
@@ -25,7 +16,7 @@ namespace game.Entities.Enemies
         public int HP;
         public int MAXHP;
 
-        //private UI_ProgressBar hpBar;
+        private UI_ProgressBar hpBar;
 
         private float flashDuration = .1f; // Duration in seconds for the flash effect
         private float flashTimer = 0f; // Timer for the flash effect
@@ -40,8 +31,6 @@ namespace game.Entities.Enemies
             : base(category, entityName, frameCount, initialPosition)
         {
             this.speed = speed;
-            MAXHP = 2;
-            HP = MAXHP;
 
             SetPosition(initialPosition);
 
@@ -49,27 +38,40 @@ namespace game.Entities.Enemies
             //hpBar = new UI_ProgressBar(new Vector2f(initialPosition.X, initialPosition.Y), new UIBinding<int>(() => HP), new UIBinding<int>(() => MAXHP), new Vector2f(16,4), Color.Red, this);
             //GameScene.Instance._uiManager.AddComponent(hpBar);
 
+            NormalNormalColor = base.animateSpriteComponent.NormalColors.First();
+
         }
 
         public Enemy(Texture texture, int rows, int columns, Time frameDuration, float speed, Vector2f initialPosition) : base(texture, rows, columns, frameDuration, initialPosition)
         {
             this.speed = speed;
-            MAXHP = 2;
-            HP = MAXHP;
 
             SetPosition(initialPosition);
 
             CanCheckCollision = true;
-            //hpBar = new UI_ProgressBar(new Vector2f(initialPosition.X, initialPosition.Y), new UIBinding<int>(() => HP), new UIBinding<int>(() => MAXHP), new Vector2f(16, 4), Color.Red, this);
+
             //GameScene.Instance._uiManager.AddComponent(hpBar);
+
+            NormalNormalColor = base.animateSpriteComponent.NormalColors.First();
+        }
+
+        public void SetHP(int maxHP)
+        {
+            MAXHP = maxHP;
+            HP = maxHP;
+
+            hpBar = new UI_ProgressBar(new Vector2f(GetPosition().X, GetPosition().Y), new UIBinding<int>(() => HP), new UIBinding<int>(() => MAXHP), new Vector2f(16, 4), Color.Red, this);
+            //Game.Instance.UIManager.AddComponent(hpBar);
         }
 
         private void CallDamageNumber(int damage)
         {
             //UniversalLog.LogInfo("NewDamageNumberHere");
-            Game.Instance.UIManager.CreateDamageNumber(damage, GetPosition(), 0.5f);
+            Game.Instance.UIManager.CreateDamageNumber(damage, GetPosition(), 0.4f);
            // GameScene.Instance._uiManager.CreateDamageNumber(damage, Position, GameScene.Instance._viewCamera.view, 0.45f);
         }
+
+        private Color NormalNormalColor;
 
         public override void ResetFromPool(Vector2f position)
         {
@@ -79,16 +81,13 @@ namespace game.Entities.Enemies
             CanCheckCollision = true;
 
             // Reset sprite colors to normal
-            if (base.animateSpriteComponent.NormalColors != null)
+            foreach (var item in base.animateSpriteComponent.sprites.ToList())
             {
-                for (int i = 0; i < base.animateSpriteComponent.sprites.Count(); i++)
-                {
-                    base.animateSpriteComponent.sprites[i].Color = base.animateSpriteComponent.NormalColors[i];
-                }
+                item.Color = NormalNormalColor;
             }
 
             // Reset other components as needed, for example:
-            // hpBar.Reset(); // If you have a method to reset the progress bar
+            //hpBar.Reset(); // If you have a method to reset the progress bar
         }
 
         public bool TakeDamage(int dmg)
@@ -140,6 +139,11 @@ namespace game.Entities.Enemies
         public override void Draw(RenderTexture renderTexture, float deltaTime)
         {
             base.Draw(renderTexture, deltaTime);
+            if(IsActive)
+            {
+                hpBar.Draw(renderTexture);
+            }
+            
 
             HitFlash(deltaTime);
         }
@@ -227,11 +231,9 @@ namespace game.Entities.Enemies
             {
                 CheckCollisionWithAbilityEntities();
             }
-        }
 
-        public void AbilityCollision(AbilityEntity entity)
-        {
-            TakeDamage(entity.Damage);
+            hpBar.Update(deltaTime);
+
         }
 
         private void CheckCollisionWithAbilityEntities()
