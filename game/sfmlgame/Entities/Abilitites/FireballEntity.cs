@@ -76,7 +76,7 @@ namespace sfmlgame.Entities.Abilitites
             if(collision.GetType() == typeof(TestEnemy))
             {
                 IsActive = false;
-                CanCheckCollision = false;
+                //CanCheckCollision = false;
             }
             
         }

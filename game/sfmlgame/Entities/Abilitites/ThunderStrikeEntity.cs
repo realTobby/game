@@ -16,7 +16,17 @@ namespace sfmlgame.Entities.Abilitites
         public ThunderStrikeEntity(Vector2f initialPosition) : base("ThunderStrike", initialPosition, GameAssets.Instance.TextureLoader.GetTexture("thunderStrike", "Entities/Abilities"), 1, 13, Time.FromSeconds(0.08f))
         {
             Damage = 1;
+            CanCheckCollision = false;
         }
+
+        public override void ResetFromPool(Vector2f position)
+        {
+            base.ResetFromPool(position);
+
+            CanCheckCollision = false;
+
+        }
+
 
         public override void Update(Player player, float deltaTime)
         {
@@ -36,6 +46,7 @@ namespace sfmlgame.Entities.Abilitites
             if (base.animateSpriteComponent.currentFrame >= base.animateSpriteComponent.sprites.Length - 1)
             {
                 IsActive = false;
+                CanCheckCollision = false;
                 //EntityManager.Instance.RemoveEntity(this);
             }
 

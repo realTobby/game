@@ -40,7 +40,11 @@ namespace sfmlgame.Entities.Enemies
 
         }
 
-        
+        public override bool TakeDamage(int dmg)
+        {
+            return base.TakeDamage(dmg);
+        }
+
         public override void Draw(RenderTexture renderTexture, float deltaTime)
         {
             base.Draw(renderTexture, deltaTime);

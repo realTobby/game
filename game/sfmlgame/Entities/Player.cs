@@ -12,6 +12,7 @@ using System.Numerics;
 using sfmlgame.Managers;
 using sfmlgame.Entities.Pickups;
 using sfmlgame.UI;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace sfmlgame.Entities
 {
@@ -20,7 +21,7 @@ namespace sfmlgame.Entities
         private WorldManager world; // Reference to the World object
 
         //public Sprite Sprite;
-        private float speed = 75f;
+        
 
         public Vector2i CurrentChunkIndex { get; private set; }
 
@@ -32,6 +33,11 @@ namespace sfmlgame.Entities
         public int Level = 1;
 
         AbilityFactory abilityFactory;
+
+        // TODO: STAT MACHINE - DAMAGE ; DEFENSE; CRIT; AND STUFF LIKE THAT, KEEP IT SEPERATED, KEEP IT SIMPLE STUPID
+        public int Damage = 0;
+
+        public float Speed = 75f;
 
         public Player(Texture texture, Vector2f position, WorldManager world) : base("Entities/priestess","priestess", 5, position)
         {
@@ -48,7 +54,9 @@ namespace sfmlgame.Entities
 
         public void LevelUp(int levels)
         {
-            
+            Damage += 1;
+
+            Speed += 0.25f;
 
             Level += levels;
 
@@ -137,10 +145,10 @@ namespace sfmlgame.Entities
             
 
             Vector2f movement = new Vector2f();
-            if (Keyboard.IsKeyPressed(Keyboard.Key.W)) movement.Y -= speed * deltaTime;
-            if (Keyboard.IsKeyPressed(Keyboard.Key.S)) movement.Y += speed * deltaTime;
-            if (Keyboard.IsKeyPressed(Keyboard.Key.A)) movement.X -= speed * deltaTime;
-            if (Keyboard.IsKeyPressed(Keyboard.Key.D)) movement.X += speed * deltaTime;
+            if (Keyboard.IsKeyPressed(Keyboard.Key.W)) movement.Y -= Speed * deltaTime;
+            if (Keyboard.IsKeyPressed(Keyboard.Key.S)) movement.Y += Speed * deltaTime;
+            if (Keyboard.IsKeyPressed(Keyboard.Key.A)) movement.X -= Speed * deltaTime;
+            if (Keyboard.IsKeyPressed(Keyboard.Key.D)) movement.X += Speed * deltaTime;
 
             if(Keyboard.IsKeyPressed(Keyboard.Key.G))
             {

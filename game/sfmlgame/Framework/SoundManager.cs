@@ -27,8 +27,7 @@ namespace sfmlgame.Managers
 
         private Sound sound = new Sound();
 
-        private Sound[] soundChannels = new Sound[32
-            ];
+        private Sound[] soundChannels = new Sound[128];
 
         private string LastSound = string.Empty;
         private Sound LastChannel = null;

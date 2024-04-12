@@ -5,7 +5,7 @@ namespace sfmlgame.Entities.Enemies
     {
         private List<EnemyWave> enemyWaves = new List<EnemyWave>();
 
-        public int EnemyHP = 5;
+        public int EnemyHP = 1;
 
         public void AddWave(EnemyWave wave)
         {
@@ -18,7 +18,7 @@ namespace sfmlgame.Entities.Enemies
             {
                 var toSpawnWaves = enemyWaves.Where(x => x.IsSpawned == false);
 
-                EnemyHP += 5;
+                EnemyHP += 2;
 
                 foreach (var item in toSpawnWaves.ToList())
                 {

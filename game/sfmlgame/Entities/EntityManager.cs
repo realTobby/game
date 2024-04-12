@@ -21,7 +21,7 @@ namespace sfmlgame.Entities
         }
 
         // Simplified properties for accessing entities
-        public IEnumerable<Entity> AllEntities => allEntities.Where(x => !(x is DamageParticle));
+        public IEnumerable<Entity> AllEntities => allEntities;
 
         public IEnumerable<Enemy> Enemies => allEntities.OfType<Enemy>();
 
@@ -30,7 +30,7 @@ namespace sfmlgame.Entities
         public IEnumerable<AbilityEntity> AbilityEntities => allEntities.OfType<AbilityEntity>();
 
         // Simplified property for non-enemy entities
-        public IEnumerable<Entity> Pickups => allEntities.OfType<Pickup>();
+        public IEnumerable<Pickup> Pickups => allEntities.OfType<Pickup>();
 
         // Method to start any background tasks for updating entities, if necessary.
         // Consider using async/await with Tasks for any heavy or IO-bound operations.

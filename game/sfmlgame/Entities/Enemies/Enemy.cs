@@ -17,7 +17,7 @@ namespace sfmlgame.Entities.Enemies
         private float flashTimer = 0f; // Timer for the flash effect
         public bool CanBeDamaged = true;
         private Clock invincibleClock = new Clock(); // Renamed for clarity
-        private float invincibilityDuration = .5f; // Duration in seconds for invincibility after being hit
+        private float invincibilityDuration = .2f; // Duration in seconds for invincibility after being hit
 
 
         public Enemy(string category, string entityName, int frameCount, Vector2f initialPosition, float speed)
@@ -94,7 +94,7 @@ namespace sfmlgame.Entities.Enemies
             }
         }
 
-        public bool TakeDamage(int dmg)
+        public virtual bool TakeDamage(int dmg)
         {
             if (!CanBeDamaged) return false;
 
@@ -110,6 +110,7 @@ namespace sfmlgame.Entities.Enemies
             if (HP <= 0)
             {
                 IsActive = false; // Enemy defeated
+                Game.Instance.EntityManager.CreateGem(MAXHP, GetPosition());
                 return true;
             }
             return false;
@@ -212,10 +213,13 @@ namespace sfmlgame.Entities.Enemies
                 {
                     if (CheckCollision(ability))
                     {
-
-                        ability.CollidedWith(this);
-                        //Console.WriteLine("I got hit by " + ability.AbilityName);
-                        TakeDamage(ability.Damage);
+                        if(CanBeDamaged)
+                        {
+                            ability.CollidedWith(this);
+                            //Console.WriteLine("I got hit by " + ability.AbilityName);
+                            TakeDamage(Game.Instance.PLAYER.Damage);
+                        }
+                        
                     }
                 }
 

@@ -1,54 +1,44 @@
-﻿
-using sfmglame.Helpers;
-using SFML.Graphics;
+﻿using SFML.Graphics;
 using SFML.System;
 using sfmlgame.Assets;
 using sfmlgame.Entities.Abilitites;
 using sfmlgame.Entities.Enemies;
 using sfmlgame.Managers;
+using System.Numerics;
 
 namespace sfmlgame.Entities.Abilities
 {
     public class ScytheEntity : AbilityEntity
     {
+        public bool AtPlayer = false;
+
         public int MaxHit = 4;
         public Clock killTimer = new Clock();
         public Entity target;
-        private float rotationSpeed = 360f; // Degrees per second
-        private float amplitude = 15f; // Amplitude of the sine wave
-        private float frequency = 0.1f; // Slower frequency for the sine wave
+        private float rotationSpeed = 420f; // Degrees per second
+        private float amplitude = 2f; // Amplitude of the sine wave
+        private float frequency = 0.5f; // Frequency of the sine wave
         private float angleOffset = 0f; // For calculating sine wave offset
+        private bool isOrbiting = false; // State of movement
+        private const float approachThreshold = 30f; // Distance at which to start orbiting
 
         public ScytheEntity(Vector2f initialPosition, Enemy targetEnemy)
             : base("Scythe", initialPosition, new Sprite(GameAssets.Instance.TextureLoader.GetTexture("scythe", "Entities/Abilities")))
         {
-            SetScale(0.7f);
+            SetScale(0.66f);
             CanCheckCollision = true;
             SetTarget(targetEnemy);
             SetPosition(initialPosition);
-            Damage = 3; // Assuming scythe is more powerful
-        }
-
-        public override void Draw(RenderTexture renderTexture, float deltaTime)
-        {
-            if (!IsActive) return;
-            base.Draw(renderTexture, deltaTime);
+            Damage = 3;
         }
 
         public void SetTarget(Entity enemyTarget)
         {
             target = enemyTarget;
+            isOrbiting = false; // Reset orbiting state
             killTimer.Restart();
             IsActive = true;
             SoundManager.Instance.PlaySliceEffect();
-        }
-
-        public override void ResetFromPool(Vector2f position)
-        {
-            base.ResetFromPool(position);
-            killTimer.Restart();
-            SetScale(0.7f);
-            MaxHit = 4;
         }
 
         public override void Update(Player player, float deltaTime)
@@ -57,64 +47,79 @@ namespace sfmlgame.Entities.Abilities
 
             base.Update(player, deltaTime);
 
-            if (target != null)
-            {
-                var direction = target.GetPosition() - GetPosition();
-                var distance = Math.Sqrt(direction.X * direction.X + direction.Y * direction.Y);
-                var normalizedDirection = new Vector2f((float)(direction.X / distance), (float)(direction.Y / distance));
 
-                // Sine wave offset
+            
+
+
+            // Ensure there is always a target
+            if (target == null || !target.IsActive)
+            {
+
+                SetTarget(Game.Instance.EntityManager.FindNearestEnemy(GetPosition()));
+
+                if(target == null) SetTarget(player); // Set player as fallback target
+
+
+            }
+            else
+            {
+                if(target.GetType() == typeof(TestEnemy))
+                {
+                    AtPlayer = false;
+                }
+                
+            }
+
+            
+
+            var direction = target.GetPosition() - GetPosition();
+            var distance = Math.Sqrt(direction.X * direction.X + direction.Y * direction.Y);
+            var normalizedDirection = new Vector2f((float)(direction.X / distance), (float)(direction.Y / distance));
+
+            if (distance <= approachThreshold)
+            {
+                isOrbiting = true;
+            }
+            else
+            {
+                isOrbiting = false; // Reset to direct movement if distance is too great
+            }
+
+            if (isOrbiting)
+            {
+                // Sine wave offset for orbiting
                 angleOffset += deltaTime * frequency;
                 float sineOffset = (float)Math.Sin(angleOffset * Math.PI * 2) * amplitude;
-
-                // Rotate around itself
-                float rotation = rotationSpeed * deltaTime;
-                SetRotation(GetRotation() + rotation);
-
-                // Update position with sine wave
-                Vector2f sineWaveOffset = new Vector2f(-normalizedDirection.Y, normalizedDirection.X) * sineOffset;
-                SetPosition(GetPosition() + normalizedDirection * 6f + sineWaveOffset); // Move towards the target
-
-                if (target == player)
-                {
-                    SetTarget(Game.Instance.EntityManager.FindNearestEnemy(player.GetPosition()));
-
-                    if (target == null)
-                    {
-                        SetTarget(player);
-                    }
-                }
-
-                if (target.IsActive == false)
-                {
-                    SetTarget(Game.Instance.EntityManager.FindNearestEnemy(player.GetPosition()));
-
-
-                    if(target == null)
-                    {
-                        SetTarget(player);
-                    }
-
-                }
+                Vector2f orbitDirection = new Vector2f(-normalizedDirection.Y, normalizedDirection.X);
+                SetPosition(target.GetPosition() + orbitDirection * sineOffset);
             }
+            else
+            {
+                // Move directly towards the target
+                SetPosition(GetPosition() + normalizedDirection * 250f * deltaTime);
+            }
+
+            // Rotate the scythe around itself
+            float rotation = rotationSpeed * deltaTime;
+            SetRotation(GetRotation() + rotation);
         }
+
 
         public override void CollidedWith(Entity collision)
         {
             if(collision.GetType() == typeof(TestEnemy))
             {
-                //UniversalLog.LogInfo("Current Scale: " + GetScale());
-                // randomize scale
-                SetScale(GetScale() - 0.05f);
-                base.animateSpriteComponent.FlipSprite(Random.Shared.NextBool());
-                if(GetScale() <= 0f)
-                {
-                    IsActive = false;
-                }
+                
+                SetTarget(Game.Instance.PLAYER);
             }
 
-            
-
+            if(collision.GetType() == typeof(Player))
+            {
+                AtPlayer = true;
+            }
         }
+
     }
+
+
 }
