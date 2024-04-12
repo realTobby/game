@@ -73,7 +73,7 @@ namespace sfmlgame.Entities.Abilitites
 
         public override void CollidedWith(Entity collision)
         {
-            if(collision.GetType() == typeof(Enemy))
+            if(collision.GetType() == typeof(TestEnemy))
             {
                 IsActive = false;
                 CanCheckCollision = false;

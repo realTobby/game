@@ -30,7 +30,7 @@ namespace sfmlgame.Entities
         public IEnumerable<AbilityEntity> AbilityEntities => allEntities.OfType<AbilityEntity>();
 
         // Simplified property for non-enemy entities
-        public IEnumerable<Entity> NoEnemyEntities => allEntities.Where(x => !(x is Enemy) && !(x is DamageParticle));
+        public IEnumerable<Entity> Pickups => allEntities.OfType<Pickup>();
 
         // Method to start any background tasks for updating entities, if necessary.
         // Consider using async/await with Tasks for any heavy or IO-bound operations.
@@ -41,9 +41,9 @@ namespace sfmlgame.Entities
         {
             //float lastFrameDeltaTime = Game.Instance.DELTATIME;
 
-            Parallel.ForEach(NoEnemyEntities.Where(a => (a is Pickup)), pickupEntity =>
+            Parallel.ForEach(Pickups, pickup =>
             {
-                pickupEntity.Update(Game.Instance.PLAYER, frameTime);
+                pickup.Update(Game.Instance.PLAYER, frameTime);
                 // Implement other entity-specific updates as needed
             });
 
@@ -72,27 +72,27 @@ namespace sfmlgame.Entities
         //    allEntities.Add(entity);
         //}
 
-        public void DrawEntities(SFML.Graphics.RenderTexture renderTexture, float deltaTime)
+        public void DrawEntities(SFML.Graphics.RenderTexture renderTexture, float frameTime)
         {
 
-            foreach (var enemy in Enemies)
+            foreach(var pickup in Pickups)
             {
-                enemy?.Draw(renderTexture, deltaTime);
+                pickup.Draw(renderTexture, frameTime);
             }
 
-            foreach (var entity in NoEnemyEntities)
+            foreach(var enemy in Enemies)
             {
-                entity?.Draw(renderTexture, deltaTime);
+                enemy.Draw(renderTexture, frameTime);
             }
 
-            Parallel.ForEach(NoEnemyEntities.Where(a => (a is Pickup)), pickupEntity =>
+            foreach(var ability in AbilityEntities)
             {
-                pickupEntity.Draw(renderTexture, deltaTime);
-            });
+                ability.Draw(renderTexture, frameTime);
+            }
 
-            foreach (var particle in Particles)
+            foreach(var particle in Particles)
             {
-                particle?.Draw(renderTexture, deltaTime);
+                particle.Draw(renderTexture, frameTime);
             }
 
             //Thread.Sleep(5);
@@ -250,7 +250,7 @@ namespace sfmlgame.Entities
 
         public Gem CreateGem(float XP, Vector2f pos)
         {
-            Gem freeGem = NoEnemyEntities.FirstOrDefault(x => !x.IsActive && x.GetType() == typeof(Gem)) as Gem;
+            Gem freeGem = Pickups.FirstOrDefault(x => !x.IsActive && x.GetType() == typeof(Gem)) as Gem;
 
             if (freeGem == null)
             {
@@ -271,7 +271,7 @@ namespace sfmlgame.Entities
 
         public Magnet CreateMagnet(Vector2f position)
         {
-            Magnet freeMagnet = NoEnemyEntities.FirstOrDefault(x => !x.IsActive && x.GetType() == typeof(Magnet)) as Magnet;
+            Magnet freeMagnet = Pickups.FirstOrDefault(x => !x.IsActive && x.GetType() == typeof(Magnet)) as Magnet;
 
             if (freeMagnet == null)
             {
@@ -288,7 +288,7 @@ namespace sfmlgame.Entities
         public void MagnetizeAllGems()
         {
             //UniversalLog.LogInfo("magnetizing");
-            foreach(var gem in NoEnemyEntities.Where(x => x.IsActive && x.GetType() == typeof(Gem)))
+            foreach(var gem in Pickups.Where(x => x.IsActive && x.GetType() == typeof(Gem)))
             {
                 gem.IsMagnetized = true;
             }

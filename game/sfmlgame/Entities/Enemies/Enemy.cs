@@ -1,10 +1,6 @@
-﻿
-using sfmglame.Helpers;
-using SFML.Graphics;
+﻿using SFML.Graphics;
 using SFML.System;
-using sfmlgame.Assets;
 using sfmlgame.Entities.Abilitites;
-using sfmlgame.Entities.Particles;
 using sfmlgame.Managers;
 using sfmlgame.UI;
 
@@ -13,22 +9,16 @@ namespace sfmlgame.Entities.Enemies
     public class Enemy : Entity
     {
         public float MinDistance { get; set; } = 25f;
-
         private float speed;
-
         public int HP;
         public int MAXHP;
-
         private UI_ProgressBar hpBar;
-
         private float flashDuration = .1f; // Duration in seconds for the flash effect
         private float flashTimer = 0f; // Timer for the flash effect
-
-
         public bool CanBeDamaged = true;
-        private Clock invisibleClock = new Clock();
-        private float invisDuration = .5f;
-        
+        private Clock invincibleClock = new Clock(); // Renamed for clarity
+        private float invincibilityDuration = .5f; // Duration in seconds for invincibility after being hit
+
 
         public Enemy(string category, string entityName, int frameCount, Vector2f initialPosition, float speed)
             : base(category, entityName, frameCount, initialPosition)
@@ -107,24 +97,20 @@ namespace sfmlgame.Entities.Enemies
         public bool TakeDamage(int dmg)
         {
             if (!CanBeDamaged) return false;
-            CanBeDamaged = false;
-            CanCheckCollision = false;
+
+            CanBeDamaged = false; // Enemy can't be damaged again until timer expires
+            HP -= dmg;
+            flashTimer = flashDuration; // Start the flash effect
+            invincibleClock.Restart(); // Restart the invincibility timer
             SoundManager.Instance.PlayHit();
             Game.Instance.ShakeCamera(0.05f);
             CallDamageNumber(dmg);
             GenerateDamageParticles(GetPosition());
-            HP -= dmg;
 
             if (HP <= 0)
             {
-                IsActive = false; // Assuming additional logic for spawning items or cleanup is done elsewhere
-                flashTimer = 0; // Reset flash timer on defeat
+                IsActive = false; // Enemy defeated
                 return true;
-            }
-            else
-            {
-                flashTimer = flashDuration; // Reset flash timer on taking damage
-
             }
             return false;
         }
@@ -146,21 +132,15 @@ namespace sfmlgame.Entities.Enemies
             if (flashTimer > 0f)
             {
                 flashTimer -= deltaTime;
+                foreach (var sprite in base.animateSpriteComponent.sprites)
+                {
+                    sprite.Color = Color.Red; // Flash color, could be set to any noticeable color
+                }
                 if (flashTimer <= 0f)
                 {
-                    // Ensure all sprites are reset to the normal color
-                    foreach (var item in base.animateSpriteComponent.sprites.ToList())
+                    foreach (var sprite in base.animateSpriteComponent.sprites)
                     {
-                        item.Color = NormalNormalColor;
-                    }
-                    CanCheckCollision = true;
-                }
-                else
-                {
-                    // Change color to black during the flash effect
-                    foreach (var item in base.animateSpriteComponent.sprites.ToList())
-                    {
-                        item.Color = new Color(0, 0, 0, 255); // RGBA for black
+                        sprite.Color = NormalNormalColor; // Reset to normal color
                     }
                 }
             }
@@ -210,24 +190,16 @@ namespace sfmlgame.Entities.Enemies
             base.Update(player, deltaTime);
             MoveTowardsPlayer(player, deltaTime);
 
-            //base.SetHitBoxDimensions(new FloatRect(GetPosition().X, GetPosition().Y, GetBounds().Width, GetBounds().Height));
-
-            if (CanBeDamaged == false)
+            // Check if invincibility duration has expired
+            if (!CanBeDamaged && invincibleClock.ElapsedTime.AsSeconds() >= invincibilityDuration)
             {
-                if (invisibleClock.ElapsedTime.AsSeconds() >= invisDuration)
-                {
-                    CanBeDamaged = true;
-                    CanCheckCollision = true;
-                    invisibleClock.Restart();
-                }
-            }
-            else
-            {
-                CheckCollisionWithAbilityEntities();
+                CanBeDamaged = true; // Enemy can be damaged again
             }
 
-            hpBar.Update(deltaTime);
+            CheckCollisionWithAbilityEntities();
 
+            HitFlash(deltaTime); // Process any ongoing hit flash
+            hpBar.Update(deltaTime); // Update the health bar
         }
 
         private void CheckCollisionWithAbilityEntities()
@@ -236,8 +208,6 @@ namespace sfmlgame.Entities.Enemies
             //Console.WriteLine(abilityEntities.Count() + " abilities could hurt me!");
             foreach (AbilityEntity ability in abilityEntities.Where(x => x.IsActive))
             {
-
-
                 if (ability.CanCheckCollision)
                 {
                     if (CheckCollision(ability))
