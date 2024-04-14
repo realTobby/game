@@ -24,8 +24,13 @@ namespace sfmlgame.UI
 
         private RenderTexture perfectSizeButtonSprite;
 
+        private bool isButtonPressed; // Flag to check if the button is already pressed
+
+
         public UI_Button(Vector2f pos, string buttonText, int textSize, int width, int height, Color color) : base(pos)
         {
+            isButtonPressed = false; // Initialize the button press state
+
             _width = width;
             _height = height;
 
@@ -67,31 +72,33 @@ namespace sfmlgame.UI
 
             if (lastRenderTarget != null)
             {
-                // Adjust mouse position based on the view offset
-                mousePos.X += (int)lastRenderTarget.GetView().Center.X - (int)lastRenderTarget.GetView().Size.X / 2;
-                mousePos.Y += (int)lastRenderTarget.GetView().Center.Y - (int)lastRenderTarget.GetView().Size.Y / 2;
-
+                // Adjust mouse position based on the view offset...
                 FloatRect buttonBounds = _buttonSprite.GetGlobalBounds();
 
-                // Check if mouse is over the button
                 if (buttonBounds.Contains(mousePos.X, mousePos.Y))
                 {
                     _buttonSprite.Color = hoverColor;
 
-                    // Check if button is clicked
                     if (Mouse.IsButtonPressed(Mouse.Button.Left))
                     {
-                        _buttonSprite.Color = clickedColor;
-                        ClickAction?.Invoke();
+                        if (!isButtonPressed)
+                        {
+                            _buttonSprite.Color = clickedColor;
+                            ClickAction?.Invoke();
+                            isButtonPressed = true; // Set the flag when the button is pressed
+                        }
+                    }
+                    else
+                    {
+                        isButtonPressed = false; // Reset the flag when the mouse button is released
                     }
                 }
                 else
                 {
                     _buttonSprite.Color = normalColor;
+                    isButtonPressed = false; // Also reset here to handle edge cases
                 }
             }
-
-            _text.Update(deltaTime);
         }
     }
 }
