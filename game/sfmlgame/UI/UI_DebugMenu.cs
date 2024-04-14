@@ -19,12 +19,15 @@ namespace sfmlgame.UI
 
         UI_Button debugTeleport;
 
+        UI_Button debugSpawnWave;
+
         public UI_DebugMenu(Vector2f position) : base(position)
         {
             backgroundShape = new RectangleShape(new Vector2f(300, 500));
             backgroundShape.Position = position;
 
-            debugHeaderText = new UI_Text("Debug-Menu", 24, new Vector2f(position.X + 10, position.Y + 10));
+            debugHeaderText = new UI_Text("Debug-Menu", 36, new Vector2f(position.X + 10, position.Y + 10));
+            debugHeaderText.SetBold(true);
 
             debugLevelUp = new UI_Button(new Vector2f(position.X+10, position.Y+60), "Gain Level", 40, 280, 64, Color.Magenta);
             debugLevelUp.ClickAction = () =>
@@ -37,6 +40,13 @@ namespace sfmlgame.UI
             {
                 Game.Instance.PLAYER.SetPosition(new Vector2f(0, 0));
             };
+
+            debugSpawnWave = new UI_Button(new Vector2f(position.X + 10, position.Y + 84 + 60 + 84), "Spawn Wave", 40, 280, 64, Color.Green);
+            debugSpawnWave.ClickAction = () =>
+            {
+                Game.Instance.WaveManager.StartWave();
+            };
+
         }
 
         public override void Draw(RenderTexture renderTexture)
@@ -49,6 +59,8 @@ namespace sfmlgame.UI
 
             debugLevelUp.Draw(renderTexture);
             debugTeleport.Draw(renderTexture);
+
+            debugSpawnWave.Draw(renderTexture);
         }
 
         public override void Update(float deltaTime)
@@ -59,6 +71,8 @@ namespace sfmlgame.UI
 
             debugLevelUp.Update(deltaTime);
             debugTeleport.Update(deltaTime);
+
+            debugSpawnWave.Update(deltaTime);
         }
     }
 }

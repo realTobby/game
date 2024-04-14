@@ -136,7 +136,7 @@ namespace sfmlgame
             {
                 waveTimer.Restart();
                 GenerateNewWave();
-                WaveManager.StartWave();
+                //WaveManager.StartWave();
                 waveCooldown = 10f;
             }
         }
