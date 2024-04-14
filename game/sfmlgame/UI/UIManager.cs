@@ -51,7 +51,7 @@ namespace sfmlgame.UI
                 }
                 else
                 {
-                    freeDamageNumber.ResetFromPool(worldPos);
+                    freeDamageNumber.ResetFromPool(worldPos, amount);
                     freeDamageNumber.IsActive = true;
                 }
             }catch(Exception ex)

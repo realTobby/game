@@ -37,7 +37,7 @@ namespace sfmlgame.UI
             damageText.Position = this.uiPosition;
             damageText.SetPosition(this.uiPosition);
 
-            if(rnd.Next(0,100) == 0)
+            if(rnd.Next(0,100) >= 50)
             {
                 damageText.SetColor(new Color(231, 41, 41, 255));
             }
@@ -45,12 +45,25 @@ namespace sfmlgame.UI
             //GameScene.Instance._uiManager.AddComponent(this);
         }
 
-        public void ResetFromPool(Vector2f worldPos)
+        public void ResetFromPool(Vector2f worldPos, int amount)
         {
             this.worldPosition = worldPos; // Store the original world position
             this.uiPosition = Game.Instance.ConvertWorldToViewPosition(worldPos); // Convert and store the initial screen position
             SetPosition(this.uiPosition); // You might not need this line if uiPosition is solely used for rendering
+
+            UIBinding<string> damageBinding = new UIBinding<string>(() => amount.ToString());
+            damageText = new UI_Text(string.Empty, 0, this.uiPosition, damageBinding);
+            damageText.SetColor(new Color(0, 0, 0, 255)); // Start fully opaque
+            damageText.SetBold(true);
+            damageText.SetSize(35);
+            damageText.Position = this.uiPosition;
             damageText.SetPosition(this.uiPosition);
+
+            if (rnd.Next(0, 100) >= 50)
+            {
+                damageText.SetColor(new Color(231, 41, 41, 255));
+            }
+
             elapsedTime = 0;
         }
 

@@ -56,7 +56,7 @@ namespace sfmlgame.Entities
         {
             Damage += 1;
 
-            Speed += 0.25f;
+            Speed += 1.25f;
 
             Level += levels;
 
