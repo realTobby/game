@@ -19,6 +19,7 @@ namespace sfmlgame.Entities.Enemies
         private Clock invincibleClock = new Clock(); // Renamed for clarity
         private float invincibilityDuration = .2f; // Duration in seconds for invincibility after being hit
 
+        public bool IsStatic = false;
 
         public Enemy(string category, string entityName, int frameCount, Vector2f initialPosition, float speed)
             : base(category, entityName, frameCount, initialPosition)
@@ -189,7 +190,11 @@ namespace sfmlgame.Entities.Enemies
         public override void Update(Player player, float deltaTime)
         {
             base.Update(player, deltaTime);
-            MoveTowardsPlayer(player, deltaTime);
+            if (!IsStatic)
+            {
+                MoveTowardsPlayer(player, deltaTime);
+            }
+            
 
             // Check if invincibility duration has expired
             if (!CanBeDamaged && invincibleClock.ElapsedTime.AsSeconds() >= invincibilityDuration)
@@ -217,7 +222,7 @@ namespace sfmlgame.Entities.Enemies
                         {
                             ability.CollidedWith(this);
                             //Console.WriteLine("I got hit by " + ability.AbilityName);
-                            TakeDamage(Game.Instance.PLAYER.Damage);
+                            TakeDamage(Game.Instance.PLAYER.Damage + ability.Damage);
                         }
                         
                     }

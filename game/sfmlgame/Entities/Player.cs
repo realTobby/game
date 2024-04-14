@@ -139,21 +139,28 @@ namespace sfmlgame.Entities
 
         private float pickupRadius = 100f; // 100 pixels as an example, adjust based on your game's scale
 
+        // Add this field at the class level to keep track of whether the key was previously pressed
+        private bool previousGKeyPressed = false;
 
         public void Update(float deltaTime)
         {
-            
-
             Vector2f movement = new Vector2f();
             if (Keyboard.IsKeyPressed(Keyboard.Key.W)) movement.Y -= Speed * deltaTime;
             if (Keyboard.IsKeyPressed(Keyboard.Key.S)) movement.Y += Speed * deltaTime;
             if (Keyboard.IsKeyPressed(Keyboard.Key.A)) movement.X -= Speed * deltaTime;
             if (Keyboard.IsKeyPressed(Keyboard.Key.D)) movement.X += Speed * deltaTime;
 
-            if(Keyboard.IsKeyPressed(Keyboard.Key.G))
+            // Check current state of the 'G' key
+            bool currentGKeyPressed = Keyboard.IsKeyPressed(Keyboard.Key.G);
+
+            // Toggle the debug mode only on key press and ensure the key was not pressed in the previous frame
+            if (currentGKeyPressed && !previousGKeyPressed)
             {
                 Game.Instance.Debug = !Game.Instance.Debug;
             }
+
+            // Update the previous key state for the next frame
+            previousGKeyPressed = currentGKeyPressed;
 
             base.SetPosition(GetPosition() + movement);
 
@@ -175,7 +182,6 @@ namespace sfmlgame.Entities
             //CheckXP();
 
             base.Update(this, deltaTime);
-
         }
 
         public override void Draw(RenderTexture renderTexture, float deltaTime)

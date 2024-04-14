@@ -14,6 +14,8 @@ namespace sfmlgame.Entities.Enemies
 
         public void StartWave()
         {
+            // i need a debug enemy, waiting for waves is bad for testing stuff fast
+            return;
             if (Game.Instance.EntityManager.Enemies.Where(x => x.IsActive).Count() < 75)
             {
                 var toSpawnWaves = enemyWaves.Where(x => x.IsSpawned == false);

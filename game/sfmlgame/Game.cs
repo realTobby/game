@@ -197,8 +197,11 @@ namespace sfmlgame
             lastPlayerChunkIndex = world.CalculateChunkIndex(PLAYER.GetPosition());
             AttachCamera(PLAYER);
 
-            MainPowerUpMenu = new UI_PowerupMenu((Vector2f)_gameWindow.Size/2);
+            MainPowerUpMenu = new UI_PowerupMenu((Vector2f)_gameWindow.Size/2, 800, 800);
             UIManager.AddComponent(MainPowerUpMenu);
+
+            var debugMenu = new UI_DebugMenu(new Vector2f(10,10));
+            UIManager.AddComponent(debugMenu);
 
             world.ManageChunks(PLAYER.GetPosition());
 
@@ -208,6 +211,9 @@ namespace sfmlgame
 
             PLAYER.LevelUp(1);
 
+            var enemy = Game.Instance.EntityManager.CreateEnemy(new Vector2f(0, 0), 999999);
+            enemy.IsStatic = true;
+
             while (_gameWindow.IsOpen)
             {
                 _gameWindow.DispatchEvents();
@@ -215,6 +221,9 @@ namespace sfmlgame
                 Update();
                 Draw();
             }
+
+            
+
         }
 
         public float DELTATIME => GameClock.Restart().AsSeconds();
