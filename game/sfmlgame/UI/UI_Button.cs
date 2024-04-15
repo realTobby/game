@@ -100,5 +100,13 @@ namespace sfmlgame.UI
                 }
             }
         }
+
+        public override void SetPosition(Vector2f newPosition)
+        {
+            Position = newPosition;
+            _buttonSprite.Position = newPosition;
+            _text.textComp.Position = new Vector2f(newPosition.X + _width / 2.0f, newPosition.Y + _height / 2.0f);
+        }
+
     }
 }

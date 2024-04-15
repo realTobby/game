@@ -1,6 +1,7 @@
 ﻿using SFML.Graphics;
 using SFML.System;
 using sfmlgame.Assets;
+using sfmlgame.Entities.Overworld;
 using System.Collections.Generic;
 using System.Security.Cryptography;
 
@@ -14,6 +15,8 @@ namespace sfmlgame.World
         private int tileSize;
         private int chunkSize = 32; // Number of tiles per side in the chunk
 
+        public bool Traps = false;
+
         public Chunk(Vector2i position, int tileSize)
         {
             this.tileSize = tileSize;
@@ -21,6 +24,10 @@ namespace sfmlgame.World
             indexText = new Text($"({Position.X}, {Position.Y})", GameAssets.Instance.pixelFont1, 19);
 
             debugOutline = new RectangleShape(new Vector2f(chunkSize * tileSize, chunkSize * tileSize));
+
+
+            // create a random amount of traps inside the chunk, scatter them arround, spawn with Game.Instance.EntityManager.CreateTrap(pos);
+
         }
 
         // Activates or deactivates the chunk
@@ -321,6 +328,32 @@ namespace sfmlgame.World
 
             return position.X >= left && position.X < right && position.Y >= top && position.Y < bottom;
         }
+
+        private List<ChunkTrapTrigger> traps = new List<ChunkTrapTrigger>(); // List to hold trap entities
+
+        public void GenerateTraps()
+        {
+            if (Traps) return;
+
+            Traps = true;
+
+            int numTraps = Random.Shared.Next(1, 5); // Randomly decide on the number of traps
+            for (int i = 0; i < numTraps; i++)
+            {
+                Vector2f trapPosition = GetRandomTrapPosition();
+                ChunkTrapTrigger trap = Game.Instance.EntityManager.CreateTrapTrigger(trapPosition);
+                traps.Add(trap); // Add the trap to the list
+            }
+        }
+
+        private Vector2f GetRandomTrapPosition()
+        {
+            int x = Random.Shared.Next(0, chunkSize);
+            int y = Random.Shared.Next(0, chunkSize);
+            return new Vector2f(Position.X * chunkSize * tileSize + x * tileSize, Position.Y * chunkSize * tileSize + y * tileSize);
+        }
+
+        
 
     }
 }

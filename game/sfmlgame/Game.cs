@@ -70,6 +70,8 @@ namespace sfmlgame
 
             LoadCRTShader();
 
+            EntityManager = new EntityManager();
+
             world = new WorldManager(18);
 
             
@@ -205,14 +207,13 @@ namespace sfmlgame
 
             world.ManageChunks(PLAYER.GetPosition());
 
-            EntityManager = new EntityManager();
+            
 
             WaveManager = new WaveManager();
 
             PLAYER.LevelUp(1);
 
-            var enemy = Game.Instance.EntityManager.CreateEnemy(new Vector2f(0, 0), 999999);
-            enemy.IsStatic = true;
+            
 
             while (_gameWindow.IsOpen)
             {

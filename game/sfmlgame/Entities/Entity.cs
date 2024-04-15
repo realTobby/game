@@ -103,7 +103,7 @@ namespace sfmlgame.Entities
             IsActive = true;
         }
 
-        private void SetDebugDraw()
+        internal void SetDebugDraw()
         {
             var width = animateSpriteComponent.sprites[0].TextureRect.Width;
             var height = animateSpriteComponent.sprites[0].TextureRect.Height;

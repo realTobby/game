@@ -173,6 +173,7 @@ namespace sfmlgame.Entities
             if (CurrentChunkIndex != PreviousChunkIndex)
             {
                 world.ManageChunks(GetPosition());
+                world.UpdateTrapsForCurrentChunk(CurrentChunkIndex);
             }
 
             UpdatePlayerAbilities(deltaTime);

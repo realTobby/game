@@ -1,10 +1,12 @@
 ﻿using System.Collections.Concurrent;
 using sfmglame.Helpers;
+using SFML.Graphics;
 using SFML.System;
 using sfmlgame.Assets;
 using sfmlgame.Entities.Abilities;
 using sfmlgame.Entities.Abilitites;
 using sfmlgame.Entities.Enemies;
+using sfmlgame.Entities.Overworld;
 using sfmlgame.Entities.Particles;
 using sfmlgame.Entities.Pickups;
 
@@ -292,6 +294,33 @@ namespace sfmlgame.Entities
             {
                 gem.IsMagnetized = true;
             }
+        }
+
+        public ChunkTrapTrigger CreateTrapTrigger(Vector2f pos)
+        {
+            ChunkTrapTrigger trap = AllEntities.OfType<ChunkTrapTrigger>().FirstOrDefault(x => !x.IsActive);
+            if (trap == null)
+            {
+                // Assuming a default sprite for traps; customize as needed
+                int width = Random.Shared.Next(100, 500);
+                int height = Random.Shared.Next(100, 500);
+
+                var perfectSizeButtonSprite = new RenderTexture((uint)width, (uint)height);
+                perfectSizeButtonSprite.Clear(SFML.Graphics.Color.Transparent); // Optional, if you want transparency
+                perfectSizeButtonSprite.Display(); // Finish rendering
+
+                // Create a new texture from the RenderTexture
+                var _buttonTexture = new Texture(perfectSizeButtonSprite.Texture);
+                var _buttonSprite = new Sprite(_buttonTexture);
+                trap = new ChunkTrapTrigger(pos, _buttonSprite);
+                allEntities.Add(trap);
+            }
+            else
+            {
+                trap.ResetFromPool(pos);
+            }
+
+            return trap;
         }
     }
 }

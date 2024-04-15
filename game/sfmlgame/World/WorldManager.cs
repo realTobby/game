@@ -114,5 +114,11 @@ namespace sfmlgame.World
             int yIndex = (int)Math.Floor(position.Y / (chunkSize * tileSize));
             return new Vector2i(xIndex, yIndex);
         }
+
+        internal void UpdateTrapsForCurrentChunk(Vector2i currentChunkIndex)
+        {
+            var chunk = activeChunks[currentChunkIndex];
+            chunk.GenerateTraps();
+        }
     }
 }

@@ -9,6 +9,7 @@ namespace sfmlgame.Assets
 {
     public enum TileType
     {
+        Invisible,
         Grass,
         Skull,
         Station,
