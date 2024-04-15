@@ -40,6 +40,9 @@ namespace sfmlgame.UI
             textComp.OutlineThickness = 3f;
 
             textComp.Position = pos;
+
+            Height = size;
+            Width = text.Length * size;
         }
 
         
@@ -56,6 +59,8 @@ namespace sfmlgame.UI
             textComp.OutlineThickness = 1.25f;
 
             textComp.Position = pos;
+            Height = size;
+            Width = text.Length * size;
         }
 
         public void SetText(string newText, uint size)

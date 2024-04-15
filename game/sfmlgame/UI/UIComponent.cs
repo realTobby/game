@@ -9,6 +9,9 @@ namespace sfmlgame.UI
 
         public bool IsActive = false;
 
+        public int Width;
+        public int Height;
+
         public Vector2f Position
         {
             get { return _position; }

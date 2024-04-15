@@ -10,8 +10,7 @@ namespace sfmlgame.UI
 
         public UI_Text _text;
         int _textSize;
-        public int _width;
-        public int _height;
+        
         Sprite _buttonSprite;
         Texture _buttonTexture;
         string _buttonText;
@@ -31,8 +30,8 @@ namespace sfmlgame.UI
         {
             isButtonPressed = false; // Initialize the button press state
 
-            _width = width;
-            _height = height;
+            Width = width;
+            Height = height;
 
             // Create a RenderTexture with the desired dimensions
             perfectSizeButtonSprite = new RenderTexture((uint)width, (uint)height);
@@ -105,7 +104,7 @@ namespace sfmlgame.UI
         {
             Position = newPosition;
             _buttonSprite.Position = newPosition;
-            _text.textComp.Position = new Vector2f(newPosition.X + _width / 2.0f, newPosition.Y + _height / 2.0f);
+            _text.textComp.Position = new Vector2f(newPosition.X + Width / 2.0f, newPosition.Y + Height / 2.0f);
         }
 
     }

@@ -1,4 +1,5 @@
-﻿using SFML.Graphics;
+﻿using sfmglame.Helpers;
+using SFML.Graphics;
 using SFML.System;
 using sfmlgame.Assets;
 using sfmlgame.Entities;
@@ -24,7 +25,6 @@ namespace sfmlgame.UI
 
 
         UI_Group debugEntitySpawn;
-        UI_Button debugSpawnWave; // entry button for debugEntitySpawn stuff
         
 
         public UI_DebugMenu(Vector2f position) : base(position)
@@ -45,7 +45,7 @@ namespace sfmlgame.UI
             debugHeaderText = new UI_Text("Debug-Menu", 36, new Vector2f(position.X + 10, position.Y + 10));
             debugHeaderText.SetBold(true);
 
-            //debugButtons.AddChild(debugHeaderText);
+            debugButtons.AddChild(debugHeaderText);
 
             debugLevelUp = new UI_Button(new Vector2f(position.X + 20, position.Y + 20), "Gain Level", 40, 280, 64, Color.Magenta);
             debugLevelUp.ClickAction = () =>
@@ -55,52 +55,74 @@ namespace sfmlgame.UI
 
             debugButtons.AddChild(debugLevelUp);
 
-
-            debugTeleport = new UI_Button(new Vector2f(position.X + 10, position.Y + 10), "Teleport", 40, 280, 64, Color.Yellow);
+            debugTeleport = new UI_Button(new Vector2f(position.X + 20, position.Y + 20), "Teleport", 40, 280, 64, Color.Yellow);
             debugTeleport.ClickAction = () =>
             {
                 Game.Instance.PLAYER.SetPosition(new Vector2f(0, 0));
             };
             debugButtons.AddChild(debugTeleport);
 
-            debugSpawnWave = new UI_Button(new Vector2f(position.X + 10, position.Y + 10), "Spawn Wave", 40, 280, 64, Color.Green);
-            debugSpawnWave.ClickAction = () =>
-            {
-                Game.Instance.WaveManager.StartWave();
-            };
-            debugButtons.AddChild(debugSpawnWave);
+            //debugSpawnWave = new UI_Button(new Vector2f(position.X + 10, position.Y + 10), "Spawn Wave", 40, 280, 64, Color.Green);
+            //debugSpawnWave.ClickAction = () =>
+            //{
+            //    Game.Instance.WaveManager.StartWave();
+            //};
+            //debugButtons.AddChild(debugSpawnWave);
 
-            // Initialize UI_Group without setting positions for children here
-            debugEntitySpawn = new UI_Group(new Vector2f(debugSpawnWave.Position.X, debugSpawnWave.Position.Y+debugSpawnWave._height+10), "Spawn");
-            
+            debugEntitySpawn = new UI_Group(new Vector2f(debugTeleport.Position.X, debugTeleport.Position.Y + debugTeleport.Height + 10), "Monster");
+            AddDebugSpawnOptions();
             debugButtons.AddChild(debugEntitySpawn);
 
-            AddDebugSpawnOptions();
+            var debugNPCGroup = new UI_Group(new Vector2f(debugEntitySpawn.Position.X, debugEntitySpawn.Position.Y + debugEntitySpawn.baseButton.Height + 10), "NPC");
+            
+            var placeholderNPC1 = new UI_Button(pos, "Placeholder NPC1", 40, 280, 64, RandomExtensions.GenerateRandomPastelColor());
+            placeholderNPC1.ClickAction = () =>
+            {
+                Game.Instance.PLAYER.LevelUp(1);
+                debugNPCGroup.IsOpen = false;
+            };
 
+            debugNPCGroup.AddChild(placeholderNPC1);
+
+            debugButtons.AddChild(debugNPCGroup);
+
+            
+
+        }
+
+        private void InitSpawnOptions()
+        {
+            // Initialize UI_Group without setting positions for children here
+            
         }
 
         private void AddDebugSpawnOptions()
         {
             // Adding children without manually setting positions
-            UI_Button childSpawnSimpleEnemy = new UI_Button(base.Position, "Enemy", 36, 280, 64, new Color(50, 168, 164, 255));
+            UI_Button childSpawnSimpleEnemy = new UI_Button(base.Position, "Enemy", 36, 280, 64, RandomExtensions.GenerateRandomPastelColor());
             childSpawnSimpleEnemy.ClickAction = () =>
             {
                 var enemy = Game.Instance.EntityManager.CreateEnemy(new Vector2f(Game.Instance.PLAYER.GetPosition().X, Game.Instance.PLAYER.GetPosition().Y - 100), 1);
+                debugEntitySpawn.IsOpen = false;
             };
-            debugEntitySpawn.AddChild(childSpawnSimpleEnemy);
+                debugEntitySpawn.AddChild(childSpawnSimpleEnemy);
 
-            UI_Button childSpawnMonsterPack = new UI_Button(base.Position, "MonsterPack", 36, 280, 64, new Color(155, 89, 182, 255));
+            UI_Button childSpawnMonsterPack = new UI_Button(base.Position, "MonsterPack", 36, 280, 64, RandomExtensions.GenerateRandomPastelColor());
             childSpawnMonsterPack.ClickAction = () =>
             {
                 MonsterFactory.SpawnMonsterPack(Game.Instance.PLAYER.Level * 2);
+                debugEntitySpawn.IsOpen = false;
             };
             debugEntitySpawn.AddChild(childSpawnMonsterPack);
 
-            UI_Button spawnChunkyBoy = new UI_Button(base.Position, "ChunkyBoy", 36, 280, 64, new Color(170, 240, 209, 255));
+            UI_Button spawnChunkyBoy = new UI_Button(base.Position, "ChunkyBoy", 36, 280, 64, RandomExtensions.GenerateRandomPastelColor());
             spawnChunkyBoy.ClickAction = () =>
             {
-                chunkyBoy.IsActive = !chunkyBoy.IsActive;
-                chunkyBoy.SetPosition(new Vector2f(Game.Instance.PLAYER.GetPosition().X, Game.Instance.PLAYER.GetPosition().Y - 200));
+                var newChunky = Game.Instance.EntityManager.CreateEnemy(new Vector2f(Game.Instance.PLAYER.GetPosition().X, Game.Instance.PLAYER.GetPosition().Y - 200), 999999);
+                newChunky.IsStatic = true;
+                debugEntitySpawn.IsOpen = false;
+                //chunkyBoy.IsActive = !chunkyBoy.IsActive;
+                //chunkyBoy.SetPosition(new Vector2f(Game.Instance.PLAYER.GetPosition().X, Game.Instance.PLAYER.GetPosition().Y - 200));
             };
             debugEntitySpawn.AddChild(spawnChunkyBoy);
         }

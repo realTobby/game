@@ -1,4 +1,5 @@
-﻿using SFML.Graphics;
+﻿using sfmglame.Helpers;
+using SFML.Graphics;
 using SFML.System;
 using System.Collections.Generic;
 
@@ -15,7 +16,7 @@ namespace sfmlgame.UI
 
         public UI_Group(Vector2f position, string name) : base(position)
         {
-            baseButton = new UI_Button(new Vector2f(position.X, position.Y), name, 40, 280, 64, Color.Magenta);
+            baseButton = new UI_Button(new Vector2f(position.X, position.Y), name, 40, 280, 64, RandomExtensions.GenerateRandomPastelColor());
             baseButton.ClickAction = () =>
             {
                 if(!HideBase)
@@ -24,6 +25,10 @@ namespace sfmlgame.UI
                 }
                 
             };
+
+
+            Width = baseButton.Width;
+            Height = baseButton.Height;
         }
 
         public void AddChild(UIComponent comp)
@@ -46,7 +51,7 @@ namespace sfmlgame.UI
                     // For subsequent children, position them below the previous child
                     newPosition = new Vector2f(
                         Position.X + 10, // Maintain the same x offset
-                        children[^1].Position.Y + ((UI_Button)children[^1])._height + verticalSpacing // Position below the previous child
+                        children[^1].Position.Y + (children[^1]).Height + verticalSpacing // Position below the previous child
                     );
                 }
             }
@@ -56,7 +61,7 @@ namespace sfmlgame.UI
                 if (children.Count == 0)
                 {
                     newPosition = new Vector2f(
-                        Position.X + baseButton._width + 10, // Offset x by the width of the baseButton and a little margin
+                        Position.X + baseButton.Width + 10, // Offset x by the width of the baseButton and a little margin
                         Position.Y // Same y-level as baseButton
                     );
                 }
@@ -64,8 +69,8 @@ namespace sfmlgame.UI
                 {
                     // For subsequent children, position them below the previous child
                     newPosition = new Vector2f(
-                        Position.X + baseButton._width + 10, // Maintain the same x offset
-                        children[^1].Position.Y + ((UI_Button)children[^1])._height + verticalSpacing // Position below the previous child
+                        Position.X + baseButton.Width + 10, // Maintain the same x offset
+                        children[^1].Position.Y + ((UI_Button)children[^1]).Height + verticalSpacing // Position below the previous child
                     );
                 }
             }
@@ -80,6 +85,9 @@ namespace sfmlgame.UI
             {
                 button.SetPosition(newPosition);
             }
+
+            Width = baseButton.Width;
+            Height = children.Count * baseButton.Height + 10;
 
             // Add the component to the list of children
             children.Add(comp);
