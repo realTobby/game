@@ -14,9 +14,13 @@ namespace sfmlgame
 
     public class Game
     {
+        
+
         private static readonly Lazy<Game> _instance = new Lazy<Game>(() => new Game());
         public static Game Instance => _instance.Value;
 
+
+        public static string GameVersion = "0.1.1";
         private Clock shaderClock = new Clock();
 
         private RenderWindow _gameWindow;
