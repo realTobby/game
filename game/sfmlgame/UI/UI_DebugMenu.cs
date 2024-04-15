@@ -4,6 +4,7 @@ using SFML.System;
 using sfmlgame.Assets;
 using sfmlgame.Entities;
 using sfmlgame.Entities.Enemies;
+using sfmlgame.Managers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -39,13 +40,28 @@ namespace sfmlgame.UI
             chunkyBoy.IsStatic = true;
             chunkyBoy.IsActive = false;
 
-            backgroundShape = new RectangleShape(new Vector2f(300, 500));
+            backgroundShape = new RectangleShape(new Vector2f(300, 550));
             backgroundShape.Position = position;
 
-            debugHeaderText = new UI_Text("Debug-Menu", 36, new Vector2f(position.X + 10, position.Y + 10));
-            debugHeaderText.SetBold(true);
+            var gameTitle = new UI_Text("Twilight Requiem", 40, new Vector2f(position.X + 10, position.Y + 10));
+            gameTitle.SetBold(true);
+            debugButtons.AddChild(gameTitle);
 
+            var gameVersion = new UI_Text("v0.1.0", 40, new Vector2f(position.X + 10, position.Y + 10));
+            gameVersion.SetBold(true);
+            debugButtons.AddChild(gameVersion);
+
+            debugHeaderText = new UI_Text("Debug-Menu", 24, new Vector2f(position.X + 10, position.Y + 10));
+            debugHeaderText.SetBold(true);
             debugButtons.AddChild(debugHeaderText);
+
+            UIBinding<string> soundChannelsBinding = new UIBinding<string>(() => SoundManager.Instance.GetActiveChannels().ToString());
+            UI_Text soundChannels = new UI_Text("Sound Channels: ", 36, new Vector2f(10, 10), soundChannelsBinding);
+            debugButtons.AddChild(soundChannels);
+
+            UIBinding<string> entityCountBinding = new UIBinding<string>(() => Game.Instance.EntityManager.AllEntities.Count().ToString());
+            UI_Text entityCountText = new UI_Text("Entity Count: ", 36, new Vector2f(10, 10), entityCountBinding);
+            debugButtons.AddChild(entityCountText);
 
             debugLevelUp = new UI_Button(new Vector2f(position.X + 20, position.Y + 20), "Gain Level", 40, 280, 64, Color.Magenta);
             debugLevelUp.ClickAction = () =>
@@ -86,8 +102,8 @@ namespace sfmlgame.UI
 
             debugButtons.AddChild(debugNPCGroup);
 
-            
 
+            
         }
 
         private void InitSpawnOptions()
@@ -118,7 +134,7 @@ namespace sfmlgame.UI
             UI_Button spawnChunkyBoy = new UI_Button(base.Position, "ChunkyBoy", 36, 280, 64, RandomExtensions.GenerateRandomPastelColor());
             spawnChunkyBoy.ClickAction = () =>
             {
-                var newChunky = Game.Instance.EntityManager.CreateEnemy(new Vector2f(Game.Instance.PLAYER.GetPosition().X, Game.Instance.PLAYER.GetPosition().Y - 200), 999999);
+                var newChunky = Game.Instance.EntityManager.CreateEnemy(new Vector2f(Game.Instance.PLAYER.GetPosition().X, Game.Instance.PLAYER.GetPosition().Y - 200), 5000);
                 newChunky.IsStatic = true;
                 debugEntitySpawn.IsOpen = false;
                 //chunkyBoy.IsActive = !chunkyBoy.IsActive;

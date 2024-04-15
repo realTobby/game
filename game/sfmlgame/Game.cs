@@ -187,13 +187,7 @@ namespace sfmlgame
             UI_Text fpsCounter = new UI_Text("FPS: ", 36, new Vector2f(10, _gameWindow.Size.Y - 50), fpsBinding);
             UIManager.AddComponent(fpsCounter);
 
-            UIBinding<string> soundChannelsBinding = new UIBinding<string>(() => SoundManager.Instance.GetActiveChannels().ToString());
-            UI_Text soundChannels = new UI_Text("Sound Channels: ", 36, new Vector2f(10, _gameWindow.Size.Y - 100), soundChannelsBinding);
-            UIManager.AddComponent(soundChannels);
-
-            UIBinding<string> entityCountBinding = new UIBinding<string>(() => EntityManager.AllEntities.Count().ToString());
-            UI_Text entityCountText = new UI_Text("Entity Count: ", 36, new Vector2f(10, _gameWindow.Size.Y - 150), entityCountBinding);
-            UIManager.AddComponent(entityCountText);
+            
 
             PLAYER = new Player(GameAssets.Instance.TextureLoader.GetTexture("priestess_0", "Entities/priestess"), new Vector2f(16 * 16, 16 * 16), world);
             lastPlayerChunkIndex = world.CalculateChunkIndex(PLAYER.GetPosition());

@@ -86,6 +86,11 @@ namespace sfmlgame.UI
                 button.SetPosition(newPosition);
             }
 
+            if (comp is UI_Text text)
+            {
+                text.SetPosition(newPosition);
+            }
+
             Width = baseButton.Width;
             Height = children.Count * baseButton.Height + 10;
 
