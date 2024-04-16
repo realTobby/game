@@ -33,6 +33,7 @@ namespace sfmlgame.Scenes
 
         public override void LoadContent()
         {
+            backgroundMusic.Loop = true;
             backgroundMusic.Play();
 
             Game.Instance.World.ManageChunks(Game.Instance.PLAYER.GetPosition());

@@ -2,6 +2,7 @@
 using SFML.Graphics;
 using SFML.System;
 using SFML.Window;
+using sfmlgame.Managers;
 
 namespace sfmlgame.UI
 {
@@ -89,6 +90,7 @@ namespace sfmlgame.UI
                         {
                             _buttonSprite.Color = clickedColor;
                             ClickAction?.Invoke();
+                            SoundManager.Instance.PlaySelectSound();
                             isButtonPressed = true; // Set the flag when the button is pressed
                         }
                     }

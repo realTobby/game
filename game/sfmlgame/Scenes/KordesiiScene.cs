@@ -1,5 +1,6 @@
 ﻿using SFML.Graphics;
 using SFML.System;
+using sfmlgame.Managers;
 using sfmlgame.UI;
 using System;
 using System.Collections.Generic;
@@ -35,6 +36,8 @@ namespace sfmlgame.Scenes
             kordesiiTitle.SetPosition(new Vector2f(centerPos.X - kordesiiTitle.Width / 2, centerPos.Y-kordesiiTitle.Height/2)); // Re-adjust X to be truly centered
 
             Game.Instance.UIManager.AddComponent(kordesiiTitle);
+
+            SoundManager.Instance.PlaySelectSound();
 
         }
 

@@ -27,6 +27,7 @@ namespace sfmlgame.Scenes
 
         public override void LoadContent()
         {
+            backgroundMusic.Loop = true;
             backgroundMusic.Play();
 
             backgroundSprite.Position = new Vector2f(0, 0);

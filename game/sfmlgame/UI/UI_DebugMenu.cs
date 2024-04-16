@@ -90,7 +90,7 @@ namespace sfmlgame.UI
             var placeholderNPC1 = new UI_Button(pos, "Placeholder NPC1", 40, 280, 64, RandomExtensions.GenerateRandomPastelColor());
             placeholderNPC1.ClickAction = () =>
             {
-                Game.Instance.PLAYER.LevelUp(1);
+                Game.Instance.EntityManager.CreateNPC(new Vector2f(Game.Instance.PLAYER.GetPosition().X, Game.Instance.PLAYER.GetPosition().Y - 100));
                 debugNPCGroup.IsOpen = false;
             };
 

@@ -13,6 +13,8 @@ namespace sfmlgame.Entities
 {
     public abstract class Entity
     {
+        public bool IsStatic = false;
+
         internal AnimatedSprite animateSpriteComponent;
 
         public bool IsActive = false;

@@ -19,7 +19,7 @@ namespace sfmlgame.Entities.Enemies
         private Clock invincibleClock = new Clock(); // Renamed for clarity
         private float invincibilityDuration = .2f; // Duration in seconds for invincibility after being hit
 
-        public bool IsStatic = false;
+        
 
         public Enemy(string category, string entityName, int frameCount, Vector2f initialPosition, float speed)
             : base(category, entityName, frameCount, initialPosition)

@@ -23,6 +23,7 @@ namespace sfmlgame.Managers
         private const string SFX_HIT = "hitHurt.wav";
         private const string SFX_PROJECTILE = "laserShoot.wav";
         private const string SFX_SLICE = "slice.wav";
+        private const string SFX_SELECT = "blipSelect.wav";
 
 
         private Sound sound = new Sound();
@@ -124,6 +125,13 @@ namespace sfmlgame.Managers
         public void PlaySliceEffect()
         {
             InitSound(SFX_SLICE, 10);
+            LastChannel.Pitch = (float)random.NextDouble() * 0.2f + 0.9f;
+            LastChannel.Play();
+        }
+
+        public void PlaySelectSound()
+        {
+            InitSound(SFX_SELECT, 100);
             LastChannel.Pitch = (float)random.NextDouble() * 0.2f + 0.9f;
             LastChannel.Play();
         }

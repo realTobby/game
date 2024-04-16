@@ -72,6 +72,9 @@
     <None Update="Assets\Objects\tree2.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Assets\SFX\blipSelect.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Assets\SFX\explosion.wav">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

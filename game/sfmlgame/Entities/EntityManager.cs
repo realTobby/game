@@ -6,6 +6,7 @@ using sfmlgame.Assets;
 using sfmlgame.Entities.Abilities;
 using sfmlgame.Entities.Abilitites;
 using sfmlgame.Entities.Enemies;
+using sfmlgame.Entities.NPCs;
 using sfmlgame.Entities.Overworld;
 using sfmlgame.Entities.Particles;
 using sfmlgame.Entities.Pickups;
@@ -38,6 +39,8 @@ namespace sfmlgame.Entities
 
         // Simplified property for non-enemy entities
         public IEnumerable<Pickup> Pickups => allEntities.OfType<Pickup>();
+
+        public IEnumerable<NPC> NPCs => allEntities.OfType<NPC>();
 
         // Method to start any background tasks for updating entities, if necessary.
         // Consider using async/await with Tasks for any heavy or IO-bound operations.
@@ -72,6 +75,12 @@ namespace sfmlgame.Entities
                 particle.Update(Game.Instance.PLAYER, frameTime);
                 // Implement other entity-specific updates as needed
             });
+
+            Parallel.ForEach(NPCs, npc =>
+            {
+                npc.Update(Game.Instance.PLAYER, frameTime);
+                // Implement other entity-specific updates as needed
+            });
         }
 
         //public void AddEntity(Entity entity)
@@ -100,6 +109,11 @@ namespace sfmlgame.Entities
             foreach(var particle in Particles)
             {
                 particle.Draw(renderTexture, frameTime);
+            }
+
+            foreach(var npc in NPCs)
+            {
+                npc.Draw(renderTexture, frameTime);
             }
 
             //Thread.Sleep(5);
@@ -327,5 +341,21 @@ namespace sfmlgame.Entities
 
             return trap;
         }
+
+        public NPC CreateNPC(Vector2f pos)
+        {
+            NPC freeNPC = NPCs.FirstOrDefault(x => !x.IsActive);
+            if(freeNPC == null)
+            {
+                freeNPC = new NPC(pos);
+                allEntities.Add(freeNPC);
+            }
+            else
+            {
+                freeNPC.ResetFromPool(pos);
+            }
+            return freeNPC;
+        }
+
     }
 }
