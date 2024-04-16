@@ -176,7 +176,7 @@ namespace sfmlgame
 
             CAMERA = new View();
 
-            SceneTransition(new MainMenuScene());
+            SceneTransition(new KordesiiScene());
 
             while (_gameWindow.IsOpen)
             {

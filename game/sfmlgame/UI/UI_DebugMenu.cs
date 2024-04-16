@@ -81,7 +81,7 @@ namespace sfmlgame.UI
             //};
             //debugButtons.AddChild(debugSpawnWave);
 
-            debugEntitySpawn = new UI_Group(new Vector2f(debugTeleport.Position.X, debugTeleport.Position.Y + debugTeleport.Height + 10), "Monster");
+            debugEntitySpawn = new UI_Group(new Vector2f(debugTeleport.Position.X, debugTeleport.Position.Y + debugTeleport.Height + 10), "Spawn Entity");
             AddDebugSpawnOptions();
             debugButtons.AddChild(debugEntitySpawn);
 
@@ -137,6 +137,14 @@ namespace sfmlgame.UI
                 //chunkyBoy.SetPosition(new Vector2f(Game.Instance.PLAYER.GetPosition().X, Game.Instance.PLAYER.GetPosition().Y - 200));
             };
             debugEntitySpawn.AddChild(spawnChunkyBoy);
+
+            UI_Button spawnParticleEffect = new UI_Button(base.Position, "Particle Effect", 36, 280, 64, RandomExtensions.GenerateRandomPastelColor());
+            spawnParticleEffect.ClickAction = () =>
+            {
+                Game.Instance.EntityManager.CreateDamageParticle(Game.Instance.PLAYER.GetPosition());
+            };
+            debugEntitySpawn.AddChild(spawnParticleEffect);
+
         }
 
         public override void Draw(RenderTexture renderTexture)
