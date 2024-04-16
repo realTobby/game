@@ -25,6 +25,7 @@ namespace sfmlgame
 
 
         public static string GameVersion = "0.1.1";
+
         private Clock shaderClock = new Clock();
 
         private RenderWindow _gameWindow;

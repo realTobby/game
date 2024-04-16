@@ -66,6 +66,37 @@ namespace sfmglame.Helpers
             return p;
         }
 
+        public static float RGBToHue(byte r, byte g, byte b)
+        {
+            float red = r / 255.0f;
+            float green = g / 255.0f;
+            float blue = b / 255.0f;
+
+            float max = Math.Max(Math.Max(red, green), blue);
+            float min = Math.Min(Math.Min(red, green), blue);
+            float delta = max - min;
+
+            float hue = 0f;
+            if (delta == 0)
+            {
+                hue = 0;
+            }
+            else if (max == red)
+            {
+                hue = (green - blue) / delta + (green < blue ? 6 : 0);
+            }
+            else if (max == green)
+            {
+                hue = (blue - red) / delta + 2;
+            }
+            else if (max == blue)
+            {
+                hue = (red - green) / delta + 4;
+            }
+
+            return hue / 6; // Normalize hue to be between 0 and 1
+        }
+
 
     }
 }

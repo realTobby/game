@@ -1,4 +1,5 @@
-﻿using SFML.Graphics;
+﻿using sfmglame.Helpers;
+using SFML.Graphics;
 using SFML.System;
 using SFML.Window;
 
@@ -25,6 +26,7 @@ namespace sfmlgame.UI
 
         private bool isButtonPressed; // Flag to check if the button is already pressed
 
+        private float rainbowHue; // Declare this in your class
 
         public UI_Button(Vector2f pos, string buttonText, int textSize, int width, int height, Color color) : base(pos)
         {
@@ -53,6 +55,9 @@ namespace sfmlgame.UI
             FloatRect textRect = _text.textComp.GetLocalBounds();
             _text.textComp.Origin = new Vector2f(textRect.Left + textRect.Width / 2.0f, textRect.Top + textRect.Height / 2.0f);
             _text.textComp.Position = new Vector2f(pos.X + width / 2.0f, pos.Y + height / 2.0f);
+
+            var pastelColor = RandomExtensions.GenerateRandomPastelColor();
+            rainbowHue = RandomExtensions.RGBToHue(pastelColor.R, pastelColor.G, pastelColor.B);
         }
 
         public override void Draw(RenderTexture renderTexture)
@@ -98,6 +103,18 @@ namespace sfmlgame.UI
                     isButtonPressed = false; // Also reset here to handle edge cases
                 }
             }
+
+            // Change the hue value at a constant rate
+            rainbowHue += deltaTime * 0.2f;  // Adjust speed as needed
+            if (rainbowHue > 1f) rainbowHue -= 1f;  // Wrap hue around if it exceeds 1
+
+            // Convert the current hue to an RGB color with full saturation and lightness
+            SFML.Graphics.Color rainbowColor = RandomExtensions.HSLToRGB(rainbowHue, 1.0f, 0.5f);
+            perfectSizeButtonSprite.Clear(rainbowColor); // Optional, if you want transparency
+            var pos = _buttonSprite.Position;
+            _buttonTexture = new Texture(perfectSizeButtonSprite.Texture);
+            _buttonSprite = new Sprite(_buttonTexture);
+            _buttonSprite.Position = pos;
         }
 
         public override void SetPosition(Vector2f newPosition)

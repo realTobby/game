@@ -81,6 +81,8 @@ namespace sfmlgame.Scenes
 
         public override void Update(float deltaTime)
         {
+            var color = RandomExtensions.GenerateRandomPastelColor();
+
             // Change the hue value at a constant rate
             gameTitleHue += deltaTime * 0.2f;  // Adjust speed as needed
             if (gameTitleHue > 1f) gameTitleHue -= 1f;  // Wrap hue around if it exceeds 1
