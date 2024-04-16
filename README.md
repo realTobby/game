@@ -2,7 +2,7 @@
 game
 
 Made using C# and SFML.net
-Using Assets from itch.io and OpenGameArt
+Using Assets from itch.io, OpenGameArt and ChatGPT Image Generation
 
 ![Banner](https://github.com/realTobby/game/blob/main/screenshots/22.PNG)
 
