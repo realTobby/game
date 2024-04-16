@@ -16,6 +16,14 @@ namespace sfmlgame.Scenes
             scenes = new Stack<Scene>();
         }
 
+        public void Clear()
+        {
+            foreach(var scene in scenes)
+            {
+                scene.UnloadContent();
+            }
+        }
+
         public void PushScene(Scene scene)
         {
             scenes.Push(scene);

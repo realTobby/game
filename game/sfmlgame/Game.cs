@@ -153,6 +153,12 @@ namespace sfmlgame
 
         private void StopGame(object? sender, EventArgs e)
         {
+            // UNLOAD SCENES
+
+            SceneManager.Clear();
+
+
+
             _gameWindow.Close();
         }
 

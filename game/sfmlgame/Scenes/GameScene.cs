@@ -1,4 +1,5 @@
-﻿using SFML.Graphics;
+﻿using SFML.Audio;
+using SFML.Graphics;
 using SFML.System;
 using sfmlgame.Assets;
 using sfmlgame.Entities;
@@ -18,8 +19,8 @@ namespace sfmlgame.Scenes
         public UI_PowerupMenu MainPowerUpMenu;
 
         public UI_DebugMenu debugMenu;
-        
-        
+
+        public Music backgroundMusic = new Music("Assets/BGM/SuperHero_original.ogg");
 
 
         public override void Draw(RenderTexture renderTexture, float deltaTime)
@@ -32,6 +33,8 @@ namespace sfmlgame.Scenes
 
         public override void LoadContent()
         {
+            backgroundMusic.Play();
+
             Game.Instance.World.ManageChunks(Game.Instance.PLAYER.GetPosition());
 
 
@@ -52,6 +55,8 @@ namespace sfmlgame.Scenes
 
         public override void UnloadContent()
         {
+            backgroundMusic.Stop();
+
             Game.Instance.World.Clear();
 
             Game.Instance.CAMERA = new View();

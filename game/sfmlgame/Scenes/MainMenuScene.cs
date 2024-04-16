@@ -1,4 +1,5 @@
 ﻿using sfmglame.Helpers;
+using SFML.Audio;
 using SFML.Graphics;
 using SFML.System;
 using sfmlgame.Assets;
@@ -16,6 +17,8 @@ namespace sfmlgame.Scenes
 
         private float gameTitleHue = 0f;  // Initial hue value
 
+        public Music backgroundMusic = new Music("Assets/BGM/Venus.wav");
+
         public MainMenuScene()
         {
 
@@ -24,6 +27,8 @@ namespace sfmlgame.Scenes
 
         public override void LoadContent()
         {
+            backgroundMusic.Play();
+
             backgroundSprite.Position = new Vector2f(0, 0);
 
             var windowSize = new Vector2f(1920, 1080);
@@ -62,6 +67,8 @@ namespace sfmlgame.Scenes
 
         public override void UnloadContent()
         {
+            backgroundMusic.Stop();
+
             Game.Instance.UIManager.RemoveComponent(gameTitle);
             Game.Instance.UIManager.RemoveComponent(startGameButton);
             Game.Instance.UIManager.RemoveComponent(gameVersion);
