@@ -45,7 +45,7 @@ namespace sfmlgame.UI
             _buttonSprite.Position = new Vector2f(pos.X, pos.Y);
             //_buttonSprite.Origin = new Vector2f(pos.X + width / 2f, pos.Y + height / 2f);
 
-            _text = new UI_Text(pos, buttonText, textSize, new Vector2f(), null);
+            _text = new UI_Text(buttonText, textSize, new Vector2f());
             _textSize = textSize;
             _buttonText = buttonText;
 

@@ -26,6 +26,12 @@ namespace sfmlgame.World
             }
         }
 
+        public void Clear()
+        {
+            chunkPool.Clear();
+            activeChunks.Clear();
+        }
+
         public void Update(Vector2f playerPosition)
         {
             // New method to manage chunks based on the player's position

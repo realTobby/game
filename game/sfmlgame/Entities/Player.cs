@@ -13,6 +13,7 @@ using sfmlgame.Managers;
 using sfmlgame.Entities.Pickups;
 using sfmlgame.UI;
 using static System.Net.Mime.MediaTypeNames;
+using sfmlgame.Scenes;
 
 namespace sfmlgame.Entities
 {
@@ -21,7 +22,8 @@ namespace sfmlgame.Entities
         private WorldManager world; // Reference to the World object
 
         //public Sprite Sprite;
-        
+
+        public Action OnPlayerLevelUp;
 
         public Vector2i CurrentChunkIndex { get; private set; }
 
@@ -62,8 +64,8 @@ namespace sfmlgame.Entities
 
             NeededXP = NeededXP + 5;
 
-            Game.Instance.MainPowerUpMenu.OpenWindow();
-            
+            OnPlayerLevelUp?.Invoke();
+
             //var newAbility = abilityFactory.CreateRandomAbility(this);
 
             //Abilities.Add(newAbility);
@@ -149,6 +151,11 @@ namespace sfmlgame.Entities
             if (Keyboard.IsKeyPressed(Keyboard.Key.S)) movement.Y += Speed * deltaTime;
             if (Keyboard.IsKeyPressed(Keyboard.Key.A)) movement.X -= Speed * deltaTime;
             if (Keyboard.IsKeyPressed(Keyboard.Key.D)) movement.X += Speed * deltaTime;
+
+            if(Keyboard.IsKeyPressed(Keyboard.Key.Escape))
+            {
+                Game.Instance.SceneTransition(new MainMenuScene());
+            }
 
             // Check current state of the 'G' key
             bool currentGKeyPressed = Keyboard.IsKeyPressed(Keyboard.Key.G);

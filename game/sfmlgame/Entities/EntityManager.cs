@@ -22,6 +22,11 @@ namespace sfmlgame.Entities
         {
         }
 
+        public void Clear()
+        {
+            allEntities.Clear();
+        }
+
         // Simplified properties for accessing entities
         public IEnumerable<Entity> AllEntities => allEntities;
 

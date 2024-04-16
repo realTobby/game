@@ -47,10 +47,6 @@ namespace sfmlgame.UI
             gameTitle.SetBold(true);
             debugButtons.AddChild(gameTitle);
 
-            var gameVersion = new UI_Text("v" + Game.GameVersion, 40, new Vector2f(position.X + 10, position.Y + 10));
-            gameVersion.SetBold(true);
-            debugButtons.AddChild(gameVersion);
-
             debugHeaderText = new UI_Text("Debug-Menu", 24, new Vector2f(position.X + 10, position.Y + 10));
             debugHeaderText.SetBold(true);
             debugButtons.AddChild(debugHeaderText);

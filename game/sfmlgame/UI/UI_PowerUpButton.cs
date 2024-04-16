@@ -69,7 +69,7 @@ namespace sfmlgame.UI
             iconBorder.Position = borderCenterPos;
 
             // Update the text as before
-            base._text.SetText(AbilityUpgrade.Name, 36);
+            base._text.SetText(AbilityUpgrade.Name);
         }
 
     }

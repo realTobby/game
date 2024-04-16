@@ -1,127 +1,98 @@
-﻿
-using SFML.Graphics;
+﻿using SFML.Graphics;
 using SFML.System;
 using sfmlgame.Assets;
-using System.Drawing;
-
 
 namespace sfmlgame.UI
 {
     public class UI_Text : UIComponent
     {
-        internal SFML.Graphics.Text textComp;
+        internal Text textComp;
         private UIBinding<string> textBinding;
         private string defaultText = string.Empty;
 
-        public UI_Text(Vector2f parentOrigin, string text, int size, Vector2f pos, UIBinding<string> textBinding) : base(pos)
+        // Constructor with UIBinding
+        public UI_Text(string text, int size, Vector2f pos, UIBinding<string> textBinding)
+            : base(pos)
         {
-            textComp = new Text(text, GameAssets.Instance.pixelFont1, (uint)size);
             this.textBinding = textBinding;
-            defaultText = text;
-
-            textComp.Color = SFML.Graphics.Color.Black;
-
-            textComp.OutlineColor = SFML.Graphics.Color.White;
-            textComp.OutlineThickness = 3f;
-
+            InitializeText(text, size);
             textComp.Position = pos;
-            textComp.Origin = parentOrigin / 2;
         }
 
-        public UI_Text(string text, int size, Vector2f pos, UIBinding<string> textBinding) : base(pos)
-        {
-            textComp = new Text(text, GameAssets.Instance.pixelFont1, (uint)size);
-            this.textBinding = textBinding;
-            defaultText = text;
-
-            textComp.Color = SFML.Graphics.Color.Black;
-
-            textComp.OutlineColor = SFML.Graphics.Color.White;
-            textComp.OutlineThickness = 3f;
-
-            textComp.Position = pos;
-
-            Height = size;
-            Width = text.Length * size;
-        }
-
-        
-
+        // Basic constructor
         public UI_Text(string text, int size, Vector2f pos) : base(pos)
         {
-            textComp = new Text(text, GameAssets.Instance.pixelFont1, (uint)size);
-            this.textBinding = null;
-            defaultText = text;
-
-            textComp.Color = SFML.Graphics.Color.Black;
-
-            textComp.OutlineColor = SFML.Graphics.Color.White;
-            textComp.OutlineThickness = 1.25f;
-
+            InitializeText(text, size);
             textComp.Position = pos;
-            Height = size;
-            Width = text.Length * size;
         }
 
-        public void SetText(string newText, uint size)
+        private void InitializeText(string text, int size)
         {
-            var pos = textComp.Position;
-
-            textComp = new SFML.Graphics.Text(newText, GameAssets.Instance.pixelFont1, size);
-            this.textBinding = null;
-
-            textComp.Color = SFML.Graphics.Color.Black;
-
-            textComp.OutlineColor = SFML.Graphics.Color.White;
+            defaultText = text;
+            textComp = new Text(text, GameAssets.Instance.pixelFont1, (uint)size);
+            textComp.Color = Color.Black;
+            textComp.OutlineColor = Color.White;
             textComp.OutlineThickness = 1.25f;
 
-            textComp.Position = pos;
+            UpdateDimensions(); // Initialize dimensions based on text
         }
 
         public override void SetPosition(Vector2f pos)
         {
-            Position = pos;
+            base.SetPosition(pos);
             textComp.Position = pos;
+            UpdateDimensions();
         }
 
-        public void SetBold(bool isBold)
+        private void UpdateDimensions()
         {
-            textComp.Style = Text.Styles.Regular;
+            FloatRect textBounds = textComp.GetLocalBounds();
+            Width = Convert.ToInt32(textBounds.Width + textComp.OutlineThickness * 2); // Consider outline thickness
+            Height = Convert.ToInt32(textBounds.Height + textComp.OutlineThickness * 2);
+        }
 
-            if (isBold)
-                textComp.Style = Text.Styles.Bold;
+        public void SetText(string newText)
+        {
+            textComp.DisplayedString = newText;
+            defaultText = newText; // Update the default text as well
+            UpdateDimensions(); // Update dimensions as the text changes
         }
 
         public void SetSize(uint size)
         {
             textComp.CharacterSize = size;
+            UpdateDimensions(); // Update dimensions as the size changes
         }
 
-        public void SetColor(SFML.Graphics.Color c)
+        public void SetBold(bool isBold)
         {
-            textComp.Color = c;
-            textComp.FillColor = c;
-            textComp.OutlineColor = new SFML.Graphics.Color(textComp.OutlineColor.R, textComp.OutlineColor.G, textComp.OutlineColor.B, c.A);
+            textComp.Style = isBold ? Text.Styles.Bold : Text.Styles.Regular;
+        }
+
+        public void SetColor(Color color)
+        {
+            textComp.FillColor = color;
+            // Keep the same alpha for the outline but change other colors to match fill color
+            textComp.OutlineColor = new Color(color.R, color.G, color.B, textComp.OutlineColor.A);
         }
 
         public override void Draw(RenderTexture renderTexture)
         {
             string displayText = defaultText;
 
-            if (textBinding != null)
+            if (textBinding != null && textBinding.Value != null)
             {
-                displayText = displayText + textBinding.Value;
+                displayText += textBinding.Value;
             }
 
             textComp.DisplayedString = displayText;
-
-            // Draw the text
+            UpdateDimensions(); // Ensure dimensions are correct before drawing
             renderTexture.Draw(textComp);
         }
 
         public override void Update(float deltaTime)
         {
-
+            // Handle updates to properties if needed
         }
     }
 }

@@ -111,6 +111,9 @@
     <None Update="Assets\Tiles\rockyTile.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Assets\TitleScreen\background.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Assets\UI\Abilities\fireballIcon.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
