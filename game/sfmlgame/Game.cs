@@ -8,14 +8,18 @@ using sfmlgame.Entities.Enemies;
 using sfmlgame.Managers;
 using sfmlgame.UI;
 using sfmlgame.Scenes;
+using Microsoft.VisualBasic;
+using System.Reflection;
+using sfmglame.Helpers;
+using System.ComponentModel;
 
 namespace sfmlgame
 {
-
-
     public class Game
     {
-        
+		private const int screen_w = 1920;
+		private const int screen_h = 1080;
+		private const int screen_b = 32;
 
         private static readonly Lazy<Game> _instance = new Lazy<Game>(() => new Game());
         public static Game Instance => _instance.Value;
@@ -87,7 +91,28 @@ namespace sfmlgame
 
             SceneManager = new SceneManager();
 
-            var mode = VideoMode.FullscreenModes[0];
+			int i=0;
+
+			VideoMode mode = VideoMode.FullscreenModes[0];
+
+			foreach(var related_mode in VideoMode.FullscreenModes)
+			{
+				UniversalLog.LogInfo("Mode[" + $"{i} " + "] " + $"{related_mode}");
+
+				if(related_mode.BitsPerPixel == screen_b && related_mode.Width == screen_w && related_mode.Height == screen_h)
+				{
+					mode = related_mode;
+				}
+
+				i++;
+			}
+
+            mode = VideoMode.FullscreenModes[4];
+
+			UniversalLog.LogInfo("");
+			UniversalLog.LogInfo("Current Fullscreen Mode is ... ");
+			UniversalLog.LogInfo($"{mode}");
+
             // [Vector2u] X(867) Y(1001)
             _gameWindow = new RenderWindow(mode, "Game", Styles.Fullscreen); // Set window to fullscreen
             _gameWindow.SetFramerateLimit(60);
