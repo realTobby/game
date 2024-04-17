@@ -31,18 +31,23 @@ namespace sfmlgame.UI
             string textNumber = damageAmount.ToString();
             UIBinding<string> damageBinding = new UIBinding<string>(() => damageAmount.ToString());
             damageText = new UI_Text(string.Empty, 0, this.uiPosition, damageBinding);
-            damageText.SetColor(new Color(0, 0, 0, 255)); // Start fully opaque
+
+            InitDamageTextProperties();
+            //GameScene.Instance._uiManager.AddComponent(this);
+        }
+
+        private void InitDamageTextProperties()
+        {
+            damageText.SetColor(Color.Black, Color.White, 3.5f);
             damageText.SetBold(true);
-            damageText.SetSize(35);
+            damageText.SetSize(80);
             damageText.Position = this.uiPosition;
             damageText.SetPosition(this.uiPosition);
 
-            if(rnd.Next(0,100) >= 50)
+            if (rnd.Next(0, 100) >= 50)
             {
-                damageText.SetColor(new Color(231, 41, 41, 255));
+                damageText.SetColor(Color.Red, Color.White, 3.5f);
             }
-
-            //GameScene.Instance._uiManager.AddComponent(this);
         }
 
         public void ResetFromPool(Vector2f worldPos, int amount)
@@ -53,16 +58,7 @@ namespace sfmlgame.UI
 
             UIBinding<string> damageBinding = new UIBinding<string>(() => amount.ToString());
             damageText = new UI_Text(string.Empty, 0, this.uiPosition, damageBinding);
-            damageText.SetColor(new Color(0, 0, 0, 255)); // Start fully opaque
-            damageText.SetBold(true);
-            damageText.SetSize(35);
-            damageText.Position = this.uiPosition;
-            damageText.SetPosition(this.uiPosition);
-
-            if (rnd.Next(0, 100) >= 50)
-            {
-                damageText.SetColor(new Color(231, 41, 41, 255));
-            }
+            InitDamageTextProperties();
 
             elapsedTime = 0;
         }

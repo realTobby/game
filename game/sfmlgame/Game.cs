@@ -190,7 +190,7 @@ namespace sfmlgame
             //UIManager.AddComponent(test);
             UIBinding<string> fpsBinding = new UIBinding<string>(() => GetFPS());
             UI_Text fpsCounter = new UI_Text("FPS: ", 36, new Vector2f(10, _gameWindow.Size.Y - 50), fpsBinding);
-            fpsCounter.SetColor(Color.White);
+            fpsCounter.SetColor(Color.Black, Color.White, 3.5f);
             UIManager.AddComponent(fpsCounter);
 
             CAMERA = new View();

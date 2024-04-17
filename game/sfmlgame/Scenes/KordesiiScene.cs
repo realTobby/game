@@ -33,7 +33,7 @@ namespace sfmlgame.Scenes
 
             kordesiiTitle = new UI_Text("kordesii", 300, centerPos);
             kordesiiTitle.SetBold(true);
-            kordesiiTitle.SetColor(Color.White);
+            kordesiiTitle.SetColor(Color.Black, Color.White, 3.5f);
             // Correctly center the title based on its actual width
             kordesiiTitle.SetPosition(new Vector2f(centerPos.X - kordesiiTitle.Width / 2, centerPos.Y - kordesiiTitle.Height)); // Re-adjust X to be truly centered
 

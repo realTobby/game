@@ -53,10 +53,12 @@ namespace sfmlgame.UI
 
             UIBinding<string> soundChannelsBinding = new UIBinding<string>(() => SoundManager.Instance.GetActiveChannels().ToString());
             UI_Text soundChannels = new UI_Text("Sound Channels: ", 36, new Vector2f(10, 10), soundChannelsBinding);
+            soundChannels.SetColor(Color.Black, Color.White, 3.5f);
             debugButtons.AddChild(soundChannels);
 
             UIBinding<string> entityCountBinding = new UIBinding<string>(() => Game.Instance.EntityManager.AllEntities.Count().ToString());
             UI_Text entityCountText = new UI_Text("Entity Count: ", 36, new Vector2f(10, 10), entityCountBinding);
+            entityCountText.SetColor(Color.Black, Color.White, 3.5f);
             debugButtons.AddChild(entityCountText);
 
             debugLevelUp = new UI_Button(new Vector2f(position.X + 20, position.Y + 20), "Gain Level", 40, 280, 64, Color.Magenta);

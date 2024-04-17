@@ -75,8 +75,18 @@ namespace sfmlgame.UI
         public void SetColor(Color color)
         {
             textComp.FillColor = color;
-            // Keep the same alpha for the outline but change other colors to match fill color
-            textComp.OutlineColor = new Color(color.R, color.G, color.B, textComp.OutlineColor.A);
+        }
+
+        public void SetColor(Color color, Color outlineColor, float thickness)
+        {
+            textComp.FillColor = color;
+            SetOutline(outlineColor, thickness);
+        }
+
+        public void SetOutline(Color color, float thickness)
+        {
+            textComp.OutlineColor = color;
+            textComp.OutlineThickness = thickness;
         }
 
         public override void Draw(RenderTexture renderTexture)
