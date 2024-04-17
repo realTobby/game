@@ -34,10 +34,9 @@ namespace sfmlgame.Scenes
         public override void LoadContent()
         {
             backgroundMusic.Loop = true;
-            backgroundMusic.Play();
+            //backgroundMusic.Play();
 
             Game.Instance.World.ManageChunks(Game.Instance.PLAYER.GetPosition());
-
 
             AttachCamera(Game.Instance.PLAYER);
 

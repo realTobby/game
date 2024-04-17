@@ -1,5 +1,6 @@
 ﻿
 using SFML.Graphics;
+using SFML.System;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -97,6 +98,14 @@ namespace sfmglame.Helpers
             return hue / 6; // Normalize hue to be between 0 and 1
         }
 
+        public static Vector2f Lerp(this Vector2f from, Vector2f to, float t)
+        {
+            t = Math.Clamp(t, 0.0f, 1.0f); // Ensure t is within the range [0, 1]
+            return new Vector2f(
+                from.X + (to.X - from.X) * t,
+                from.Y + (to.Y - from.Y) * t
+            );
+        }
 
     }
 }

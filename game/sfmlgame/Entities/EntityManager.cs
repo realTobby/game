@@ -7,7 +7,6 @@ using sfmlgame.Entities.Abilities;
 using sfmlgame.Entities.Abilitites;
 using sfmlgame.Entities.Enemies;
 using sfmlgame.Entities.NPCs;
-using sfmlgame.Entities.Overworld;
 using sfmlgame.Entities.Particles;
 using sfmlgame.Entities.Pickups;
 
@@ -41,6 +40,8 @@ namespace sfmlgame.Entities
         public IEnumerable<Pickup> Pickups => allEntities.OfType<Pickup>();
 
         public IEnumerable<NPC> NPCs => allEntities.OfType<NPC>();
+
+        //public IEnumerable<ChunkTrapTrigger> TRAPS => allEntities.OfType<ChunkTrapTrigger>();
 
         // Method to start any background tasks for updating entities, if necessary.
         // Consider using async/await with Tasks for any heavy or IO-bound operations.
@@ -81,6 +82,12 @@ namespace sfmlgame.Entities
                 npc.Update(Game.Instance.PLAYER, frameTime);
                 // Implement other entity-specific updates as needed
             });
+
+            //Parallel.ForEach(TRAPS, trap =>
+            //{
+            //    trap.Update(Game.Instance.PLAYER, frameTime);
+            //    // Implement other entity-specific updates as needed
+            //});
         }
 
         //public void AddEntity(Entity entity)
@@ -111,10 +118,15 @@ namespace sfmlgame.Entities
                 particle.Draw(renderTexture, frameTime);
             }
 
-            foreach(var npc in NPCs)
+            foreach (var npc in NPCs)
             {
                 npc.Draw(renderTexture, frameTime);
             }
+
+            //foreach (var trap in TRAPS)
+            //{
+            //    trap.Draw(renderTexture, frameTime);
+            //}
 
             //Thread.Sleep(5);
         }
@@ -315,32 +327,33 @@ namespace sfmlgame.Entities
             }
         }
 
-        public ChunkTrapTrigger CreateTrapTrigger(Vector2f pos)
-        {
-            ChunkTrapTrigger trap = AllEntities.OfType<ChunkTrapTrigger>().FirstOrDefault(x => !x.IsActive);
-            if (trap == null)
-            {
-                // Assuming a default sprite for traps; customize as needed
-                int width = Random.Shared.Next(100, 500);
-                int height = Random.Shared.Next(100, 500);
+        //public ChunkTrapTrigger CreateTrapTrigger(Vector2f pos)
+        //{
+        //    ChunkTrapTrigger trap = TRAPS.FirstOrDefault(x => !x.IsActive);
+        //    if (trap == null)
+        //    {
+        //        // Assuming a default sprite for traps; customize as needed
+        //        int width = Random.Shared.Next(75, 250);
+        //        int height = Random.Shared.Next(75, 250);
 
-                var perfectSizeButtonSprite = new RenderTexture((uint)width, (uint)height);
-                perfectSizeButtonSprite.Clear(SFML.Graphics.Color.Transparent); // Optional, if you want transparency
-                perfectSizeButtonSprite.Display(); // Finish rendering
+        //        var perfectSizeButtonSprite = new RenderTexture((uint)width, (uint)height);
+        //        perfectSizeButtonSprite.Clear(SFML.Graphics.Color.Transparent); // Optional, if you want transparency
+        //        perfectSizeButtonSprite.Display(); // Finish rendering
 
-                // Create a new texture from the RenderTexture
-                var _buttonTexture = new Texture(perfectSizeButtonSprite.Texture);
-                var _buttonSprite = new Sprite(_buttonTexture);
-                trap = new ChunkTrapTrigger(pos, _buttonSprite);
-                allEntities.Add(trap);
-            }
-            else
-            {
-                trap.ResetFromPool(pos);
-            }
+        //        // Create a new texture from the RenderTexture
+        //        var _buttonTexture = new Texture(perfectSizeButtonSprite.Texture);
+        //        var _buttonSprite = new Sprite(_buttonTexture);
 
-            return trap;
-        }
+        //        trap = new ChunkTrapTrigger(pos, _buttonSprite);
+        //        allEntities.Add(trap);
+        //    }
+        //    else
+        //    {
+        //        trap.ResetFromPool(pos);
+        //    }
+
+        //    return trap;
+        //}
 
         public NPC CreateNPC(Vector2f pos)
         {

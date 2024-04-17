@@ -1,4 +1,5 @@
-﻿using SFML.Graphics;
+﻿using sfmglame.Helpers;
+using SFML.Graphics;
 using SFML.System;
 using sfmlgame.Managers;
 using sfmlgame.UI;
@@ -15,9 +16,10 @@ namespace sfmlgame.Scenes
 
         private UI_Text kordesiiTitle;
 
-        public float WaitTime = 5f;
-
-        public float CurrentWait = 0f;
+        private float animationTime = 0f;
+        private Vector2f startPosition;
+        private Vector2f endPosition;
+        private bool transitionStarted = false;
 
         public override void Draw(RenderTexture renderTexture, float deltaTime)
         {
@@ -29,16 +31,19 @@ namespace sfmlgame.Scenes
             var windowSize = new Vector2f(1920, 1080);
             var centerPos = windowSize / 2;
 
-            kordesiiTitle = new UI_Text("kordesii", 128, centerPos);
+            kordesiiTitle = new UI_Text("kordesii", 300, centerPos);
             kordesiiTitle.SetBold(true);
             kordesiiTitle.SetColor(Color.White);
             // Correctly center the title based on its actual width
-            kordesiiTitle.SetPosition(new Vector2f(centerPos.X - kordesiiTitle.Width / 2, centerPos.Y-kordesiiTitle.Height/2)); // Re-adjust X to be truly centered
+            kordesiiTitle.SetPosition(new Vector2f(centerPos.X - kordesiiTitle.Width / 2, centerPos.Y - kordesiiTitle.Height)); // Re-adjust X to be truly centered
 
             Game.Instance.UIManager.AddComponent(kordesiiTitle);
 
-            SoundManager.Instance.PlaySelectSound();
+            startPosition = new Vector2f(centerPos.X, 0); // Start from top of the screen
+            endPosition = new Vector2f(centerPos.X - kordesiiTitle.Width / 2, centerPos.Y - kordesiiTitle.Height / 2);
 
+            kordesiiTitle.SetPosition(startPosition);
+            kordesiiTitle.Opacity = 0; // Start transparent
         }
 
         public override void UnloadContent()
@@ -48,12 +53,42 @@ namespace sfmlgame.Scenes
 
         public override void Update(float deltaTime)
         {
-            CurrentWait += deltaTime;
+            animationTime += deltaTime;
 
-            if(CurrentWait > WaitTime)
+            float moveDuration = 3.0f;
+            float jiggleDuration = 1.0f;
+            float fadeOutDuration = 1.0f;
+            float totalDuration = moveDuration + jiggleDuration + fadeOutDuration;
+
+            if (animationTime <= moveDuration)
             {
+                // Fade in while moving down
+                kordesiiTitle.Opacity = (animationTime / moveDuration) * 255;
+                float progress = animationTime / moveDuration;
+                kordesiiTitle.SetPosition(RandomExtensions.Lerp(startPosition, endPosition, progress));
+                kordesiiTitle.Scale = 1.0f + progress * 0.5f; // Grow while moving
+            }
+            else if (animationTime <= moveDuration + jiggleDuration)
+            {
+                // Jiggle effect
+                float jiggleProgress = (animationTime - moveDuration) / jiggleDuration;
+                float jiggleScale = 1.5f - Math.Abs(0.5f - jiggleProgress) * 1.0f; // Bouncy effect
+                kordesiiTitle.Scale = jiggleScale;
+            }
+            else if (animationTime <= totalDuration)
+            {
+                // Fade out
+                float fadeProgress = (animationTime - moveDuration - jiggleDuration) / fadeOutDuration;
+                kordesiiTitle.Opacity = 255 - (fadeProgress * 255);
+            }
+
+            if (animationTime > totalDuration && !transitionStarted)
+            {
+                transitionStarted = true;
                 Game.Instance.SceneTransition(new MainMenuScene());
             }
         }
+
+
     }
 }

@@ -47,12 +47,7 @@ namespace sfmlgame
         public bool Debug = false;
         public bool GamePaused = false;
 
-        
-
         private SceneManager SceneManager;
-
-        
-        
 
         public EntityManager EntityManager;
         public WaveManager WaveManager;
@@ -93,7 +88,7 @@ namespace sfmlgame
 
 			int i=0;
 
-			VideoMode mode = VideoMode.FullscreenModes[0];
+            VideoMode mode = VideoMode.DesktopMode;
 
 			foreach(var related_mode in VideoMode.FullscreenModes)
 			{
@@ -107,7 +102,7 @@ namespace sfmlgame
 				i++;
 			}
 
-            mode = VideoMode.FullscreenModes[4];
+            // mode = VideoMode.FullscreenModes[4];
 
 			UniversalLog.LogInfo("");
 			UniversalLog.LogInfo("Current Fullscreen Mode is ... ");
@@ -115,7 +110,6 @@ namespace sfmlgame
 
             // [Vector2u] X(867) Y(1001)
             _gameWindow = new RenderWindow(mode, "Game", Styles.Fullscreen); // Set window to fullscreen
-            _gameWindow.SetFramerateLimit(60);
             _gameWindow.SetVerticalSyncEnabled(true);
 
             _gameWindow.Closed += StopGame;
@@ -208,8 +202,23 @@ namespace sfmlgame
                 _gameWindow.DispatchEvents();
                 _gameWindow.Clear(Color.Black);
 
-                Update();
-                Draw();
+                float frameTime = DELTATIME;
+                float crtTime = shaderClock.ElapsedTime.AsSeconds();
+                frameCount++;
+                float currentTime = fpsClock.ElapsedTime.AsSeconds();
+                float deltaTime = currentTime - lastTime;
+
+                // Calculate FPS every second
+                if (deltaTime >= 1.0f)
+                {
+                    int fps = frameCount;
+                    frameCount = 0;
+                    lastTime += deltaTime;
+                    LastCalculatedFPS = fps;
+                }
+
+                Update(frameTime);
+                Draw(frameTime);
 
                 _gameWindow.Display();
                 _gameWindow.DispatchEvents();
@@ -235,25 +244,9 @@ namespace sfmlgame
             shakeDuration = duration;
         }
 
-        private void Update()
+        private void Update(float deltaTime)
         {
-            float frameTime = DELTATIME;
-            float crtTime = shaderClock.ElapsedTime.AsSeconds();
-            frameCount++;
-            float currentTime = fpsClock.ElapsedTime.AsSeconds();
-            float deltaTime = currentTime - lastTime;
-
-            // Calculate FPS every second
-            if (deltaTime >= 1.0f)
-            {
-                int fps = frameCount;
-                frameCount = 0;
-                lastTime += deltaTime;
-                LastCalculatedFPS = fps;
-            }
-
-
-
+            
             Vector2i mousePosition = Mouse.GetPosition(_gameWindow); // Get the mouse position relative to the window
             cursorSprite.Position = new Vector2f(mousePosition.X, mousePosition.Y);
 
@@ -263,49 +256,34 @@ namespace sfmlgame
 
             //CRTShader.SetUniform("crtSpeed", crtTime); // This will be a continuously increasing value
 
-            UIManager.Update(frameTime);
+            UIManager.Update(deltaTime);
 
             if (GamePaused)
             {
                 return;
             }
 
-            SceneManager.Update(frameTime);
+            SceneManager.Update(deltaTime);
 
-            EntityManager.UpdateEntities(frameTime);
+            EntityManager.UpdateEntities(deltaTime);
 
             
 
         }
 
 
-        private void Draw()
+        private void Draw(float deltaTime)
         {
             //_gameWindow.Clear();
-
-            float frameTime = DELTATIME;
-
-            frameCount++;
-            float currentTime = fpsClock.ElapsedTime.AsSeconds();
-            float deltaTime = currentTime - lastTime;
-
-            //// Calculate FPS every second
-            if (deltaTime >= 1.0f)
-            {
-                int fps = frameCount;
-                frameCount = 0;
-                lastTime += deltaTime;
-                LastCalculatedFPS = fps;
-            }
 
             //// First, clear the RenderTexture and draw the game world and player onto it
             gameRenderTexture.Clear(Color.Black);
             uiRenderTexture.Clear(Color.Transparent);
             //// Ensure the RenderTexture uses the camera's view for rendering the scene
 
-            SceneManager.Draw(gameRenderTexture, frameTime);
+            SceneManager.Draw(gameRenderTexture, deltaTime);
 
-            EntityManager.DrawEntities(gameRenderTexture, frameTime);
+            EntityManager.DrawEntities(gameRenderTexture, deltaTime);
 
             //// draw ui
 

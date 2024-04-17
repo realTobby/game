@@ -10,6 +10,9 @@ namespace sfmlgame.UI
         private UIBinding<string> textBinding;
         private string defaultText = string.Empty;
 
+        public float Opacity { get; set; } = 255;  // Full opacity by default
+        public float Scale { get; set; } = 1.0f;   // Normal scale by default
+
         // Constructor with UIBinding
         public UI_Text(string text, int size, Vector2f pos, UIBinding<string> textBinding)
             : base(pos)
@@ -87,6 +90,8 @@ namespace sfmlgame.UI
 
             textComp.DisplayedString = displayText;
             UpdateDimensions(); // Ensure dimensions are correct before drawing
+            textComp.Color = new Color(textComp.Color.R, textComp.Color.G, textComp.Color.B, (byte)Opacity);
+            textComp.Scale = new Vector2f(Scale, Scale);
             renderTexture.Draw(textComp);
         }
 

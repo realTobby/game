@@ -124,7 +124,7 @@ namespace sfmlgame.World
         internal void UpdateTrapsForCurrentChunk(Vector2i currentChunkIndex)
         {
             var chunk = activeChunks[currentChunkIndex];
-            chunk.GenerateTraps();
+            //chunk.GenerateTraps();
         }
     }
 }

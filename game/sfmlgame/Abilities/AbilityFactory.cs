@@ -25,7 +25,7 @@ namespace sfmlgame.Abilities
             object[]? constructorArgs = null;
             if (abilityType == typeof(FireballAbility))
             {
-                constructorArgs = new object[] { player, 1.25f};
+                constructorArgs = new object[] { player, 1.25f };
             }
             else if (abilityType == typeof(OrbitalAbility))
             {
@@ -34,13 +34,14 @@ namespace sfmlgame.Abilities
             else if (abilityType == typeof(ThunderStrikeAbility))
             {
                 constructorArgs = new object[] { 5f }; // Assuming default cooldown
+            }
             //}else if(abilityType == typeof(BombAbility))
             //{
             //    constructorArgs = new object[] { 1, 4f };
-            }else if(abilityType == typeof(ScytheAbility))
-            {
-                constructorArgs = new object[] { player, 2f };
-            }
+            //}else if(abilityType == typeof(ScytheAbility))
+            //{
+            //    constructorArgs = new object[] { player, 2f };
+            //}
 
 
 

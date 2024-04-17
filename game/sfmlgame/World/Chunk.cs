@@ -1,9 +1,6 @@
 ﻿using SFML.Graphics;
 using SFML.System;
 using sfmlgame.Assets;
-using sfmlgame.Entities.Overworld;
-using System.Collections.Generic;
-using System.Security.Cryptography;
 
 namespace sfmlgame.World
 {
@@ -329,22 +326,22 @@ namespace sfmlgame.World
             return position.X >= left && position.X < right && position.Y >= top && position.Y < bottom;
         }
 
-        private List<ChunkTrapTrigger> traps = new List<ChunkTrapTrigger>(); // List to hold trap entities
+        //private List<ChunkTrapTrigger> traps = new List<ChunkTrapTrigger>(); // List to hold trap entities
 
-        public void GenerateTraps()
-        {
-            if (Traps) return;
+        //public void GenerateTraps()
+        //{
+        //    if (Traps) return;
 
-            Traps = true;
+        //    Traps = true;
 
-            int numTraps = Random.Shared.Next(1, 5); // Randomly decide on the number of traps
-            for (int i = 0; i < numTraps; i++)
-            {
-                Vector2f trapPosition = GetRandomTrapPosition();
-                ChunkTrapTrigger trap = Game.Instance.EntityManager.CreateTrapTrigger(trapPosition);
-                traps.Add(trap); // Add the trap to the list
-            }
-        }
+        //    int numTraps = Random.Shared.Next(1, 5); // Randomly decide on the number of traps
+        //    for (int i = 0; i < numTraps; i++)
+        //    {
+        //        Vector2f trapPosition = GetRandomTrapPosition();
+        //        ChunkTrapTrigger trap = Game.Instance.EntityManager.CreateTrapTrigger(trapPosition);
+        //        traps.Add(trap); // Add the trap to the list
+        //    }
+        //}
 
         private Vector2f GetRandomTrapPosition()
         {

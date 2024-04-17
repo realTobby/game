@@ -99,6 +99,20 @@ namespace sfmlgame.Entities
                     }
                 }
             }
+
+            //foreach (var trap in Game.Instance.EntityManager.TRAPS.Where(x => x.IsActive))
+            //{
+            //    float distance = Vector2fDistance(this.GetPosition(), trap.GetPosition());
+
+            //    if (distance <= pickupRadius)
+            //    {
+            //        if(trap.CanCheckCollision)
+            //        {
+            //            trap.CollidedWith(this);
+            //        }
+            //    }
+            //}
+
         }
 
         private void HandleGemPickup(Gem gem)
