@@ -41,18 +41,24 @@ namespace sfmlgame.Entities
 
         public float Speed = 75f;
 
-        public Player(Texture texture, Vector2f position, WorldManager world) : base("Entities/priestess","priestess", 5, position)
+
+
+        private Dictionary<Keyboard.Key, bool> previousKeysPressed = new Dictionary<Keyboard.Key, bool>();
+
+        public Player(Texture texture, Vector2f position, WorldManager world) : base("Entities/priestess", "priestess", 5, position)
         {
-            this.world = world; // Store the World reference
-
+            this.world = world;
             abilityFactory = new AbilityFactory();
-
-            
-
             CanCheckCollision = true;
+
+            // Initialize key state tracking
+            foreach (Keyboard.Key key in Enum.GetValues(typeof(Keyboard.Key)))
+            {
+                previousKeysPressed[key] = false;
+            }
         }
 
-        
+
 
         public void LevelUp(int levels)
         {
@@ -99,20 +105,6 @@ namespace sfmlgame.Entities
                     }
                 }
             }
-
-            //foreach (var trap in Game.Instance.EntityManager.TRAPS.Where(x => x.IsActive))
-            //{
-            //    float distance = Vector2fDistance(this.GetPosition(), trap.GetPosition());
-
-            //    if (distance <= pickupRadius)
-            //    {
-            //        if(trap.CanCheckCollision)
-            //        {
-            //            trap.CollidedWith(this);
-            //        }
-            //    }
-            //}
-
         }
 
         private void HandleGemPickup(Gem gem)
@@ -160,37 +152,11 @@ namespace sfmlgame.Entities
 
         public void Update(float deltaTime)
         {
-            Vector2f movement = new Vector2f();
-            if (Keyboard.IsKeyPressed(Keyboard.Key.W)) movement.Y -= Speed * deltaTime;
-            if (Keyboard.IsKeyPressed(Keyboard.Key.S)) movement.Y += Speed * deltaTime;
-            if (Keyboard.IsKeyPressed(Keyboard.Key.A)) movement.X -= Speed * deltaTime;
-            if (Keyboard.IsKeyPressed(Keyboard.Key.D)) movement.X += Speed * deltaTime;
+            HandleKeyboardInput(deltaTime);
 
-            if(Keyboard.IsKeyPressed(Keyboard.Key.Escape))
-            {
-                Game.Instance.SceneTransition(new MainMenuScene());
-            }
-
-            // Check current state of the 'G' key
-            bool currentGKeyPressed = Keyboard.IsKeyPressed(Keyboard.Key.G);
-
-            // Toggle the debug mode only on key press and ensure the key was not pressed in the previous frame
-            if (currentGKeyPressed && !previousGKeyPressed)
-            {
-                Game.Instance.Debug = !Game.Instance.Debug;
-            }
-
-            // Update the previous key state for the next frame
-            previousGKeyPressed = currentGKeyPressed;
-
-            base.SetPosition(GetPosition() + movement);
-
-            if (world == null) return;
-
+            // Other updates like chunk management and collision checks
             PreviousChunkIndex = CurrentChunkIndex;
             CurrentChunkIndex = world.CalculateChunkIndex(GetPosition());
-
-            // Check if the player has moved to a new chunk
             if (CurrentChunkIndex != PreviousChunkIndex)
             {
                 world.ManageChunks(GetPosition());
@@ -198,13 +164,10 @@ namespace sfmlgame.Entities
             }
 
             UpdatePlayerAbilities(deltaTime);
-
             CheckCollisionWithPickups();
-
-            //CheckXP();
-
             base.Update(this, deltaTime);
         }
+
 
         public override void Draw(RenderTexture renderTexture, float deltaTime)
         {
@@ -232,5 +195,34 @@ namespace sfmlgame.Entities
             // this hopefully never happens, thank you :) -Player
             throw new NotImplementedException();
         }
+
+        private void HandleKeyboardInput(float deltaTime)
+        {
+            Vector2f movement = new Vector2f();
+
+            if (Keyboard.IsKeyPressed(Keyboard.Key.W)) movement.Y -= Speed * deltaTime;
+            if (Keyboard.IsKeyPressed(Keyboard.Key.S)) movement.Y += Speed * deltaTime;
+            if (Keyboard.IsKeyPressed(Keyboard.Key.A)) movement.X -= Speed * deltaTime;
+            if (Keyboard.IsKeyPressed(Keyboard.Key.D)) movement.X += Speed * deltaTime;
+
+            SetPosition(GetPosition() + movement);
+
+            // Specific key checks for non-movement commands
+            CheckSingleKeyPress(Keyboard.Key.Escape, () => Game.Instance.SceneTransition(new MainMenuScene()));
+            CheckSingleKeyPress(Keyboard.Key.C, () => Game.Instance.SceneManager.CallGameSceneForOpenPlayerInfo());
+            CheckSingleKeyPress(Keyboard.Key.G, () => { Game.Instance.Debug = !Game.Instance.Debug; });
+        }
+
+        private void CheckSingleKeyPress(Keyboard.Key key, Action action)
+        {
+            bool currentlyPressed = Keyboard.IsKeyPressed(key);
+            if (currentlyPressed && previousKeysPressed.ContainsKey(key) && !previousKeysPressed[key])
+            {
+                action.Invoke();
+            }
+            previousKeysPressed[key] = currentlyPressed; // Update the state in the dictionary
+        }
+
+
     }
 }

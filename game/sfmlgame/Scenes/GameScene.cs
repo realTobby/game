@@ -12,10 +12,10 @@ namespace sfmlgame.Scenes
 {
     public class GameScene : Scene
     {
-        
-        
 
-        
+
+
+        public UI_PlayerInfo PlayerInfo;
         public UI_PowerupMenu MainPowerUpMenu;
 
         public UI_DebugMenu debugMenu;
@@ -46,6 +46,9 @@ namespace sfmlgame.Scenes
             debugMenu = new UI_DebugMenu(new Vector2f(10, 10));
             Game.Instance.UIManager.AddComponent(debugMenu);
 
+            PlayerInfo = new UI_PlayerInfo(new Vector2f(Game.Instance.GetWindow().Size.X - 525, Game.Instance.GetWindow().Size.Y/2-250));
+            Game.Instance.UIManager.AddComponent(PlayerInfo);
+
             Game.Instance.PLAYER.OnPlayerLevelUp += MainPowerUpMenu.OpenWindow;
 
             Game.Instance.PLAYER.LevelUp(1);
@@ -68,6 +71,8 @@ namespace sfmlgame.Scenes
 
             //var debugMenu = new UI_DebugMenu(new Vector2f(10, 10));
             Game.Instance.UIManager.RemoveComponent(debugMenu);
+
+            Game.Instance.UIManager.RemoveComponent(PlayerInfo);
 
             Game.Instance.PLAYER.OnPlayerLevelUp -= MainPowerUpMenu.OpenWindow;
 
@@ -93,6 +98,7 @@ namespace sfmlgame.Scenes
             }
 
             Game.Instance.World.Update(Game.Instance.PLAYER.GetPosition());
+
 
             //EntityManager.UpdateEntities(PLAYER, DELTATIME); WE DO THIS IN THE BACKGROUND NOW
 

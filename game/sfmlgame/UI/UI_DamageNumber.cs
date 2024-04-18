@@ -38,7 +38,7 @@ namespace sfmlgame.UI
 
         private void InitDamageTextProperties()
         {
-            damageText.SetColor(Color.Black, Color.White, 3.5f);
+            damageText.SetColor(Color.Black, Color.White, 4.4f);
             damageText.SetBold(true);
             damageText.SetSize(80);
             damageText.Position = this.uiPosition;

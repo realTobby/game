@@ -47,7 +47,7 @@ namespace sfmlgame
         public bool Debug = false;
         public bool GamePaused = false;
 
-        private SceneManager SceneManager;
+        public SceneManager SceneManager;
 
         public EntityManager EntityManager;
         public WaveManager WaveManager;
@@ -195,7 +195,7 @@ namespace sfmlgame
 
             CAMERA = new View();
 
-            SceneTransition(new KordesiiScene());
+            SceneTransition(new GameScene());
 
             while (_gameWindow.IsOpen)
             {

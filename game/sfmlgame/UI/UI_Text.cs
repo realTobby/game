@@ -52,6 +52,9 @@ namespace sfmlgame.UI
             FloatRect textBounds = textComp.GetLocalBounds();
             Width = Convert.ToInt32(textBounds.Width + textComp.OutlineThickness * 2); // Consider outline thickness
             Height = Convert.ToInt32(textBounds.Height + textComp.OutlineThickness * 2);
+
+            textComp.Origin = new Vector2f(textBounds.Left + Width / 2, textBounds.Top + Height / 2);
+
         }
 
         public void SetText(string newText)
@@ -108,6 +111,14 @@ namespace sfmlgame.UI
         public override void Update(float deltaTime)
         {
             // Handle updates to properties if needed
+        }
+
+        public void CenterOrigin()
+        {
+            FloatRect textBounds = textComp.GetLocalBounds();
+            textComp.Origin = new Vector2f(textBounds.Width / 2.0f, textBounds.Height / 2.0f);
+            // Ensure the position is updated to reflect the new origin.
+            //SetPosition(new Vector2f(Position.X, Position.Y));
         }
     }
 }

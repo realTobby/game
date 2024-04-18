@@ -52,5 +52,13 @@ namespace sfmlgame.Scenes
             Scene scene = scenes.Peek();
             scene.Draw(renderTexture, deltaTime);
         }
+
+
+        public void CallGameSceneForOpenPlayerInfo()
+        {
+            GameScene gameScene = scenes.Peek() as GameScene;
+            gameScene.PlayerInfo.IsOpen = !gameScene.PlayerInfo.IsOpen;
+        }
+
     }
 }

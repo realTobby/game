@@ -48,17 +48,23 @@ namespace sfmlgame.UI
             _buttonSprite.Position = new Vector2f(pos.X, pos.Y);
             //_buttonSprite.Origin = new Vector2f(pos.X + width / 2f, pos.Y + height / 2f);
 
-            _text = new UI_Text(buttonText, textSize, new Vector2f());
+            // Center the text within the button
+            FloatRect buttonRect = _buttonSprite.GetLocalBounds();
+            _buttonSprite.Origin = new Vector2f(buttonRect.Left + buttonRect.Width / 2.0f, buttonRect.Top + buttonRect.Height / 2.0f);
+
+            _text = new UI_Text(buttonText, textSize, pos);
             _textSize = textSize;
             _buttonText = buttonText;
 
-            // Center the text within the button
             FloatRect textRect = _text.textComp.GetLocalBounds();
             _text.textComp.Origin = new Vector2f(textRect.Left + textRect.Width / 2.0f, textRect.Top + textRect.Height / 2.0f);
-            _text.textComp.Position = new Vector2f(pos.X + width / 2.0f, pos.Y + height / 2.0f);
+
+            _text.textComp.Position = _text.textComp.Position;
 
             var pastelColor = RandomExtensions.GenerateRandomPastelColor();
             rainbowHue = RandomExtensions.RGBToHue(pastelColor.R, pastelColor.G, pastelColor.B);
+
+            
         }
 
         public override void Draw(RenderTexture renderTexture)
@@ -74,11 +80,11 @@ namespace sfmlgame.UI
         public override void Update(float deltaTime)
         {
             var mousePos = Mouse.GetPosition();
-
+            FloatRect buttonBounds = _buttonSprite.GetGlobalBounds();
             if (lastRenderTarget != null)
             {
                 // Adjust mouse position based on the view offset...
-                FloatRect buttonBounds = _buttonSprite.GetGlobalBounds();
+                
 
                 if (buttonBounds.Contains(mousePos.X, mousePos.Y))
                 {
@@ -113,17 +119,14 @@ namespace sfmlgame.UI
             // Convert the current hue to an RGB color with full saturation and lightness
             SFML.Graphics.Color rainbowColor = RandomExtensions.HSLToRGB(rainbowHue, 1.0f, 0.5f);
             perfectSizeButtonSprite.Clear(rainbowColor); // Optional, if you want transparency
-            var pos = _buttonSprite.Position;
-            _buttonTexture = new Texture(perfectSizeButtonSprite.Texture);
-            _buttonSprite = new Sprite(_buttonTexture);
-            _buttonSprite.Position = pos;
+            
         }
 
         public override void SetPosition(Vector2f newPosition)
         {
             Position = newPosition;
             _buttonSprite.Position = newPosition;
-            _text.textComp.Position = new Vector2f(newPosition.X + Width / 2.0f, newPosition.Y + Height / 2.0f);
+            _text.SetPosition(new Vector2f(newPosition.X + Width / 2.0f, newPosition.Y + Height / 2.0f));
         }
 
     }
