@@ -26,7 +26,7 @@ namespace sfmlgame.UI
             playerStatsGroup = new UI_List(new Vector2f(GetCenterX, GetCenterY-Width/2));
 
             UI_Text title = new UI_Text("- Info -", 45, new Vector2f(GetCenterX, GetCenterY));
-            playerStatsGroup.AddChild(title);
+            playerStatsGroup.AddChild(title, new Vector2f(0, 50));
 
 
         }

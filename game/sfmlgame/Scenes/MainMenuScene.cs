@@ -43,13 +43,13 @@ namespace sfmlgame.Scenes
             gameTitle.SetBold(true);
             gameTitle.SetColor(Color.Cyan);
             // Correctly center the title based on its actual width
-            gameTitle.SetPosition(new Vector2f(centerPos.X-gameTitle.Width/2, 25)); // Re-adjust X to be truly centered
+            gameTitle.SetPosition(new Vector2f(centerPos.X, 100)); // Re-adjust X to be truly centered
 
             Game.Instance.UIManager.AddComponent(gameTitle);
 
             // Setup the start game button
             startGameButton = new UI_Button(
-                new Vector2f(centerPos.X - 64, centerPos.Y - 32), // Minor adjustment from center, may adjust as needed
+                new Vector2f(centerPos.X, centerPos.Y), // Minor adjustment from center, may adjust as needed
                 "Start Game",
                 26,
                 128,
@@ -57,11 +57,12 @@ namespace sfmlgame.Scenes
                 RandomExtensions.GenerateRandomPastelColor());
             startGameButton.ClickAction += StartGame;
             Game.Instance.UIManager.AddComponent(startGameButton);
+            startGameButton.SetPosition(new Vector2f(centerPos.X, centerPos.Y));
 
             gameVersion = new UI_Text("v" + Game.GameVersion, 40, new Vector2f(0,0));
             gameVersion.SetBold(true);
             gameVersion.SetColor(Color.Red);
-            gameVersion.SetPosition(new Vector2f(windowSize.X-gameVersion.Width-10, windowSize.Y-gameVersion.Height-10));
+            gameVersion.SetPosition(new Vector2f(windowSize.X-gameVersion.Width, windowSize.Y-gameVersion.Height-10));
 
             Game.Instance.UIManager.AddComponent(gameVersion);
         }

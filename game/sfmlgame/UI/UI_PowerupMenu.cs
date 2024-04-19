@@ -34,9 +34,9 @@ namespace sfmlgame.UI
             //closeButton = new UI_Button(closeButtonPos, "Close", 46, 45, 25, Color.Cyan);
             ///closeButton.ClickAction += CloseButton_ClickAction;
 
-            leftOption = new UI_PowerUpButton(new Vector2f(position.X-250/2-250, position.Y-125), string.Empty, 0, 250, 250, Color.Red);
+            leftOption = new UI_PowerUpButton(new Vector2f(position.X-250, position.Y), string.Empty, 0, 250, 250, Color.Red);
 
-            rightOption = new UI_PowerUpButton(new Vector2f(position.X+ 250 / 2, position.Y - 125), string.Empty, 0, 250, 250, Color.Blue);
+            rightOption = new UI_PowerUpButton(new Vector2f(position.X+ 250, position.Y), string.Empty, 0, 250, 250, Color.Blue);
 
 
             

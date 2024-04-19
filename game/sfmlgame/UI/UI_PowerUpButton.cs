@@ -55,18 +55,25 @@ namespace sfmlgame.UI
             // Calculate the center position for the icon
             FloatRect iconBounds = uiAbilityIcon.GetLocalBounds();
             Vector2f iconSize = new Vector2f(iconBounds.Width, iconBounds.Height);
-            Vector2f iconCenterPos = new Vector2f(Position.X + (Width - iconSize.X) / 2.0f,
-                                                  Position.Y + (Height - iconSize.Y) / 2.0f);
+            //Vector2f iconCenterPos = new Vector2f(Position.X + (Width - iconSize.X) / 2.0f,
+            //Position.Y + (Height - iconSize.Y) / 2.0f);
+
+
+            uiAbilityIcon.Origin = new Vector2f(iconBounds.Left + iconBounds.Width/2, iconBounds.Top + iconBounds.Height/2);
 
             // Set the icon's position to the calculated center position
-            uiAbilityIcon.Position = iconCenterPos;
+            uiAbilityIcon.Position = Position;
+            
 
             // Also center the iconBorder if needed
             FloatRect borderBounds = iconBorder.GetLocalBounds();
             Vector2f borderSize = new Vector2f(borderBounds.Width, borderBounds.Height);
             Vector2f borderCenterPos = new Vector2f(Position.X + (Width - borderSize.X) / 2.0f,
                                                     Position.Y + (Height - borderSize.Y) / 2.0f);
-            iconBorder.Position = borderCenterPos;
+
+            iconBorder.Origin = new Vector2f(borderBounds.Left + borderBounds.Width / 2, borderBounds.Top + borderBounds.Height / 2);
+
+            iconBorder.Position = Position;
 
             // Update the text as before
             base._text.SetText(AbilityUpgrade.Name);

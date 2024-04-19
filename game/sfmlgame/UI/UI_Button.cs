@@ -59,7 +59,14 @@ namespace sfmlgame.UI
             FloatRect textRect = _text.textComp.GetLocalBounds();
             _text.textComp.Origin = new Vector2f(textRect.Left + textRect.Width / 2.0f, textRect.Top + textRect.Height / 2.0f);
 
-            _text.textComp.Position = _text.textComp.Position;
+            // This line needs to set the text position to the center of the button, not to its current position.
+            // Calculate the position of the text to be at the center of the button
+            _text.textComp.Position = new Vector2f(
+                _buttonSprite.Position.X + (buttonRect.Width / 2.0f),
+                _buttonSprite.Position.Y + (buttonRect.Height / 2.0f) - (_text.textComp.GetLocalBounds().Height / 2.0f)
+            );
+
+
 
             var pastelColor = RandomExtensions.GenerateRandomPastelColor();
             rainbowHue = RandomExtensions.RGBToHue(pastelColor.R, pastelColor.G, pastelColor.B);
@@ -126,7 +133,11 @@ namespace sfmlgame.UI
         {
             Position = newPosition;
             _buttonSprite.Position = newPosition;
-            _text.SetPosition(new Vector2f(newPosition.X + Width / 2.0f, newPosition.Y + Height / 2.0f));
+            FloatRect buttonRect = _buttonSprite.GetLocalBounds();
+            _text.textComp.Position = new Vector2f(
+                _buttonSprite.Position.X,
+                _buttonSprite.Position.Y
+            );
         }
 
     }

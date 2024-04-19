@@ -28,7 +28,7 @@ namespace sfmlgame
         public Vector2i lastPlayerChunkIndex;
 
 
-        public static string GameVersion = "0.1.1";
+        public static string GameVersion = "0.1.2";
 
         private Clock shaderClock = new Clock();
 
@@ -189,7 +189,7 @@ namespace sfmlgame
             //UI_DamageNumber test = new UI_DamageNumber(-1, new Vector2f(0, 0), 1000);
             //UIManager.AddComponent(test);
             UIBinding<string> fpsBinding = new UIBinding<string>(() => GetFPS());
-            UI_Text fpsCounter = new UI_Text("FPS: ", 36, new Vector2f(10, _gameWindow.Size.Y - 50), fpsBinding);
+            UI_Text fpsCounter = new UI_Text("FPS: ", 36, new Vector2f(60, _gameWindow.Size.Y - 20), fpsBinding);
             fpsCounter.SetColor(Color.Black, Color.White, 3.5f);
             UIManager.AddComponent(fpsCounter);
 

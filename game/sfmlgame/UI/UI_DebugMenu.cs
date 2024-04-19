@@ -85,7 +85,14 @@ namespace sfmlgame.UI
             debugEntitySpawnButtonList = new UI_List(new Vector2f(0,0));
             debugEntitySpawnButtonList.Hide = true;
             UI_Button debugEntitySpawnButton = new UI_Button(position, "Entities", 40, 280, 64, RandomExtensions.GenerateRandomPastelColor());
-            debugEntitySpawnButtonList.SetPosition(new Vector2f(debugEntitySpawnButton.Position.X + debugEntitySpawnButton.Width / 2, debugEntitySpawnButton.Position.Y));
+            debugButtons.AddChild(debugEntitySpawnButton);
+            // Position the spawn button list to the right of the Entities button
+            float margin = 10f; // Margin between the buttons
+            Vector2f debugEntitySpawnButtonListPosition = new Vector2f(
+                debugEntitySpawnButton.Position.X + debugEntitySpawnButton.Width + margin,
+                debugEntitySpawnButton.Position.Y
+            );
+            debugEntitySpawnButtonList.SetPosition(debugEntitySpawnButtonListPosition);
             debugEntitySpawnButton.ClickAction = () =>
             {
                 debugEntitySpawnButtonList.Hide = !debugEntitySpawnButtonList.Hide;
@@ -93,8 +100,6 @@ namespace sfmlgame.UI
             
             
             AddDebugSpawnOptions(debugEntitySpawnButtonList);
-
-            debugButtons.AddChild(debugEntitySpawnButton);
              
             //var debugNPCGroup = new UI_List(new Vector2f(debugEntitySpawnButtonList.Position.X+debugEntitySpawnButtonList., debugEntitySpawnButtonList.Position.Y + debugEntitySpawnButtonList.baseButton.Height + 10), "NPC", true);
 
@@ -176,6 +181,8 @@ namespace sfmlgame.UI
             if (!Game.Instance.Debug) return;
 
             debugButtons.Update(deltaTime);
+
+            debugEntitySpawnButtonList.Update(deltaTime);
         }
     }
 }
