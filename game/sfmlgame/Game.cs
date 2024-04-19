@@ -90,17 +90,17 @@ namespace sfmlgame
 
             VideoMode mode = VideoMode.DesktopMode;
 
-			foreach(var related_mode in VideoMode.FullscreenModes)
-			{
-				UniversalLog.LogInfo("Mode[" + $"{i} " + "] " + $"{related_mode}");
+			//foreach(var related_mode in VideoMode.FullscreenModes)
+			//{
+			//	UniversalLog.LogInfo("Mode[" + $"{i} " + "] " + $"{related_mode}");
 
-				if(related_mode.BitsPerPixel == screen_b && related_mode.Width == screen_w && related_mode.Height == screen_h)
-				{
-					mode = related_mode;
-				}
+			//	if(related_mode.BitsPerPixel == screen_b && related_mode.Width == screen_w && related_mode.Height == screen_h)
+			//	{
+			//		mode = related_mode;
+			//	}
 
-				i++;
-			}
+			//	i++;
+			//}
 
             // mode = VideoMode.FullscreenModes[4];
 
@@ -109,7 +109,7 @@ namespace sfmlgame
 			UniversalLog.LogInfo($"{mode}");
 
             // [Vector2u] X(867) Y(1001)
-            _gameWindow = new RenderWindow(mode, "Game", Styles.Fullscreen); // Set window to fullscreen
+            _gameWindow = new RenderWindow(mode, "Game", Styles.Default); // Set window to fullscreen
             _gameWindow.SetVerticalSyncEnabled(true);
 
             _gameWindow.Closed += StopGame;
