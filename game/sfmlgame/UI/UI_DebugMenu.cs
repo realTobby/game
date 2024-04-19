@@ -63,7 +63,7 @@ namespace sfmlgame.UI
             debugLevelUp = new UI_Button(position, "Gain Level", 40, 280, 64, Color.Magenta);
             debugLevelUp.ClickAction = () =>
             {
-                Game.Instance.PLAYER.LevelUp(1);
+                Game.Instance.PLAYER.Stats.LevelUp(1);
             };
 
             debugButtons.AddChild(debugLevelUp);
@@ -138,7 +138,7 @@ namespace sfmlgame.UI
             UI_Button childSpawnMonsterPack = new UI_Button(base.Position, "MonsterPack", 36, 280, 64, RandomExtensions.GenerateRandomPastelColor());
             childSpawnMonsterPack.ClickAction = () =>
             {
-                MonsterFactory.SpawnMonsterPack(Game.Instance.PLAYER.Level * 2);
+                MonsterFactory.SpawnMonsterPack(Game.Instance.PLAYER.Stats.Level * 2);
                 list.Hide = true;
             };
             list.AddChild(childSpawnMonsterPack);

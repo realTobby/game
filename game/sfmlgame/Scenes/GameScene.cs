@@ -13,8 +13,6 @@ namespace sfmlgame.Scenes
     public class GameScene : Scene
     {
 
-
-
         public UI_PlayerInfo PlayerInfo;
         public UI_PowerupMenu MainPowerUpMenu;
 
@@ -49,9 +47,9 @@ namespace sfmlgame.Scenes
             PlayerInfo = new UI_PlayerInfo(new Vector2f(Game.Instance.GetWindow().Size.X - 525, Game.Instance.GetWindow().Size.Y/2-250));
             Game.Instance.UIManager.AddComponent(PlayerInfo);
 
-            Game.Instance.PLAYER.OnPlayerLevelUp += MainPowerUpMenu.OpenWindow;
+            Game.Instance.PLAYER.Stats.OnPlayerLevelUp += MainPowerUpMenu.OpenWindow;
 
-            Game.Instance.PLAYER.LevelUp(1);
+            Game.Instance.PLAYER.Stats.LevelUp(1);
 
         }
 
@@ -74,7 +72,7 @@ namespace sfmlgame.Scenes
 
             Game.Instance.UIManager.RemoveComponent(PlayerInfo);
 
-            Game.Instance.PLAYER.OnPlayerLevelUp -= MainPowerUpMenu.OpenWindow;
+            Game.Instance.PLAYER.Stats.OnPlayerLevelUp -= MainPowerUpMenu.OpenWindow;
 
             Game.Instance.EntityManager.Clear();
 

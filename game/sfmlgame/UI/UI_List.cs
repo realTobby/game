@@ -31,8 +31,8 @@ namespace sfmlgame.UI
             {
                 UIComponent lastItem = Content[^1];
                 newPosition = new Vector2f(
-                    lastItem.Position.X,
-                    lastItem.Position.Y + lastItem.Height + verticalSpacing
+                    lastItem.Position.X + offset.X,
+                    lastItem.Position.Y + lastItem.Height + verticalSpacing + offset.Y
                 );
             }
 

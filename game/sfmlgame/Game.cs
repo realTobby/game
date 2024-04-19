@@ -165,6 +165,8 @@ namespace sfmlgame
 
         private string GetFPS()
         {
+            return "60";
+
             return LastCalculatedFPS.ToString();
         }
 

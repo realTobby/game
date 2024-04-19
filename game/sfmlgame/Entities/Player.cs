@@ -14,39 +14,36 @@ using sfmlgame.Entities.Pickups;
 using sfmlgame.UI;
 using static System.Net.Mime.MediaTypeNames;
 using sfmlgame.Scenes;
+using sfmlgame.Framework;
 
 namespace sfmlgame.Entities
 {
     public class Player : Entity
     {
+        public PlayerStats Stats;
+
         private WorldManager world; // Reference to the World object
 
         //public Sprite Sprite;
 
-        public Action OnPlayerLevelUp;
+        
 
         public Vector2i CurrentChunkIndex { get; private set; }
 
         public List<Ability> Abilities { get; private set; } = new List<Ability>();
 
-        public int XP = 0;
-        public int NeededXP = 4;
 
-        public int Level = 1;
 
         AbilityFactory abilityFactory;
-
-        // TODO: STAT MACHINE - DAMAGE ; DEFENSE; CRIT; AND STUFF LIKE THAT, KEEP IT SEPERATED, KEEP IT SIMPLE STUPID
-        public int Damage = 0;
-
-        public float Speed = 75f;
-
-
 
         private Dictionary<Keyboard.Key, bool> previousKeysPressed = new Dictionary<Keyboard.Key, bool>();
 
         public Player(Texture texture, Vector2f position, WorldManager world) : base("Entities/priestess", "priestess", 5, position)
         {
+            Stats = new PlayerStats();
+
+
+
             this.world = world;
             abilityFactory = new AbilityFactory();
             CanCheckCollision = true;
@@ -60,24 +57,7 @@ namespace sfmlgame.Entities
 
 
 
-        public void LevelUp(int levels)
-        {
-            Damage += 1;
-
-            Speed += 1.25f;
-
-            Level += levels;
-
-            NeededXP = NeededXP + 5;
-
-            OnPlayerLevelUp?.Invoke();
-
-            //var newAbility = abilityFactory.CreateRandomAbility(this);
-
-            //Abilities.Add(newAbility);
-
-            SoundManager.Instance.PlayLevelUp();
-        }
+        
 
         private void CheckCollisionWithPickups()
         {
@@ -110,7 +90,7 @@ namespace sfmlgame.Entities
         private void HandleGemPickup(Gem gem)
         {
             int xpAmount = gem.PickItUpInt(); // Or any specific logic for Gems
-            ProcessXP(xpAmount);
+            Stats.ProcessXP(xpAmount);
         }
 
         private void HandleMagnetPickup(Magnet magnet)
@@ -119,23 +99,7 @@ namespace sfmlgame.Entities
                                // Perhaps Magnets don't give XP but have another effect
         }
 
-        private void ProcessXP(int xpAmount)
-        {
-            while (xpAmount > 0)
-            {
-                if (XP + xpAmount >= NeededXP)
-                {
-                    xpAmount -= (NeededXP - XP);
-                    XP = 0;
-                    LevelUp(1);
-                }
-                else
-                {
-                    XP += xpAmount;
-                    xpAmount = 0;
-                }
-            }
-        }
+        
 
 
         private float Vector2fDistance(Vector2f point1, Vector2f point2)
@@ -200,10 +164,10 @@ namespace sfmlgame.Entities
         {
             Vector2f movement = new Vector2f();
 
-            if (Keyboard.IsKeyPressed(Keyboard.Key.W)) movement.Y -= Speed * deltaTime;
-            if (Keyboard.IsKeyPressed(Keyboard.Key.S)) movement.Y += Speed * deltaTime;
-            if (Keyboard.IsKeyPressed(Keyboard.Key.A)) movement.X -= Speed * deltaTime;
-            if (Keyboard.IsKeyPressed(Keyboard.Key.D)) movement.X += Speed * deltaTime;
+            if (Keyboard.IsKeyPressed(Keyboard.Key.W)) movement.Y -= Stats.MovementSpeed * deltaTime;
+            if (Keyboard.IsKeyPressed(Keyboard.Key.S)) movement.Y += Stats.MovementSpeed * deltaTime;
+            if (Keyboard.IsKeyPressed(Keyboard.Key.A)) movement.X -= Stats.MovementSpeed * deltaTime;
+            if (Keyboard.IsKeyPressed(Keyboard.Key.D)) movement.X += Stats.MovementSpeed * deltaTime;
 
             SetPosition(GetPosition() + movement);
 

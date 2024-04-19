@@ -4,15 +4,16 @@ using SFML.System;
 using sfmlgame.Abilities;
 using sfmlgame.Assets;
 
-
 namespace sfmlgame.UI
 {
     public class UI_PowerupMenu : UIComponent
     {
         RectangleShape backgroundShape;
 
-        UI_PowerUpButton leftOption;
-        UI_PowerUpButton rightOption;
+        UI_PowerUpButton abilityUpgrade1;
+        UI_PowerUpButton abilityUpgrade2;
+
+        UI_Button statUpgrade;
 
         //UI_Button closeButton;
 
@@ -29,16 +30,19 @@ namespace sfmlgame.UI
             backgroundShape.Origin = new Vector2f(width / 2f, height / 2f);
 
 
+            Width = (int)width;
+            Height = (int)height;
+
             //var closeButtonPos = new Vector2f(850, 845);
 
             //closeButton = new UI_Button(closeButtonPos, "Close", 46, 45, 25, Color.Cyan);
             ///closeButton.ClickAction += CloseButton_ClickAction;
 
-            leftOption = new UI_PowerUpButton(new Vector2f(position.X-250, position.Y), string.Empty, 0, 250, 250, Color.Red);
+            abilityUpgrade1 = new UI_PowerUpButton(new Vector2f(position.X-250, position.Y), string.Empty, 0, 250, 250, Color.Red);
 
-            rightOption = new UI_PowerUpButton(new Vector2f(position.X+ 250, position.Y), string.Empty, 0, 250, 250, Color.Blue);
+            abilityUpgrade2 = new UI_PowerUpButton(new Vector2f(position.X+ 250, position.Y), string.Empty, 0, 250, 250, Color.Blue);
 
-
+            statUpgrade = new UI_Button(new Vector2f(GetCenterX, GetCenterY+Height/2), "Stat", 30, 150, 150, Color.Magenta);
             
 
             
@@ -48,17 +52,24 @@ namespace sfmlgame.UI
         private void ReShuffleOptions()
         {
             AbilityFactory abilityFactory = new AbilityFactory();
-            leftOption.Reset(abilityFactory.CreateRandomAbility(Game.Instance.PLAYER));
-            rightOption.Reset(abilityFactory.CreateRandomAbility(Game.Instance.PLAYER));
+            abilityUpgrade1.Reset(abilityFactory.CreateRandomAbility(Game.Instance.PLAYER));
+            abilityUpgrade2.Reset(abilityFactory.CreateRandomAbility(Game.Instance.PLAYER));
 
-            leftOption.ClickAction += ChooseOptionLeft;
-            rightOption.ClickAction += ChooseOptionRight;
+            abilityUpgrade1.ClickAction += ChooseOptionLeft;
+            abilityUpgrade2.ClickAction += ChooseOptionRight;
 
+            statUpgrade.ClickAction += ChooseStatUpgrade;
+
+        }
+
+        private void ChooseStatUpgrade()
+        {
+            Game.Instance.PLAYER.Stats.RandomStatUp();
         }
 
         private void ChooseOptionLeft()
         {
-            Game.Instance.PLAYER.Abilities.Add(leftOption.AbilityUpgrade);
+            Game.Instance.PLAYER.Abilities.Add(abilityUpgrade1.AbilityUpgrade);
 
             CloseWindow();
         }
@@ -66,7 +77,7 @@ namespace sfmlgame.UI
 
         private void ChooseOptionRight()
         {
-            Game.Instance.PLAYER.Abilities.Add(rightOption.AbilityUpgrade);
+            Game.Instance.PLAYER.Abilities.Add(abilityUpgrade2.AbilityUpgrade);
             CloseWindow();
         }
 
@@ -97,16 +108,16 @@ namespace sfmlgame.UI
         {
             if (!IsMenuOpen) return;
             //closeButton.Update(deltaTime);
-            leftOption.Update(deltaTime);
-            rightOption.Update(deltaTime);
+            abilityUpgrade1.Update(deltaTime);
+            abilityUpgrade2.Update(deltaTime);
         }
 
         public override void Draw(RenderTexture renderTexture)
         {
             if (!IsMenuOpen) return;
             renderTexture.Draw(backgroundShape);
-            leftOption.Draw(renderTexture);
-            rightOption.Draw(renderTexture);
+            abilityUpgrade1.Draw(renderTexture);
+            abilityUpgrade2.Draw(renderTexture);
             //closeButton.Draw(renderTexture);
         }
     }

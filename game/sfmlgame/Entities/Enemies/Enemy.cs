@@ -222,7 +222,7 @@ namespace sfmlgame.Entities.Enemies
                         {
                             ability.CollidedWith(this);
                             //Console.WriteLine("I got hit by " + ability.AbilityName);
-                            TakeDamage(Game.Instance.PLAYER.Damage + ability.Damage);
+                            TakeDamage(Game.Instance.PLAYER.Stats.Damage + ability.Damage);
                         }
                         
                     }
