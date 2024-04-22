@@ -34,7 +34,7 @@ namespace sfmlgame.Scenes
             backgroundMusic.Loop = true;
             //backgroundMusic.Play();
 
-            Game.Instance.World.ManageChunks(Game.Instance.PLAYER.GetPosition());
+            //Game.Instance.World.ManageChunks(new Vector2i(0,0));
 
             AttachCamera(Game.Instance.PLAYER);
 

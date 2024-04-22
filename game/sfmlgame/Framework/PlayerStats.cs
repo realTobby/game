@@ -1,5 +1,7 @@
 ﻿using sfmglame.Helpers;
+using SFML.System;
 using sfmlgame.Managers;
+using sfmlgame.UI;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -26,6 +28,15 @@ namespace sfmlgame.Framework
         public int Level = 1;
 
         public Action OnPlayerLevelUp;
+
+        public UI_ProgressBar HPBar;
+
+        public void SetHP(int maxHP)
+        {
+            MaxHP = maxHP;
+            CurrentHP = maxHP;
+
+        }
 
         public void LevelUp(int levels)
         {

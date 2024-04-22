@@ -7,7 +7,7 @@ namespace sfmlgame.World
     public class Chunk
     {
         public bool IsActive { get; private set; }
-        public Vector2i Position { get; private set; } // Position in the chunk grid
+        public Vector2i Position { get;  set; } // Position in the chunk grid
         private List<WorldTile> tiles = new List<WorldTile>(); // List of tiles in the chunk
         private int tileSize;
         private int chunkSize = 32; // Number of tiles per side in the chunk
@@ -17,15 +17,24 @@ namespace sfmlgame.World
         public Chunk(Vector2i position, int tileSize)
         {
             this.tileSize = tileSize;
-            Reset(position, null); // Null passed initially for texture, assuming tiles are set later
-            indexText = new Text($"({Position.X}, {Position.Y})", GameAssets.Instance.pixelFont1, 19);
+            Reset(position, null); // Initialize with no texture initially
 
-            debugOutline = new RectangleShape(new Vector2f(chunkSize * tileSize, chunkSize * tileSize));
+            // Initialize debug graphics
+            debugOutline = new RectangleShape(new Vector2f(chunkSize * tileSize, chunkSize * tileSize))
+            {
+                OutlineThickness = 1f,
+                OutlineColor = Color.Red,
+                FillColor = Color.Transparent
+            };
 
-
-            // create a random amount of traps inside the chunk, scatter them arround, spawn with Game.Instance.EntityManager.CreateTrap(pos);
-
+            indexText = new Text($"({Position.X}, {Position.Y})", GameAssets.Instance.pixelFont1, 19)
+            {
+                FillColor = Color.Black,
+                OutlineColor = Color.White,
+                OutlineThickness = 1
+            };
         }
+
 
         // Activates or deactivates the chunk
         public void SetActive(bool active)
@@ -273,21 +282,22 @@ namespace sfmlgame.World
         }
 
         // Draws the chunk's content to the given render target
-        public void Draw(RenderTexture target)
+        public void Draw(RenderTexture target, Vector2f position)
         {
-            if (IsActive)
+            foreach (var tile in tiles)
             {
-
-                foreach (var tile in tiles)
-                {
-                    tile.Draw(target);
-                }
-
-
+                tile.Sprite.Position = position + new Vector2f(tile.Sprite.Position.X, tile.Sprite.Position.Y); // Adjust position based on the new relative coordinates
+                tile.Draw(target);
             }
-            if(Game.Instance.Debug)
+
+            // Optionally draw debug information
+            if (Game.Instance.Debug) // Assuming there's a global flag to toggle debug mode
+            {
                 DrawDebug(target);
+            }
         }
+
+
 
         RectangleShape debugOutline;
         Text indexText;
@@ -296,25 +306,19 @@ namespace sfmlgame.World
         {
             if (!IsActive) return;
 
-            // Update positions first before drawing
-            debugOutline.Position = new Vector2f(Position.X * chunkSize * tileSize, Position.Y * chunkSize * tileSize);
-            indexText.Position = new Vector2f(Position.X * chunkSize * tileSize, Position.Y * chunkSize * tileSize);
-            indexText.DisplayedString = $"({Position.X}, {Position.Y})"; // Ensure the text is updated every draw call
+            // Calculate the actual drawing position based on the chunk's location in the world
+            Vector2f drawPosition = new Vector2f(Position.X * chunkSize * tileSize, Position.Y * chunkSize * tileSize);
 
-            // Set styles (this could be moved to the constructor or Reset method to avoid setting it every frame)
-            debugOutline.OutlineThickness = 1f;
-            debugOutline.OutlineColor = Color.Red;
-            debugOutline.FillColor = Color.Transparent;
-            indexText.Color = Color.Black;
-            indexText.OutlineColor = Color.White;
-            indexText.OutlineThickness = 1;
+            debugOutline.Position = drawPosition;
+            indexText.Position = new Vector2f(drawPosition.X, drawPosition.Y - 20); // Adjust text position slightly above the outline
 
-            // Now, draw the debug elements
+            indexText.DisplayedString = $"({Position.X}, {Position.Y})";
+
+            // Draw the debug elements
             target.Draw(debugOutline);
             target.Draw(indexText);
-
-            //Console.WriteLine($"Drawing debug for chunk at position: {Position}");
         }
+
 
         public bool ContainsPosition(Vector2f position)
         {

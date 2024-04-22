@@ -147,8 +147,8 @@ namespace sfmlgame
             lastPlayerChunkIndex = World.CalculateChunkIndex(PLAYER.GetPosition());
 
 
+            UIManager.AddComponent(PLAYER.HPBar);
 
-            
 
         }
 

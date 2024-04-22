@@ -1,0 +1,19 @@
+Spiel Ablauf
+
+SPIELABLAUF PART1 - START
+
+- Start in einem einzigen Chunk (weitere Chunks werden noch nicht angezeigt)
+- Der Spieler startet in einem "Camp" mit einem einfachen Lagerfeuer das noch aus ist
+(Das Camp kann durch das Spielen erweitert werden, Dekorationen usw. )
+ 
+CAMP
+- Der Spieler kann im Camp sein Loadout einstellen
+- Es können Fähigkeiten, Stats, Items angepasst werden mit gesammelten Materials und Gold
+
+LOADOUT
+- Der Spieler hat eine art Inventar, für Spielablauf Part2
+- Es beinhaltet: Stats, Fähigkeiten, Items
+
+SPIELABLAUF PART2 - OPEN WORLD (Overworld, Chunks, Infinite)
+
+- code: Der aktive Chunk in dem sich der Spieler befindet, soll sich immer am Welt Punkt 0,0 orientieren, so kann vermieden werden das die Float Berechnung in weiterentfernten Chunks zu ungenau wird

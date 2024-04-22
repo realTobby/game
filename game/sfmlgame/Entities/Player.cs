@@ -36,13 +36,22 @@ namespace sfmlgame.Entities
 
         AbilityFactory abilityFactory;
 
+        public UI_ProgressBar HPBar;
+
         private Dictionary<Keyboard.Key, bool> previousKeysPressed = new Dictionary<Keyboard.Key, bool>();
+
+        
 
         public Player(Texture texture, Vector2f position, WorldManager world) : base("Entities/priestess", "priestess", 5, position)
         {
             Stats = new PlayerStats();
 
+            Stats.MaxHP = 10;
+            Stats.CurrentHP = 9;
 
+            HPBar = new UI_ProgressBar(new Vector2f(GetPosition().X, GetPosition().Y), new UIBinding<int>(() => Stats.CurrentHP), new UIBinding<int>(() => Stats.MaxHP), new Vector2f(32, 8), Color.Green, this);
+            //Game.Instance.UIManager.AddComponent(hpBar);
+            
 
             this.world = world;
             abilityFactory = new AbilityFactory();
@@ -54,10 +63,6 @@ namespace sfmlgame.Entities
                 previousKeysPressed[key] = false;
             }
         }
-
-
-
-        
 
         private void CheckCollisionWithPickups()
         {
@@ -116,26 +121,49 @@ namespace sfmlgame.Entities
 
         public void Update(float deltaTime)
         {
-            HandleKeyboardInput(deltaTime);
+            HandleKeyboardInput(deltaTime); // Handle player input and movement
 
-            // Other updates like chunk management and collision checks
-            PreviousChunkIndex = CurrentChunkIndex;
-            CurrentChunkIndex = world.CalculateChunkIndex(GetPosition());
-            if (CurrentChunkIndex != PreviousChunkIndex)
+            Vector2f worldPosition = GetWorldPosition(); // Get the updated world position after movement
+            Vector2i newChunkIndex = world.CalculateChunkIndex(worldPosition);
+
+            if (newChunkIndex != CurrentChunkIndex)
             {
-                world.ManageChunks(GetPosition());
-                world.UpdateTrapsForCurrentChunk(CurrentChunkIndex);
+                // Correctly position the player within the new chunk center
+                SetPosition(world.AdjustPlayerPositionForChunkTransition(GetPosition(), CurrentChunkIndex, newChunkIndex));
+                CurrentChunkIndex = newChunkIndex; // Update the current chunk index
+                world.ManageChunks(newChunkIndex); // Manage chunk loading/unloading
             }
 
-            UpdatePlayerAbilities(deltaTime);
-            CheckCollisionWithPickups();
-            base.Update(this, deltaTime);
+            UpdatePlayerAbilities(deltaTime); // Update abilities based on cooldowns and usage
+            CheckCollisionWithPickups(); // Check for and handle collisions with pickups
+            base.Update(this, deltaTime); // Call base update (if any additional logic is needed there)
+
+            HPBar.Update(deltaTime); // Update the player's health bar UI
+        }
+
+
+        private Vector2f CalculateMovement(float deltaTime)
+        {
+            Vector2f movement = new Vector2f();
+            if (Keyboard.IsKeyPressed(Keyboard.Key.W)) movement.Y -= Stats.MovementSpeed * deltaTime;
+            if (Keyboard.IsKeyPressed(Keyboard.Key.S)) movement.Y += Stats.MovementSpeed * deltaTime;
+            if (Keyboard.IsKeyPressed(Keyboard.Key.A)) movement.X -= Stats.MovementSpeed * deltaTime;
+            if (Keyboard.IsKeyPressed(Keyboard.Key.D)) movement.X += Stats.MovementSpeed * deltaTime;
+            return movement;
+        }
+
+        // This function calculates the player's position in world space
+        private Vector2f GetWorldPosition()
+        {
+            return GetPosition();  // Directly return the position since it's always relative to the current chunk
         }
 
 
         public override void Draw(RenderTexture renderTexture, float deltaTime)
         {
             base.Draw(renderTexture, deltaTime);
+            
+
         }
 
         private void UpdatePlayerAbilities(float deltaTime)
@@ -162,20 +190,15 @@ namespace sfmlgame.Entities
 
         private void HandleKeyboardInput(float deltaTime)
         {
-            Vector2f movement = new Vector2f();
+            Vector2f movement = CalculateMovement(deltaTime);
+            SetPosition(movement + GetPosition());  // Update player's position based on input
 
-            if (Keyboard.IsKeyPressed(Keyboard.Key.W)) movement.Y -= Stats.MovementSpeed * deltaTime;
-            if (Keyboard.IsKeyPressed(Keyboard.Key.S)) movement.Y += Stats.MovementSpeed * deltaTime;
-            if (Keyboard.IsKeyPressed(Keyboard.Key.A)) movement.X -= Stats.MovementSpeed * deltaTime;
-            if (Keyboard.IsKeyPressed(Keyboard.Key.D)) movement.X += Stats.MovementSpeed * deltaTime;
-
-            SetPosition(GetPosition() + movement);
-
-            // Specific key checks for non-movement commands
+            // Additional command checks (like toggling debug mode, etc.)
             CheckSingleKeyPress(Keyboard.Key.Escape, () => Game.Instance.SceneTransition(new MainMenuScene()));
             CheckSingleKeyPress(Keyboard.Key.C, () => Game.Instance.SceneManager.CallGameSceneForOpenPlayerInfo());
             CheckSingleKeyPress(Keyboard.Key.G, () => { Game.Instance.Debug = !Game.Instance.Debug; });
         }
+
 
         private void CheckSingleKeyPress(Keyboard.Key key, Action action)
         {
@@ -186,6 +209,8 @@ namespace sfmlgame.Entities
             }
             previousKeysPressed[key] = currentlyPressed; // Update the state in the dictionary
         }
+
+
 
 
     }

@@ -100,7 +100,7 @@ namespace sfmlgame.UI
             
             
             AddDebugSpawnOptions(debugEntitySpawnButtonList);
-             
+
             //var debugNPCGroup = new UI_List(new Vector2f(debugEntitySpawnButtonList.Position.X+debugEntitySpawnButtonList., debugEntitySpawnButtonList.Position.Y + debugEntitySpawnButtonList.baseButton.Height + 10), "NPC", true);
 
             //var placeholderNPC1 = new UI_Button(pos, "Placeholder NPC1", 40, 280, 64, RandomExtensions.GenerateRandomPastelColor());
@@ -114,7 +114,10 @@ namespace sfmlgame.UI
 
             //debugButtons.AddChild(debugNPCGroup, new Vector2f(25, 25));
 
-
+            UIBinding<string> playerPositionBinding = new UIBinding<string>(() => Game.Instance.PLAYER.GetPosition().ToString());
+            UI_Text playerPosition = new UI_Text("Player Position: ", 36, new Vector2f(10, 10), playerPositionBinding);
+            playerPosition.SetColor(Color.Black, Color.White, 3.5f);
+            debugButtons.AddChild(playerPosition);
 
         }
 
