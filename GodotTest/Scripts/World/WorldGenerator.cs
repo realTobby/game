@@ -18,10 +18,10 @@ public partial class WorldGenerator : TileMap
 
 	public override void _Draw()
 	{
-		foreach (var chunkKey in chunks.Keys)
-		{
-			DrawChunkOutline(chunkKey);
-		}
+		//foreach (var chunkKey in chunks.Keys)
+		//{
+		//	DrawChunkOutline(chunkKey);
+		//}
 	}
 
 	private void DrawChunkOutline(Vector2I chunkPosition)
@@ -103,6 +103,9 @@ public partial class WorldGenerator : TileMap
 		GD.Print("Calculated chunk position: " + chunkPos.ToString());
 
 		UpdateActiveChunks(chunkPos); // Update chunks around the new player position
+
+		// plus points: origin system that resets the world origin and moves everything to the center of the scene again lol
+
 	}
 
 
@@ -119,9 +122,9 @@ public partial class WorldGenerator : TileMap
 
 		GD.Print("Loading Chunks");
 		// Load or activate chunks around the player
-		for (int dx = -1; dx <= 1; dx++)
+		for (int dx = -2; dx <= 2; dx++)
 		{
-			for (int dy = -1; dy <= 1; dy++)
+			for (int dy = -2; dy <= 2; dy++)
 			{
 				Vector2I pos = new Vector2I(newChunkPos.X + dx, newChunkPos.Y + dy);
 				LoadChunk(pos);
